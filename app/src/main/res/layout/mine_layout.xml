@@ -51,10 +51,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:id="@+id/mine_layout"
+            android:clickable="true"
+            >
 
             <RelativeLayout
-                android:id="@+id/userino"
+                android:tag="0"
                 android:layout_width="fill_parent"
                 android:layout_height="80dp"
                 android:layout_marginTop="10dp"
@@ -131,14 +134,14 @@
                 >
 
                 <LinearLayout
+                    android:id="@+id/mine_left"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:clickable="true"
-                    android:onClick="leftClick"
-
+                    android:tag="left"
                     >
 
                     <TextView
@@ -167,13 +170,13 @@
                     />
 
                 <LinearLayout
+                    android:id="@+id/mine_right"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:clickable="true"
-                    android:onClick="rightClick"
+                    android:tag="right"
                     >
 
                     <TextView
@@ -208,9 +211,7 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="11dp"
-                android:tag="0"
-                android:clickable="true"
-                android:onClick="listClick"
+                android:tag="1"
                 >
 
                 <TextView
@@ -253,9 +254,7 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="11dp"
-                android:tag="1"
-                android:clickable="true"
-                android:onClick="listClick"
+                android:tag="2"
                 >
 
                 <TextView
@@ -298,9 +297,7 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="11dp"
-                android:tag="2"
-                android:clickable="true"
-                android:onClick="listClick"
+                android:tag="3"
                 >
 
                 <TextView
@@ -343,9 +340,7 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="11dp"
-                android:tag="3"
-                android:clickable="true"
-                android:onClick="listClick"
+                android:tag="4"
                 >
 
                 <TextView
@@ -363,23 +358,6 @@
                     android:layout_height="wrap_content"
                     android:src="@mipmap/go_arrow_icon" />
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#ffffff"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/app_separator_offx"
-                android:paddingRight="@dimen/app_separator_offx"
-                >
-
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#eeeeee"/>
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -389,9 +367,7 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="11dp"
-                android:tag="4"
-                android:clickable="true"
-                android:onClick="listClick">
+                android:tag="5">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -433,9 +409,7 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="11dp"
-                android:tag="5"
-                android:clickable="true"
-                android:onClick="listClick">
+                android:tag="6">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -477,9 +451,7 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="11dp"
-                android:tag="6"
-                android:clickable="true"
-                android:onClick="listClick">
+                android:tag="7">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -496,41 +468,6 @@
                     android:layout_height="wrap_content"
                     android:src="@mipmap/go_arrow_icon" />
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#ffffff"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/app_separator_offx"
-                android:paddingRight="@dimen/app_separator_offx"
-                >
-
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#eeeeee"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#ffffff"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/app_separator_offx"
-                android:paddingRight="@dimen/app_separator_offx"
-                >
-
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#eeeeee"/>
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -540,9 +477,9 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="11dp"
-                android:tag="7"
-                android:clickable="true"
-                android:onClick="listClick">
+                android:layout_marginBottom="20dp"
+                android:tag="8"
+                >
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -58,10 +58,10 @@ import okhttp3.Call;
  */
 public class MineFragment extends Fragment implements View.OnClickListener {
     View view;
+    LinearLayout mine;
+    LinearLayout left;
+    LinearLayout right;
 
-    ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
-    HashMap<String, Object> map;
-    RelativeLayout userino;
     TextView name, vip,password,seting;
     com.nostra13.universalimageloader.core.ImageLoader ImageLoader;
     DisplayImageOptions options;
@@ -75,12 +75,13 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.mine_layout, container, false);
-        Intent intent = new Intent(getActivity(), CityServices.class);
-        getActivity().startService(intent);
-        IntentFilter filter = new IntentFilter(CityServices.action);
-        getActivity().registerReceiver(broadcastReceiver, filter);
+        //Intent intent = new Intent(getActivity(), CityServices.class);
+        //getActivity().startService(intent);
+        //IntentFilter filter = new IntentFilter(CityServices.action);
+        //getActivity().registerReceiver(broadcastReceiver, filter);
         intview();
-        EventBus.getDefault().register(this);
+        //EventBus.getDefault().register(this);
+
         int a = PreferencesUtils.getInt(getActivity(), "land");
         if (a == 0) {
             handler.sendEmptyMessage(2);
@@ -92,18 +93,34 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     }
 
     public void intview() {
+        mine = (LinearLayout) view.findViewById(R.id.mine_layout);
+        left = (LinearLayout) view.findViewById(R.id.mine_left);
+        right = (LinearLayout) view.findViewById(R.id.mine_right);
+
+        left.setOnClickListener(this);
+        right.setOnClickListener(this);
+
+        int count = mine.getChildCount();
+
+        for(int i=0;i<count;i++)
+        {
+            if(mine.getChildAt(i).getTag() != null)
+            {
+                System.out.println(mine.getChildAt(i)) ;
+                mine.getChildAt(i).setClickable(true);
+                mine.getChildAt(i).setOnClickListener(this);
+            }
+
+        }
 
         vip = (TextView) view.findViewById(R.id.vip);
         seting=(TextView)view.findViewById(R.id.seting);
         password=(TextView)view.findViewById(R.id.password) ;
         head = (ImageView) view.findViewById(R.id.head);
         name = (TextView) view.findViewById(R.id.name);
-        userino = (RelativeLayout) view.findViewById(R.id.userino);
-        userino.setOnClickListener(this);
 
         ImageUtils = new ImageUtils();
         ImageLoader = ImageLoader.getInstance();
-        seting.setOnClickListener(this);
         ImageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
         animateFirstListener = new ImageUtils.AnimateFirstDisplayListener();
 
@@ -147,8 +164,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
                     break;
                 case 2:
-                    EventBus.getDefault().post(
-                            new MyEventBus("dis"));
+                    //EventBus.getDefault().post(new MyEventBus("dis"));
                     name.setText("请登录");
                     vip.setText("请登录");
 
@@ -160,66 +176,61 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         }
     };
 
-
-    public void leftClick(View v)
-    {
-
-    }
-
-    public void rightClick(View v)
-    {
-
-    }
-
-    public void listClick(View v)
-    {
-
-    }
-
-
     @Override
     public void onClick(View v) {
         Intent intent = new Intent();
-        switch (v.getId()) {
-            case R.id.userino:
-                int a = PreferencesUtils.getInt(getActivity(), "land");
-                if (a == 0) {
-                    intent.setClass(getActivity(), Logn.class);
-                    getActivity().startActivity(intent);
-                } else {
-                    intent.setClass(getActivity(), MyInfo.class);
-                    getActivity().startActivity(intent);
-                }
-                break;
 
-            case R.id.seting:
-                intent.setClass(getActivity(), SetActivity.class);
-                getActivity().startActivity(intent);
-                break;
-        }
-    }
+        if(v.getTag() instanceof  String)
+        {
+            switch ((String)v.getTag()) {
+                case "0":
+                    int a = PreferencesUtils.getInt(getActivity(), "land");
+                    if (a == 0) {
+                        intent.setClass(getActivity(), Logn.class);
+                        getActivity().startActivity(intent);
+                    } else {
+                        intent.setClass(getActivity(), MyInfo.class);
+                        getActivity().startActivity(intent);
+                    }
+                    break;
 
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int a = intent.getExtras().getInt("meeage");
-            if (a == 0) {
-                handler.sendEmptyMessage(1);
-            } else if (a == 1) {
-                handler.sendEmptyMessage(2);
+//            case "1":
+//                System.out.println("click "+v.getTag()+" !!!!!!!");
+//                break;
+
+                case "8":
+                    intent.setClass(getActivity(), SetActivity.class);
+                    getActivity().startActivity(intent);
+                    break;
+
+                default:
+                    System.out.println("click "+v.getTag()+" !!!!!!!");
+                    break;
             }
         }
-    };
-    @Subscribe
-    public void getEventmsg(MyEventBus myEventBus){
-//        Toast.makeText(getActivity(),myEventBus.getMsg(),Toast.LENGTH_SHORT).show();
+
     }
+
+//    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            int a = intent.getExtras().getInt("meeage");
+//            if (a == 0) {
+//                handler.sendEmptyMessage(1);
+//            } else if (a == 1) {
+//                handler.sendEmptyMessage(2);
+//            }
+//        }
+//    };
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getActivity().unregisterReceiver(broadcastReceiver);
+        //getActivity().unregisterReceiver(broadcastReceiver);
         EventBus.getDefault().unregister(this);//反注册EventBus
     }
+
     public void getJsom() {
         String username = PreferencesUtils.getString(getActivity(), "username");
         String uid = PreferencesUtils.getString(getActivity(), "userid");
