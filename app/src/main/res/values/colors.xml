@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="APPBGColor">#F0F0F0</color>
+
+    <color name="APPOrangeJifen">#FF8A00</color>
+
+    <color name="APPOrangeDark">#F45C2B</color>
     <color name="APPOrangeLight">#f1740a</color>
+
     <color name="APPBlue">#21adfd</color>
 
     <color name="buttonbule">#21adfd</color>

@@ -17,5 +17,6 @@
     <dimen name="sp_14">14sp</dimen>
     <dimen name="sp_16">16sp</dimen>
     <dimen name="app_separator_offx">15dp</dimen>
+    <dimen name="spacing_medium">8dp</dimen>
 
 </resources>

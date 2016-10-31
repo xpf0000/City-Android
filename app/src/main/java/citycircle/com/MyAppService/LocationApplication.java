@@ -4,7 +4,9 @@ import android.app.Application;
 import android.app.Service;
 import android.content.Context;
 import android.os.Vibrator;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.alibaba.sdk.android.push.CloudPushService;
 import com.alibaba.sdk.android.push.CommonCallback;
@@ -19,8 +21,22 @@ import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.robin.lazy.cache.CacheLoaderManager;
+import com.robin.lazy.cache.disk.naming.HashCodeFileNameGenerator;
 
 import java.io.File;
+import java.io.IOException;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import util.DataCache;
+import util.ServicesAPI;
+import util.XNetUtil;
 
 public class LocationApplication extends Application {
     public LocationClient mLocationClient;
@@ -33,9 +49,82 @@ public class LocationApplication extends Application {
     public String adress,getStreet;
     public String city,District;
     private static final String TAG = "Init";
+
+
+    public static int stateBarHeight = 0;
+    public static int navBarHeight = 0;
+
+    public static int SW = 0;
+    public static int SH = 0;
+
+    public static Context context;
+
+    public static Retrofit retrofit;
+
+    public static ServicesAPI APPService;
+
+    static public DataCache APPDataCache;
+
+    /**
+     * 创建全局变量 全局变量一般都比较倾向于创建一个单独的数据类文件，并使用static静态变量
+     *
+     * 这里使用了在Application中添加数据的方法实现全局变量
+     * 注意在AndroidManifest.xml中的Application节点添加android:name=".MyApplication"属性
+     *
+     */
+    private WindowManager.LayoutParams wmParams = new WindowManager.LayoutParams();
+
+    public WindowManager.LayoutParams getMywmParams() {
+        return wmParams;
+    }
+
+
+
     @Override
     public void onCreate() {
         super.onCreate();
+
+        context = getApplicationContext();
+
+        CacheLoaderManager.getInstance().init(this, new HashCodeFileNameGenerator(), 1024 * 1024 * 64, 200, 50);
+        APPDataCache = new DataCache();
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        SW = displayMetrics.widthPixels;
+        SH = displayMetrics.heightPixels;
+
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+
+                Request request = chain.request().newBuilder()
+                        .addHeader("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36")
+                        .addHeader("Content-Type","text/plain; charset=utf-8")
+                        .addHeader("Accept","*/*")
+                        .addHeader("Accept-Encoding","gzip, deflate, sdch")
+                        .build();
+
+                XNetUtil.APPPrintln("URL: "+request.url().toString());
+                if(request.body() != null)
+                {
+                    XNetUtil.APPPrintln("Body: "+request.body().toString());
+                }
+
+                Response response = chain.proceed(request);
+
+                return response;
+            }
+        }).build();
+
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(ServicesAPI.APPUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .callFactory(client)
+                .build();
+
+        APPService = retrofit.create(ServicesAPI.class);
+
         initCloudChannel(this);
         // System.out.println("getApplicationContext()"+getApplicationContext());
         SDKInitializer.initialize(getApplicationContext());
@@ -57,6 +146,8 @@ public class LocationApplication extends Application {
         mVibrator = (Vibrator) getApplicationContext().getSystemService(
                 Service.VIBRATOR_SERVICE);
         mLocationClient.start();
+
+        System.out.println("================init============");
     }
 
     public class MyLocationListener implements BDLocationListener {
