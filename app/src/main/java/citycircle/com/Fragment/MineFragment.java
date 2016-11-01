@@ -51,6 +51,7 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
 import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.PreferencesUtils;
+import citycircle.com.hfb.HfbCenter;
 import okhttp3.Call;
 
 /**
@@ -199,6 +200,16 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 //                break;
 
                 case "8":
+                    intent.setClass(getActivity(), SetActivity.class);
+                    getActivity().startActivity(intent);
+                    break;
+
+                case "left":
+                    intent.setClass(getActivity(), HfbCenter.class);
+                    getActivity().startActivity(intent);
+                    break;
+
+                case "right":
                     intent.setClass(getActivity(), SetActivity.class);
                     getActivity().startActivity(intent);
                     break;

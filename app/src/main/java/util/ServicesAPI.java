@@ -1,6 +1,8 @@
 package util;
 
 import java.util.List;
+
+import model.GoodsModel;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import rx.Observable;
@@ -11,11 +13,13 @@ import rx.Observable;
 
 public interface ServicesAPI {
 
- String APPUrl = "http://182.92.70.85/hfshopapi/Public/Found/";
+ String APPUrl = "http://182.92.70.85/hfapi/Public/Found/";
 
-    @POST("?service=User.login")
-    Observable<HttpResult<List<UserModel>>> doLogin(@Query("mobile") String mobile, @Query
-            ("password") String password);
+    @POST("?service=jifen.getproductList")
+    Observable<HttpResult<List<GoodsModel>>> jifenGetproductList(
+            @Query("page") int page,
+            @Query("perNumber") int perNumber
+    );
 
     @POST("?service=User.register")
     Observable<HttpResult<Object>> userRegister(@Query("mobile") String mobile, @Query

@@ -403,6 +403,12 @@
         <activity
             android:name=".Activity.ShopCam"
             android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".hfb.HfbCenter"
+            android:screenOrientation="portrait"></activity>
+
+
         <!--<activity-->
         <!--android:name="com.mob.tools.MobUIShell"-->
         <!--android:theme="@android:style/Theme.Translucent.NoTitleBar"-->
