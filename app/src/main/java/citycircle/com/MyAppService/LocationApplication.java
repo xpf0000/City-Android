@@ -4,6 +4,7 @@ import android.app.Application;
 import android.app.Service;
 import android.content.Context;
 import android.os.Vibrator;
+import android.support.multidex.MultiDex;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
@@ -17,16 +18,20 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 import com.baidu.mapapi.SDKInitializer;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
+
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+
 import com.robin.lazy.cache.CacheLoaderManager;
 import com.robin.lazy.cache.disk.naming.HashCodeFileNameGenerator;
 
 import java.io.File;
 import java.io.IOException;
 
+import citycircle.com.R;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -78,7 +83,12 @@ public class LocationApplication extends Application {
         return wmParams;
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
 
+        MultiDex.install(this);
+    }
 
     @Override
     public void onCreate() {
@@ -129,13 +139,10 @@ public class LocationApplication extends Application {
         // System.out.println("getApplicationContext()"+getApplicationContext());
         SDKInitializer.initialize(getApplicationContext());
         mLocationClient = new LocationClient(this.getApplicationContext());
+
         //初始化imgload
-        File diskCache = StorageUtils.getOwnCacheDirectory(this.getApplicationContext(),
-                "citycircle/Cache");
-        ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(
-                this.getApplicationContext()).memoryCacheExtraOptions(720, 1980).discCacheFileCount(200)
-                .discCache(new UnlimitedDiskCache(diskCache)).build();
-        ImageLoader.getInstance().init(configuration);
+        initImageLoader();
+
         mMyLocationListener = new MyLocationListener();
         mLocationClient.registerLocationListener(mMyLocationListener);
         locationClientOption = new LocationClientOption();
@@ -148,6 +155,23 @@ public class LocationApplication extends Application {
         mLocationClient.start();
 
         System.out.println("================init============");
+    }
+
+    //初始化网络图片缓存库
+    private void initImageLoader() {
+        //网络图片例子,结合常用的图片缓存库UIL,你可以根据自己需求自己换其他网络图片库
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder().
+                showImageForEmptyUri(R.drawable.app_default)
+                .cacheInMemory(true).cacheOnDisk(true).build();
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+                getApplicationContext()).defaultDisplayImageOptions(defaultOptions)
+                .threadPriority(Thread.NORM_PRIORITY - 2)
+                .denyCacheImageMultipleSizesInMemory()
+                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                .tasksProcessingOrder(QueueProcessingType.LIFO).build();
+        ImageLoader.getInstance().init(config);
+
     }
 
     public class MyLocationListener implements BDLocationListener {
