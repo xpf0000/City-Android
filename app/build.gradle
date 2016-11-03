@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.1"
 
     defaultConfig {
         applicationId "citycircle.com"
-        minSdkVersion 14
-        targetSdkVersion 22
+        minSdkVersion 15
+        targetSdkVersion 24
         versionCode 9
         versionName "3.3"
     }
@@ -35,9 +35,10 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.android.support:support-v4:23.0.1'
-    compile 'com.android.support:design:23.0.1'
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:support-v4:24.2.0'
+    compile 'com.android.support:design:24.2.0'
     compile files('libs/fastjson-1.1.34.android.jar')
     compile files('libs/universal-image-loader-1.9.4.jar')
     compile 'fr.baloomba:viewpagerindicator:2.4.2'
@@ -49,8 +50,8 @@ dependencies {
     compile files('libs/ShareSDK-Wechat-2.6.4.jar')
     compile files('libs/ShareSDK-Wechat-Core-2.6.4.jar')
     compile files('libs/ShareSDK-Wechat-Moments-2.6.4.jar')
-    compile 'com.android.support:recyclerview-v7:23.+'
-    compile 'com.android.support:cardview-v7:23.+'
+    compile 'com.android.support:recyclerview-v7:24.2.0'
+    compile 'com.android.support:cardview-v7:24.2.0'
     compile files('libs/MobLogCollector.jar')
     compile files('libs/MobTools.jar')
     compile files('libs/MobLogCollector.jar')
@@ -66,12 +67,12 @@ dependencies {
         exclude module: 'support-v4'
     }
     compile files('libs/android-viewbadger.jar')
-    compile 'com.bigkoo:alertview:1.0.2'
+    //compile 'com.bigkoo:alertview:1.0.2'
     compile 'com.github.iwgang:countdownview:1.2'
-    compile 'com.android.support:palette-v7:23.3.0'
+    compile 'com.android.support:palette-v7:24.2.0'
     compile 'com.zhy:okhttputils:2.3.9'
-    compile 'com.bigkoo:convenientbanner:2.0.5'
-    compile 'com.bigkoo:pickerview:2.0.8'
+    //compile 'com.bigkoo:convenientbanner:2.0.5'
+    //compile 'com.bigkoo:pickerview:2.0.8'
     compile 'info.hoang8f:android-segmented:1.0.6'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.baoyz.swipemenulistview:library:1.3.0'
