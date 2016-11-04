@@ -2,11 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
-
+              android:layout_height="match_parent"
+                android:descendantFocusability="blocksDescendants"
+    >
 
     <ScrollView
+        android:id="@+id/hfbcenter_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#F0F0F0"
@@ -37,7 +38,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
@@ -46,6 +47,7 @@
             android:orientation="vertical"
             >
             <TextView
+                android:id="@+id/hfbcenter_tatle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0个"
@@ -292,9 +294,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center|right"
+            android:clickable="true"
+            android:onClick="doQD"
             >
 
             <ImageView
+                android:id="@+id/hfbcenter_doneicon"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:src="@mipmap/duihao"
@@ -307,6 +312,7 @@
                 >
 
                 <TextView
+                    android:id="@+id/hfbcenter_donetxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="已完成"
@@ -391,6 +397,7 @@
     </LinearLayout>
 
     <util.XGridView
+        android:focusable="false"
         android:id="@+id/hfbcenter_grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -404,8 +411,6 @@
         >
 
     </util.XGridView>
-
-
 
 </LinearLayout>
 

@@ -2,7 +2,10 @@ package util;
 
 import java.util.List;
 
+import model.BannerModel;
 import model.GoodsModel;
+import model.UserModel;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import rx.Observable;
@@ -21,58 +24,30 @@ public interface ServicesAPI {
             @Query("perNumber") int perNumber
     );
 
-    @POST("?service=User.register")
-    Observable<HttpResult<Object>> userRegister(@Query("mobile") String mobile, @Query
-            ("truename") String truename);
+    @POST("?service=jifen.getUinfo")
+    Observable<HttpResult<List<UserModel>>> jifenGetUinfo(
+                    @Query("uid") String uid,
+                    @Query("username") String username
+            );
 
-
- @POST("?service=User.getUserInfoM")//根据手机号获取会员信息
-    Observable<HttpResult<List<UserModel>>> userGetUserInfoM(@Query("mobile") String mobile);
-
-    @POST("?service=User.smsSend")//发送验证码  type: 1 注册 2 找回密码
-    Observable<HttpResult<Object>> userSmsSend(@Query("mobile") String mobile, @Query("type") String type);
-
-   @POST("?service=User.updateMobile")//修改用户手机号
-   Observable<HttpResult<Object>> userUpdateMobile(@Query("mobile") String mobile
-           , @Query("newmobile") String newmobile
-           , @Query("code") String code
-   );
-
-    @POST("?service=User.updatePass2")//修改用户密码
-    Observable<HttpResult<Object>> userUpdatePass2(@Query("mobile") String mobile
-            , @Query("oldpass") String oldpass
-            , @Query("newpass") String newpass
+    @POST("?service=jifen.addQiandao")
+    Observable<HttpResult<Object>> jifenAddQiandao(
+            @Query("uid") String uid,
+            @Query("username") String username
     );
 
-    @POST("?service=User.smsVerify")//短信验证
-    Observable<HttpResult<Object>> userSmsVerify(@Query("mobile") String mobile
-            , @Query("code") String code
+    @POST("?service=jifen.addDH")
+    Observable<HttpResult<Object>> jifenAddDH(
+            @Query("uid") String uid,
+            @Query("username") String username,
+            @Query("id") String id
     );
 
-    @POST("?service=User.updatePass")//重置密码
-    Observable<HttpResult<Object>> userUpdatePass(@Query("mobile") String mobile
-            , @Query("code") String code
-            , @Query("password") String password
-    );
+   @GET("?service=news.getGuanggao&typeid=111")
+   Observable<HttpResult<List<BannerModel>>> getBanner();
 
-    @POST("?service=Shopd.updateShopInfo")//修改店铺资料
-    Observable<HttpResult<Object>> shopdUpdateShopInfo(@Query("id") String sid
-            , @Query("address") String address
-            , @Query("tel") String tel
-    );
 
-    @POST("?service=Shopd.getShopInfo")//获取商家详情
-    Observable<HttpResult<List<UserModel>>> shopdGetShopInfo(@Query("id") String sid);
 
-    @POST("?service=Power.addShopJob")//添加岗位
-    Observable<HttpResult<Object>> powerAddShopJob(@Query("shopid") String shopid
-            , @Query("name") String name
-    );
-
-    @POST("?service=Power.updateShopJob")//修改岗位
-    Observable<HttpResult<Object>> powerUpdateShopJob(@Query("id") String id
-            , @Query("name") String name
-    );
 
 }
 

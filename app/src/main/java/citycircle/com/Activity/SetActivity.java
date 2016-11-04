@@ -31,6 +31,8 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.friends.Wechat;
 
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+
 /**
  * Created by admins on 2015/11/20.
  */
@@ -209,6 +211,9 @@ public class SetActivity extends Activity {
                     WX.removeAccount();
                     ShareSDK.removeCookieOnAuthorize(true);
                 }
+
+                APPDataCache.User.reSet();
+
                 PreferencesUtils.putInt(SetActivity.this, "land", 0);
                 PreferencesUtils.putString(SetActivity.this, "userid", null);
                 Intent intent = new Intent();

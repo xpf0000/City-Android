@@ -97,6 +97,7 @@ public class LocationApplication extends Application {
         context = getApplicationContext();
 
         CacheLoaderManager.getInstance().init(this, new HashCodeFileNameGenerator(), 1024 * 1024 * 64, 200, 50);
+
         APPDataCache = new DataCache();
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         SW = displayMetrics.widthPixels;

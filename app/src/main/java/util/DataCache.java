@@ -1,5 +1,8 @@
 package util;
 import com.robin.lazy.cache.CacheLoaderManager;
+
+import model.UserModel;
+
 /**
  * Created by X on 2016/10/2.
  */
@@ -20,8 +23,6 @@ public class DataCache {
         {
             ModelUtil.reSet(User);
         }
-
-
 
         XNetUtil.APPPrintln("User: "+User.toString());
 

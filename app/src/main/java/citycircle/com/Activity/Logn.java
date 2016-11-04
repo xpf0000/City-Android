@@ -44,6 +44,10 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.friends.Wechat;
+import model.UserModel;
+import util.DataCache;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 //import static cn.smssdk.SMSSDK.getVerificationCode;
 
@@ -184,7 +188,14 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
                             PreferencesUtils.putString(Logn.this, "truename", jsonObject2.getString("truename"));
                             PreferencesUtils.putString(Logn.this, "birthday", jsonObject2.getString("birthday"));
                             PreferencesUtils.putString(Logn.this, "address", jsonObject2.getString("address"));
+
+                            // JSON串转用户组对象
+                            UserModel user = JSON.parseObject(jsonObject2.toJSONString(), UserModel.class);
+
+                            APPDataCache.User.copy(user);
+
                         }
+
                         PreferencesUtils.putInt(Logn.this, "land", 1);
                         Intent intent = new Intent();
                         intent.setAction("com.servicedemo4");

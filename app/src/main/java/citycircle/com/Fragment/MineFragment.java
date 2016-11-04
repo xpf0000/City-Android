@@ -1,9 +1,6 @@
 package citycircle.com.Fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,10 +9,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,24 +23,10 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import citycircle.com.Activity.GetPhone;
 import citycircle.com.Activity.Logn;
-import citycircle.com.Activity.MyCity;
-import citycircle.com.Activity.MyCollect;
 import citycircle.com.Activity.MyInfo;
-import citycircle.com.Activity.MyVipcard;
-import citycircle.com.Activity.MyWallet;
-import citycircle.com.Activity.Mymessage;
 import citycircle.com.Activity.SetActivity;
-import citycircle.com.Activity.UpPassword;
-import citycircle.com.Adapter.MineAdapter;
-import citycircle.com.MyAppService.CityServices;
-import citycircle.com.MyViews.MyListView;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
@@ -63,7 +44,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     LinearLayout left;
     LinearLayout right;
 
-    TextView name, vip,password,seting;
+    TextView name, vip,seting;
     com.nostra13.universalimageloader.core.ImageLoader ImageLoader;
     DisplayImageOptions options;
     citycircle.com.Utils.ImageUtils ImageUtils;
@@ -119,7 +100,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
         vip = (TextView) view.findViewById(R.id.vip);
         seting=(TextView)view.findViewById(R.id.seting);
-        password=(TextView)view.findViewById(R.id.password) ;
         head = (ImageView) view.findViewById(R.id.head);
         name = (TextView) view.findViewById(R.id.name);
 
@@ -153,16 +133,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
                         if (tel.length()!=0) {
                             name.setText("账号:" + tel);
-//                        list.clear();
-//                        item = new String[]{"收藏", "怀府圈", "修改密码"};
-                            password.setText("修改密码");
                         } else {
                             name.setText("账号:" + names);
-//                        list.clear();
-//                        item = new String[]{"收藏", "怀府圈", "绑定手机号"};
-//                        setMyListView();
-//                        name.setText("账号:" + names);
-                            password.setText("绑定手机号");
                         }
 
 

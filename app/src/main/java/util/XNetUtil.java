@@ -98,7 +98,7 @@ public class XNetUtil {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        XActivityindicator.hide();
                         Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
                         res.onError(e);
                     }
@@ -151,6 +151,8 @@ public class XNetUtil {
 
         @Override
         public Boolean call(HttpResult<T> httpResult) {
+
+            XActivityindicator.hide();
 
             if (httpResult.getRet() != 200) {
 

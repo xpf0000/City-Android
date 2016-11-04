@@ -309,7 +309,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 		});
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
 		mToolBarHelper = new ToolBarHelper(this,layoutResID) ;
 		toolbar = mToolBarHelper.getToolBar() ;
@@ -436,18 +436,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
 		}
 
 		return true;
-	}
-
-	public boolean CheckUserPower(String str)
-	{
-		boolean b = APPDataCache.User.getPowerArr().contains(str);
-
-		if(!b)
-		{
-			doShowToast("您没有该操作权限,无法使用此功能");
-		}
-
-		return b;
 	}
 
 

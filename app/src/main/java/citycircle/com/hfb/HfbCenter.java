@@ -1,5 +1,6 @@
 package citycircle.com.hfb;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -9,8 +10,12 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.baidu.mapapi.map.Text;
+import com.bigkoo.svprogresshud.SVProgressHUD;
+import com.bigkoo.svprogresshud.listener.OnDismissListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -19,11 +24,16 @@ import java.util.List;
 import citycircle.com.MyAppService.LocationApplication;
 import citycircle.com.R;
 import model.GoodsModel;
+import model.UserModel;
 import util.BaseActivity;
+import util.XAPPUtil;
+import util.XActivityindicator;
 import util.XGridView;
 import util.XNetUtil;
 
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 import static citycircle.com.MyAppService.LocationApplication.APPService;
+import static citycircle.com.MyAppService.LocationApplication.SW;
 
 /**
  * Created by X on 2016/11/1.
@@ -31,28 +41,35 @@ import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 public class HfbCenter extends BaseActivity {
 
+    private ScrollView scroll;
     private XGridView gview;
     private HFBGoodsAdapter adapter;
     private List<GoodsModel> dataArr = new ArrayList<>();
 
-    public void setDataArr(List<GoodsModel> dataArr) {
-        this.dataArr = dataArr;
-        adapter.notifyDataSetChanged();
+    private TextView tatle;
+    private TextView donetxt;
+    private ImageView doneicon;
+
+    private String uid = "";
+    private String uname = "";
+
+    @Override
+    protected void setupData() {
+
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        getWindow().setAttributes(params);
-
+    protected void setupUi() {
         setContentView(R.layout.hfbcenter);
+        setPageTitle("怀府币中心");
 
-        doHideBackBtn();
-        //setRightImg(R.drawable.user_head);
+        uid = APPDataCache.User.getUid();
+        uname = APPDataCache.User.getUsername();
 
+        tatle = (TextView) findViewById(R.id.hfbcenter_tatle);
+        donetxt = (TextView) findViewById(R.id.hfbcenter_donetxt);
+        doneicon = (ImageView) findViewById(R.id.hfbcenter_doneicon);
+        scroll = (ScrollView) findViewById(R.id.hfbcenter_scroll);
         gview = (XGridView) findViewById(R.id.hfbcenter_grid);
         gview.setScrollEnable(false);
 
@@ -62,15 +79,21 @@ public class HfbCenter extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                GoodsModel m = dataArr.get(i);
+                doDH(view,m);
             }
         });
 
         adapter = new HFBGoodsAdapter();
-
         gview.setAdapter(adapter);
-
         getGoods();
 
+    }
+
+
+    public void setDataArr(List<GoodsModel> dataArr) {
+        this.dataArr = dataArr;
+        adapter.notifyDataSetChanged();
     }
 
     private void getGoods() {
@@ -85,13 +108,90 @@ public class HfbCenter extends BaseActivity {
 
             @Override
             public void onSuccess(List<GoodsModel> arrs) {
-
                 setDataArr(arrs);
             }
         });
 
+    }
+
+    public void doQD(final View v) {
+        XActivityindicator.create(this).show();
+        v.setEnabled(false);
+        XNetUtil.Handle(APPService.jifenAddQiandao(uid,uname), "签到成功", "签到失败", new XNetUtil.OnHttpResult<Boolean>() {
+            @Override
+            public void onError(Throwable e) {
+                XNetUtil.APPPrintln(e);
+                v.setEnabled(true);
+            }
+
+            @Override
+            public void onSuccess(Boolean aBoolean) {
+                v.setEnabled(!aBoolean);
+                if(aBoolean)
+                {
+                    doneicon.setVisibility(View.VISIBLE);
+                    donetxt.setText("已完成");
+                    int c = Color.parseColor("#21adfd");
+                    donetxt.setTextColor(c);
+                }
+            }
+        });
+
+    }
+
+    private void getHFB()
+    {
+        XNetUtil.Handle(APPService.jifenGetUinfo(uid,uname), new XNetUtil.OnHttpResult<List<UserModel>>() {
+            @Override
+            public void onError(Throwable e) {
+
+                XNetUtil.APPPrintln("!!!!!! jifenGetUinfo error: "+e);
+
+            }
+
+            @Override
+            public void onSuccess(List<UserModel> arrs) {
+
+                XNetUtil.APPPrintln(arrs.toString());
+
+                if(arrs.size() > 0)
+                {
+                    UserModel u = arrs.get(0);
+
+                    XNetUtil.APPPrintln(u.toString());
+
+                    tatle.setText(u.getHfb()+"个");
+
+                    if(u.getOrqd() != 1)
+                    {
+                        doneicon.setVisibility(View.INVISIBLE);
+                        donetxt.setText("还未签到");
+                        int c = Color.parseColor("#333333");
+                        donetxt.setTextColor(c);
+                    }
 
 
+                }
+
+            }
+        });
+    }
+
+    public void doDH(final View v,GoodsModel model) {
+        XActivityindicator.create(this).show();
+        v.setEnabled(false);
+        XNetUtil.Handle(APPService.jifenAddDH(uid,uname,model.getId()), "兑换成功", "兑换失败", new XNetUtil.OnHttpResult<Boolean>() {
+            @Override
+            public void onError(Throwable e) {
+                XNetUtil.APPPrintln(e);
+                v.setEnabled(true);
+            }
+
+            @Override
+            public void onSuccess(Boolean aBoolean) {
+                v.setEnabled(true);
+            }
+        });
 
     }
 
@@ -99,7 +199,7 @@ public class HfbCenter extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        getHFB();
     }
 
     // 停止自动翻页
@@ -110,34 +210,16 @@ public class HfbCenter extends BaseActivity {
 
     }
 
-    public void toBanKa(View v) {
+    public void leftClick(View v) {
 
-
-    }
-
-    public void toXiaoFei(View v) {
-
+        pushVC(GoodsCenter.class);
 
     }
 
+    public void rightClick(View v) {
 
-    @Override
-    protected void setupData() {
 
     }
-
-    @Override
-    protected void setupUi() {
-
-    }
-
-    @Override
-    public void onCreateCustomToolBar(Toolbar toolbar) {
-        super.onCreateCustomToolBar(toolbar);
-
-    }
-
-
 
 
     /**
@@ -203,7 +285,7 @@ public class HfbCenter extends BaseActivity {
 
             ViewGroup.LayoutParams layoutParams = listItemView.img.getLayoutParams();
 
-            int w = layoutParams.width;
+            int w = SW/2;
             int h = (int)(w*0.75);
 
             layoutParams.height = h;
@@ -215,7 +297,7 @@ public class HfbCenter extends BaseActivity {
 
             ImageLoader.getInstance().displayImage(img,listItemView.img);
             listItemView.name.setText(name);
-            listItemView.price.setText(price);
+            listItemView.price.setText(price+"怀府币");
 
             // 返回convertView对象
             return convertView;
