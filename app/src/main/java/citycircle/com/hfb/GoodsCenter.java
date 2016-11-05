@@ -135,6 +135,16 @@ public class GoodsCenter extends BaseActivity {
 
     }
 
+    public void leftClick(View v) {
+
+        pushVC(HfbCenter.class);
+
+    }
+
+    public void rightClick(View v) {
+
+
+    }
 
 
     /**
