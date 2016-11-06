@@ -14,6 +14,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.baidu.mapapi.map.Text;
+import com.bigkoo.alertview.AlertView;
+import com.bigkoo.alertview.OnItemClickListener;
 import com.bigkoo.svprogresshud.SVProgressHUD;
 import com.bigkoo.svprogresshud.listener.OnDismissListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -177,21 +179,36 @@ public class HfbCenter extends BaseActivity {
         });
     }
 
-    public void doDH(final View v,GoodsModel model) {
-        XActivityindicator.create(this).show();
-        v.setEnabled(false);
-        XNetUtil.Handle(APPService.jifenAddDH(uid,uname,model.getId()), "兑换成功", "兑换失败", new XNetUtil.OnHttpResult<Boolean>() {
-            @Override
-            public void onError(Throwable e) {
-                XNetUtil.APPPrintln(e);
-                v.setEnabled(true);
-            }
+    public void doDH(final View v,final GoodsModel model) {
 
+        AlertView alert = new AlertView("提醒", "确定要兑换该商品?", null, null, new String[]{"取消","确定"}, this, AlertView.Style.Alert, new OnItemClickListener() {
             @Override
-            public void onSuccess(Boolean aBoolean) {
-                v.setEnabled(true);
+            public void onItemClick(Object o, int position) {
+
+                if(position == 1)
+                {
+                    XActivityindicator.create(HfbCenter.this).show();
+                    v.setEnabled(false);
+                    XNetUtil.Handle(APPService.jifenAddDH(uid,uname,model.getId()), "兑换成功", "兑换失败", new XNetUtil.OnHttpResult<Boolean>() {
+                        @Override
+                        public void onError(Throwable e) {
+                            XNetUtil.APPPrintln(e);
+                            v.setEnabled(true);
+                        }
+
+                        @Override
+                        public void onSuccess(Boolean aBoolean) {
+                            v.setEnabled(true);
+                        }
+                    });
+                }
+
             }
         });
+
+        XActivityindicator.setAlert(alert);
+
+        alert.show();
 
     }
 
@@ -218,8 +235,18 @@ public class HfbCenter extends BaseActivity {
 
     public void rightClick(View v) {
 
+        pushVC(YGManageMainVC.class);
 
     }
+
+    public void toDetail(View v) {
+
+        pushVC(JifenDetail.class);
+
+    }
+
+
+
 
 
     /**

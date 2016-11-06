@@ -12,6 +12,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bigkoo.alertview.AlertView;
+import com.bigkoo.alertview.OnItemClickListener;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.handmark.pulltorefresh.library.extras.recyclerview.PullToRefreshRecyclerView;
@@ -25,8 +27,11 @@ import model.BannerModel;
 import model.GoodsModel;
 import util.BaseActivity;
 import util.NetworkImageHolderView;
+import util.XActivityindicator;
+import util.XInterface;
 import util.XNetUtil;
 
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 import static citycircle.com.MyAppService.LocationApplication.APPService;
 import static citycircle.com.MyAppService.LocationApplication.SW;
 
@@ -41,6 +46,8 @@ public class GoodsCenter extends BaseActivity {
     private GoodsAdapter adapter;
     private List<GoodsModel> dataArr = new ArrayList<>();
     private List<BannerModel> bannerArr = new ArrayList<>();
+    private String uid = "";
+    private String uname = "";
 
     @Override
     protected void setupUi() {
@@ -50,7 +57,8 @@ public class GoodsCenter extends BaseActivity {
         list = (PullToRefreshRecyclerView)findViewById(R.id.goodscenger_list);
         mRecyclerView = list.getRefreshableView();
 
-
+        uid = APPDataCache.User.getUid();
+        uname = APPDataCache.User.getUsername();
 
         //设置布局管理器
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
@@ -78,6 +86,16 @@ public class GoodsCenter extends BaseActivity {
         mRecyclerView.setHasFixedSize(false);
 
         adapter = new GoodsAdapter(mContext);
+
+        adapter.setOnItemClickLitener(new XInterface()
+        {
+            @Override
+            public void onItemClick(View view, int position)
+            {
+                doDH(view,position);
+            }
+        });
+
         mRecyclerView.setAdapter(adapter);
 
         getBanner();
@@ -93,6 +111,44 @@ public class GoodsCenter extends BaseActivity {
     public void setDataArr(List<GoodsModel> dataArr) {
         this.dataArr = dataArr;
         adapter.notifyDataSetChanged();
+    }
+
+
+    public void doDH(final View v,final int p) {
+
+        v.setEnabled(false);
+
+        AlertView alert = new AlertView("提醒", "确定要兑换该商品?", null, null, new String[]{"取消","确定"}, this, AlertView.Style.Alert, new OnItemClickListener() {
+            @Override
+            public void onItemClick(Object o, int position) {
+
+                if(position == 1)
+                {
+                    GoodsModel model = dataArr.get(p);
+
+                    XActivityindicator.create(GoodsCenter.this).show();
+                    v.setEnabled(false);
+                    XNetUtil.Handle(APPService.jifenAddDH(uid,uname,model.getId()), "兑换成功", "兑换失败", new XNetUtil.OnHttpResult<Boolean>() {
+                        @Override
+                        public void onError(Throwable e) {
+                            XNetUtil.APPPrintln(e);
+                            v.setEnabled(true);
+                        }
+
+                        @Override
+                        public void onSuccess(Boolean aBoolean) {
+                            v.setEnabled(true);
+                        }
+                    });
+                }
+
+            }
+        });
+
+        XActivityindicator.setAlert(alert);
+
+        alert.show();
+
     }
 
     private void getBanner() {
@@ -143,7 +199,7 @@ public class GoodsCenter extends BaseActivity {
 
     public void rightClick(View v) {
 
-
+        pushVC(DHRecord.class);
     }
 
 
@@ -151,6 +207,13 @@ public class GoodsCenter extends BaseActivity {
      * 定义ListView适配器MainListViewAdapter
      */
     private class GoodsAdapter extends RecyclerView.Adapter {
+
+        private XInterface mOnItemClickLitener;
+
+        public void setOnItemClickLitener(XInterface mOnItemClickLitener)
+        {
+            this.mOnItemClickLitener = mOnItemClickLitener;
+        }
 
         private  class ViewHolder extends RecyclerView.ViewHolder
         {
@@ -249,6 +312,23 @@ public class GoodsCenter extends BaseActivity {
                 ImageLoader.getInstance().displayImage(img,viewHolder.img);
                 viewHolder.name.setText(name);
                 viewHolder.price.setText(price+"怀府币");
+
+                int c = Color.parseColor("#F45C2B");
+                viewHolder.price.setTextColor(c);
+
+                //如果设置了回调，则设置点击事件
+                if (mOnItemClickLitener != null)
+                {
+                    holder.itemView.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mOnItemClickLitener.onItemClick(holder.itemView, i-1);
+                        }
+                    });
+
+                }
             }
 
         }

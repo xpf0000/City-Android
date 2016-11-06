@@ -74,6 +74,8 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:padding="12dp"
+            android:clickable="true"
+            android:onClick="toDetail"
             >
 
             <TextView
