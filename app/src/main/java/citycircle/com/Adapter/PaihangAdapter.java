@@ -5,7 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +25,15 @@ import model.HFBModel;
 
 public class PaihangAdapter extends BaseAdapter {
 
-    public List<HFBModel> dataArr = new ArrayList<>();
+    DisplayImageOptions options = new DisplayImageOptions.Builder()
+            .showImageForEmptyUri(R.mipmap.home_head)
+            .showImageOnFail(R.mipmap.home_head)
+            .build();
+
+    public List<Object> dataArr = new ArrayList<>();
 
     private Context context;
+    public String dw = "";
 
     public PaihangAdapter(Context context) {
         this.context = context;
@@ -61,7 +72,9 @@ public class PaihangAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        ListItemView listItemView;
+        ListItemView1 listItemView1;
+        ListItemView2 listItemView2;
+
         View cell1 = null;
         View cell2 = null;
 
@@ -70,13 +83,91 @@ public class PaihangAdapter extends BaseAdapter {
             if (convertView == null) {
                 cell1 = LayoutInflater.from(context).inflate(
                         R.layout.paihangcell1, null);
-                listItemView = new ListItemView();
-                cell1.setTag(listItemView);
+                listItemView1 = new ListItemView1();
+
+                listItemView1.img1 = (RoundedImageView) cell1
+                        .findViewById(R.id.paihangcell1_img1);
+                listItemView1.img2 = (RoundedImageView) cell1
+                        .findViewById(R.id.paihangcell1_img2);
+                listItemView1.img3 = (RoundedImageView) cell1
+                        .findViewById(R.id.paihangcell1_img3);
+
+                listItemView1.name1 = (TextView) cell1
+                        .findViewById(R.id.paihangcell1_name1);
+                listItemView1.name2 = (TextView) cell1
+                        .findViewById(R.id.paihangcell1_name2);
+                listItemView1.name3 = (TextView) cell1
+                        .findViewById(R.id.paihangcell1_name3);
+
+                listItemView1.day1 = (TextView) cell1
+                        .findViewById(R.id.paihangcell1_day1);
+                listItemView1.day2 = (TextView) cell1
+                        .findViewById(R.id.paihangcell1_day2);
+                listItemView1.day3 = (TextView) cell1
+                        .findViewById(R.id.paihangcell1_day3);
+
+                cell1.setTag(listItemView1);
 
                 convertView = cell1;
 
             } else {
-                listItemView = (ListItemView) convertView.getTag();
+                listItemView1 = (ListItemView1) convertView.getTag();
+            }
+
+            List<HFBModel> arr = (List<HFBModel>) dataArr.get(0);
+
+            if(arr.size() > 0)
+            {
+                HFBModel model = arr.get(0);
+
+                listItemView1.name1.setText(model.getNickname());
+                ImageLoader.getInstance().displayImage(model.getHeadimage(),listItemView1.img1,options);
+
+                if(dw.equals("天"))
+                {
+                    listItemView1.day1.setText(model.getQdday() +"天");
+                }
+                else
+                {
+                    listItemView1.day1.setText(model.getHfb()+"怀府币");
+                }
+
+            }
+
+            if(arr.size() > 1)
+            {
+                HFBModel model = arr.get(1);
+
+                listItemView1.name2.setText(model.getNickname());
+                ImageLoader.getInstance().displayImage(model.getHeadimage(),listItemView1.img2,options);
+
+                if(dw.equals("天"))
+                {
+                    listItemView1.day2.setText(model.getQdday() +"天");
+                }
+                else
+                {
+                    listItemView1.day2.setText(model.getHfb()+"怀府币");
+                }
+
+            }
+
+            if(arr.size() > 2)
+            {
+                HFBModel model = arr.get(2);
+
+                listItemView1.name3.setText(model.getNickname());
+                ImageLoader.getInstance().displayImage(model.getHeadimage(),listItemView1.img3,options);
+
+                if(dw.equals("天"))
+                {
+                    listItemView1.day3.setText(model.getQdday() +"天");
+                }
+                else
+                {
+                    listItemView1.day3.setText(model.getHfb()+"怀府币");
+                }
+
             }
 
         }
@@ -85,13 +176,40 @@ public class PaihangAdapter extends BaseAdapter {
             if (convertView == null) {
                 cell2 = LayoutInflater.from(context).inflate(
                         R.layout.paihangcell2, null);
-                listItemView = new ListItemView();
-                cell2.setTag(listItemView);
+                listItemView2 = new ListItemView2();
+
+                listItemView2.img = (RoundedImageView) cell2
+                        .findViewById(R.id.paihangcell2_img);
+                listItemView2.name = (TextView) cell2
+                        .findViewById(R.id.paihangcell2_name);
+                listItemView2.num = (TextView) cell2
+                        .findViewById(R.id.paihangcell2_num);
+                listItemView2.pm = (TextView) cell2
+                        .findViewById(R.id.paihangcell2_pm);
+
+                cell2.setTag(listItemView2);
 
                 convertView = cell2;
 
             } else {
-                listItemView = (ListItemView) convertView.getTag();
+                listItemView2 = (ListItemView2) convertView.getTag();
+            }
+
+
+            HFBModel model = (HFBModel) dataArr.get(position);
+
+            listItemView2.pm.setText((position+3)+"");
+            listItemView2.name.setText(model.getNickname());
+
+            ImageLoader.getInstance().displayImage(model.getHeadimage(),listItemView2.img,options);
+
+            if(dw.equals("天"))
+            {
+                listItemView2.num.setText(model.getQdday() +"天");
+            }
+            else
+            {
+                listItemView2.num.setText(model.getHfb()+"怀府币");
             }
 
         }
@@ -118,8 +236,26 @@ public class PaihangAdapter extends BaseAdapter {
     /**
      * 封装两个视图组件的类
      */
-    class ListItemView {
-        TextView title;
+    class ListItemView1 {
+        RoundedImageView img1;
+        RoundedImageView img2;
+        RoundedImageView img3;
+
+        TextView name1;
+        TextView name2;
+        TextView name3;
+
+        TextView day1;
+        TextView day2;
+        TextView day3;
+    }
+
+    class ListItemView2 {
+        TextView pm;
+        RoundedImageView img;
+        TextView name;
+        TextView num;
+
     }
 
 }

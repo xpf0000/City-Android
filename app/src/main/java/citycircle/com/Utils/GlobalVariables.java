@@ -13,7 +13,7 @@ public class GlobalVariables {
     //    public static String urlstr="http://192.168.2.177:8089/Api";
 //    public static String urlstr = "http://123.57.28.170/csl/api/Public/Found/?service=";
 //        public static String urlstr="http://101.201.169.38/api/Public/Found/?service=";
-    public static String urlstr = "http://123.57.162.97/hfapi/Public/Found/?service=";
+    public static String urlstr = "http://182.92.70.85/hfapi/Public/Found/?service=";
     public static String oaurlstr = "http://101.201.169.38/apioa/Public/OA/?service=";
     public static String imgurlstr = "http://123.57.28.170/csl/test/";
     public static String imgurl = "http://123.57.28.170";

@@ -65,7 +65,19 @@ public class HttpResult<T> {
          * title : 推荐
          */
 
+
+
         private T info;
+
+        private Uinfo uinfo;
+
+        public Uinfo getUinfo() {
+            return uinfo;
+        }
+
+        public void setUinfo(Uinfo uinfo) {
+            this.uinfo = uinfo;
+        }
 
         public int getCode() {
             return code;
@@ -102,6 +114,63 @@ public class HttpResult<T> {
                     '}';
         }
     }
+
+    public class Uinfo
+    {
+        /**
+         * pm : 2
+         * nick : xxxpppfff
+         * headimage : http://7xotdy.com2.z0.glb.qiniucdn.com/2016-08-17_57b41738cfa85.jpg
+         * qdday : 4
+         */
+
+        private String pm;
+        private String nick;
+        private String headimage;
+        private String qdday;
+        private String hfb;
+
+        public String getHfb() {
+            return hfb;
+        }
+
+        public void setHfb(String hfb) {
+            this.hfb = hfb;
+        }
+
+        public String getPm() {
+            return pm;
+        }
+
+        public void setPm(String pm) {
+            this.pm = pm;
+        }
+
+        public String getNick() {
+            return nick;
+        }
+
+        public void setNick(String nick) {
+            this.nick = nick;
+        }
+
+        public String getHeadimage() {
+            return headimage;
+        }
+
+        public void setHeadimage(String headimage) {
+            this.headimage = headimage;
+        }
+
+        public String getQdday() {
+            return qdday;
+        }
+
+        public void setQdday(String qdday) {
+            this.qdday = qdday;
+        }
+    }
+
 
     @Override
     public String toString() {

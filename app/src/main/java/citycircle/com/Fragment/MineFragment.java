@@ -33,6 +33,7 @@ import citycircle.com.Utils.ImageUtils;
 import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.hfb.HfbCenter;
+import citycircle.com.user.MyMinePage;
 import okhttp3.Call;
 
 /**
@@ -170,9 +171,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                     }
                     break;
 
-//            case "1":
-//                System.out.println("click "+v.getTag()+" !!!!!!!");
-//                break;
+                case "1":
+                    intent.setClass(getActivity(), MyMinePage.class);
+                    getActivity().startActivity(intent);
+                break;
 
                 case "8":
                     intent.setClass(getActivity(), SetActivity.class);

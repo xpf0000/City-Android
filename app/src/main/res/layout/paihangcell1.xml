@@ -12,8 +12,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:background="#ffffff"
-    android:layout_marginTop="190dp"
+    android:background="@drawable/paihangstroke1"
+    android:layout_marginTop="180dp"
     >
 
     <TextView
@@ -26,76 +26,20 @@
         />
 
     <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/shop_setup_img2"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:riv_corner_radius="20dp"
+        android:id="@+id/paihangcell1_img2"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:riv_corner_radius="30dp"
         android:scaleType="fitXY"
-        app:riv_border_width="4dp"
+        app:riv_border_width="0dp"
         app:riv_border_color="@color/white"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:src="@mipmap/home_head"
-        android:clickable="true"
-        android:onClick="chooseHeaderImg"
         />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="xxxxxx"
-        android:textSize="16sp"
-        android:textColor="@color/APPOrangeJifen"
-        android:layout_weight="1"
-        android:layout_marginBottom="10dp"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0天"
-        android:textSize="16sp"
-        android:textColor="@color/APPOrangeJifen"
-        android:layout_marginBottom="10dp"
-        />
-
-</LinearLayout>
-
-    <LinearLayout
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:background="#ffffff"
-        android:layout_marginTop="150dp"
-        >
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1"
-            android:textSize="24sp"
-            android:textColor="@color/APPOrangeJifen"
-            android:layout_marginTop="10dp"
-            />
-
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/shop_setup_img1"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:riv_corner_radius="20dp"
-            android:scaleType="fitXY"
-            app:riv_border_width="4dp"
-            app:riv_border_color="@color/white"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:src="@mipmap/home_head"
-            android:clickable="true"
-            android:onClick="chooseHeaderImg"
-            />
-
-        <TextView
+            android:id="@+id/paihangcell1_name2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="xxxxxx"
@@ -106,15 +50,99 @@
             />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0天"
-            android:textSize="16sp"
-            android:textColor="@color/APPOrangeJifen"
-            android:layout_marginBottom="50dp"
-            />
+            android:id="@+id/paihangcell1_day2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0天"
+        android:textSize="16sp"
+        android:textColor="@color/APPOrangeJifen"
+        android:layout_marginBottom="10dp"
+        />
 
-    </LinearLayout>
+</LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@drawable/paihangstroke2_1"
+            android:layout_marginTop="140dp"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:textSize="24sp"
+                android:textColor="@color/APPOrangeJifen"
+                android:layout_marginTop="10dp"
+                />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/paihangcell1_img1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:riv_corner_radius="30dp"
+                android:scaleType="fitXY"
+                app:riv_border_width="0dp"
+                app:riv_border_color="@color/white"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:src="@mipmap/home_head"
+                />
+
+            <TextView
+                android:id="@+id/paihangcell1_name1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="xxxxxx"
+                android:textSize="16sp"
+                android:textColor="@color/APPOrangeJifen"
+                android:layout_weight="1"
+                android:layout_marginBottom="10dp"
+                />
+
+            <TextView
+                android:id="@+id/paihangcell1_day1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0天"
+                android:textSize="16sp"
+                android:textColor="@color/APPOrangeJifen"
+                android:layout_marginBottom="50dp"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="140dp"
+            android:background="@drawable/paihangstroke2"
+            android:gravity="center_horizontal"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:textSize="24sp"
+                android:textColor="@color/APPOrangeJifen"
+                android:layout_marginTop="10dp"
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
 
     <LinearLayout
         android:layout_weight="1"
@@ -122,8 +150,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:background="#ffffff"
-        android:layout_marginTop="190dp"
+        android:background="@drawable/paihangstroke3"
+        android:layout_marginTop="180dp"
         >
 
         <TextView
@@ -136,21 +164,20 @@
             />
 
         <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/shop_setup_img3"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:riv_corner_radius="20dp"
+            android:id="@+id/paihangcell1_img3"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:riv_corner_radius="30dp"
             android:scaleType="fitXY"
-            app:riv_border_width="4dp"
+            app:riv_border_width="0dp"
             app:riv_border_color="@color/white"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:src="@mipmap/home_head"
-            android:clickable="true"
-            android:onClick="chooseHeaderImg"
             />
 
         <TextView
+            android:id="@+id/paihangcell1_name3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="xxxxxx"
@@ -161,6 +188,7 @@
             />
 
         <TextView
+            android:id="@+id/paihangcell1_day3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0天"

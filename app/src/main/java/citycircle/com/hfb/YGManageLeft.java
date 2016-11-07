@@ -7,10 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +23,7 @@ import citycircle.com.Adapter.PaihangAdapter;
 import citycircle.com.MyAppService.LocationApplication;
 import citycircle.com.R;
 import model.HFBModel;
+import util.HttpResult;
 import util.XHorizontalBaseFragment;
 import util.XNetUtil;
 
@@ -32,13 +37,22 @@ public class YGManageLeft extends XHorizontalBaseFragment
     private PullToRefreshListView list;
     private PaihangAdapter adapter;
 
-    public List<HFBModel> dataArr = new ArrayList<>();
+    public List<Object> dataArr = new ArrayList<>();
     private int page = 1;
     private boolean end = false;
 
     private Context context;
 
-    public int selectIndex = 0;
+    private TextView pm;
+    private RoundedImageView img;
+    private TextView name;
+    private TextView num;
+
+    DisplayImageOptions options = new DisplayImageOptions.Builder()
+            .showImageForEmptyUri(R.mipmap.home_head)
+            .showImageOnFail(R.mipmap.home_head)
+            .build();
+
 
     public void refresh()
     {
@@ -52,6 +66,7 @@ public class YGManageLeft extends XHorizontalBaseFragment
 
         // 获取MainListAdapter对象
         adapter = new PaihangAdapter(getActivity());
+        adapter.dw = "天";
         // 将MainListAdapter对象传递给ListView视图
 
         if(list != null)
@@ -88,6 +103,15 @@ public class YGManageLeft extends XHorizontalBaseFragment
         System.out.println("RightFragment--->onCreateView");
         View v = inflater.inflate(R.layout.qiandaopaihang, container, false);
         list = (PullToRefreshListView) v.findViewById(R.id.qiandaopaihang_list);
+
+        img = (RoundedImageView) v
+                .findViewById(R.id.qiandaopaihang_header);
+        name = (TextView) v
+                .findViewById(R.id.qiandaopaihang_name);
+        num = (TextView) v
+                .findViewById(R.id.qiandaopaihang_num);
+        pm = (TextView) v
+                .findViewById(R.id.qiandaopaihang_order);
 
         list.setMode(PullToRefreshBase.Mode.BOTH);
 
@@ -159,15 +183,17 @@ public class YGManageLeft extends XHorizontalBaseFragment
 
         String uid = APPDataCache.User.getUid();
 
-        XNetUtil.Handle(LocationApplication.APPService.JifenGetQDPM(uid, page, 20), new XNetUtil.OnHttpResult<List<HFBModel>>() {
+        XNetUtil.HandleReturnAll(LocationApplication.APPService.JifenGetQDPM(uid, page, 20), new XNetUtil.OnHttpResult<HttpResult<List<HFBModel>>>() {
+
             @Override
             public void onError(Throwable e) {
-
                 XNetUtil.APPPrintln(e);
             }
 
             @Override
-            public void onSuccess(List<HFBModel> models) {
+            public void onSuccess(HttpResult<List<HFBModel>> listHttpResult) {
+
+                List<HFBModel> models = listHttpResult.getData().getInfo();
 
                 if(page == 1)
                 {
@@ -176,7 +202,39 @@ public class YGManageLeft extends XHorizontalBaseFragment
 
                 if(models.size() > 0)
                 {
-                    dataArr.addAll(models);
+                    if(page == 1)
+                    {
+                        if(models.size() > 3)
+                        {
+                            List<HFBModel> arr = new ArrayList<>();
+                            arr.add(models.get(0));
+                            arr.add(models.get(1));
+                            arr.add(models.get(2));
+
+                            dataArr.add(arr);
+
+                            for(int i = 3;i<models.size();i++)
+                            {
+                                dataArr.add(models.get(i));
+                            }
+
+                        }
+                        else
+                        {
+                            List<HFBModel> arr = new ArrayList<>();
+
+                            for(int i = 0;i<models.size();i++)
+                            {
+                                arr.add(models.get(i));
+                            }
+
+                            dataArr.add(arr);
+                        }
+                    }
+                    else
+                    {
+                        dataArr.addAll(models);
+                    }
                 }
 
                 if(models.size() == 20)
@@ -188,11 +246,21 @@ public class YGManageLeft extends XHorizontalBaseFragment
                 {
                     end = true;
                 }
+
+                HttpResult.Uinfo info = listHttpResult.getData().getUinfo();
+
+                pm.setText(info.getPm());
+                name.setText(info.getNick());
+                ImageLoader.getInstance().displayImage(info.getHeadimage(),img,options);
+                num.setText(info.getQdday() +"天");
+
                 adapter.dataArr = dataArr;
                 adapter.notifyDataSetChanged();
                 list.onRefreshComplete();
+
             }
         });
+
 
     }
 
