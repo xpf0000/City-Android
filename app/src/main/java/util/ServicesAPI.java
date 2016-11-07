@@ -6,6 +6,7 @@ import model.BannerModel;
 import model.GoodsModel;
 import model.HFBModel;
 import model.UserModel;
+import model.YouhuiquanModel;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -72,6 +73,14 @@ public interface ServicesAPI {
 
     @GET("?service=jifen.gethfbpm")  //财富排行
     Observable<HttpResult<List<HFBModel>>> jifenethfbpm(
+            @Query("uid") String uid,
+            @Query("page") int page,
+            @Query("perNumber") int perNumber
+    );
+
+
+    @GET("?service=Jifen.getUYHQList")  //我的优惠券
+    Observable<HttpResult<List<YouhuiquanModel>>> JifenGetUYHQList(
             @Query("uid") String uid,
             @Query("page") int page,
             @Query("perNumber") int perNumber

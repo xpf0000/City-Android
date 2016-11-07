@@ -119,6 +119,7 @@ public class UserModel implements Serializable {
     }
 
     public String getUid() {
+        uid = uid == null? "" : uid;
         return uid;
     }
 

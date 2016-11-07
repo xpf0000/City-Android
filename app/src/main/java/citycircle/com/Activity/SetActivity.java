@@ -30,6 +30,7 @@ import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.friends.Wechat;
+import util.XNotificationCenter;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
@@ -213,6 +214,7 @@ public class SetActivity extends Activity {
                 }
 
                 APPDataCache.User.reSet();
+                XNotificationCenter.getInstance().postNotice("UserChanged",null);
 
                 PreferencesUtils.putInt(SetActivity.this, "land", 0);
                 PreferencesUtils.putString(SetActivity.this, "userid", null);

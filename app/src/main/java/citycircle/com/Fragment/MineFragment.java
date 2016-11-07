@@ -1,5 +1,6 @@
 package citycircle.com.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,16 +26,26 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.greenrobot.eventbus.EventBus;
 
 import citycircle.com.Activity.Logn;
+import citycircle.com.Activity.MyCity;
+import citycircle.com.Activity.MyCollect;
 import citycircle.com.Activity.MyInfo;
+import citycircle.com.Activity.MyVipcard;
+import citycircle.com.Activity.Mymessage;
 import citycircle.com.Activity.SetActivity;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
 import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.PreferencesUtils;
+import citycircle.com.hfb.GoodsCenter;
 import citycircle.com.hfb.HfbCenter;
 import citycircle.com.user.MyMinePage;
+import citycircle.com.user.MyYouhuiquan;
 import okhttp3.Call;
+import util.XNetUtil;
+import util.XNotificationCenter;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/11/14.
@@ -58,23 +69,44 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.mine_layout, container, false);
-        //Intent intent = new Intent(getActivity(), CityServices.class);
-        //getActivity().startService(intent);
-        //IntentFilter filter = new IntentFilter(CityServices.action);
-        //getActivity().registerReceiver(broadcastReceiver, filter);
-        intview();
-        //EventBus.getDefault().register(this);
 
-        int a = PreferencesUtils.getInt(getActivity(), "land");
-        if (a == 0) {
-            handler.sendEmptyMessage(2);
-        } else {
-            handler.sendEmptyMessage(1);
-        }
+        XNetUtil.APPPrintln("onCreateView &&&&&&&&&&&&&&");
+
+        intview();
+
+        XNotificationCenter.getInstance().addObserver("UserChanged", new XNotificationCenter.OnNoticeListener() {
+            @Override
+            public void OnNotice(Object obj) {
+                show();
+            }
+        });
 
         return view;
 
+    }
 
+    private void show()
+    {
+        XNetUtil.APPPrintln(APPDataCache.User.toString());
+
+        if(APPDataCache.User.getUid().equals(""))
+        {
+            vip.setText("登录后查看更多");
+            name.setText("点击登录");
+            head.setImageResource(R.mipmap.my_face_icon);
+        }
+        else
+        {
+            options = ImageUtils.setCirclelmageOptions();
+            ImageLoader.displayImage(APPDataCache.User.getHeadimage(), head, options,
+                    animateFirstListener);
+
+            String n = APPDataCache.User.getNickname();
+            String tel = APPDataCache.User.getMobile().equals("") ? "尚未绑定手机号" : APPDataCache.User.getMobile();
+
+            vip.setText(n);
+            name.setText(tel);
+        }
 
     }
 
@@ -109,72 +141,84 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         ImageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
         animateFirstListener = new ImageUtils.AnimateFirstDisplayListener();
 
+        show();
     }
-
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 1:
-                    getJsom();
-                    String names = PreferencesUtils.getString(getActivity(), "username");
-                    vip.setText(PreferencesUtils.getString(getActivity(), "nickname"));
-                    String url = PreferencesUtils.getString(getActivity(), "headimage");
-                    options = ImageUtils.setCirclelmageOptions();
-                    ImageLoader.displayImage(url, head, options,
-                            animateFirstListener);
-                    opid = PreferencesUtils.getString(getActivity(), "openid");
-                    if(opid==null){
-                        opid="";
-                    }
-                    tel =PreferencesUtils.getString(getActivity(),"mobile");
-
-                    int a = PreferencesUtils.getInt(getActivity(), "land");
-
-                        if (tel.length()!=0) {
-                            name.setText("账号:" + tel);
-                        } else {
-                            name.setText("账号:" + names);
-                        }
-
-
-                    break;
-                case 2:
-                    //EventBus.getDefault().post(new MyEventBus("dis"));
-                    name.setText("请登录");
-                    vip.setText("请登录");
-
-                    head.setImageResource(R.mipmap.my_face_icon);
-                    break;
-                case 3:
-                    break;
-            }
-        }
-    };
 
     @Override
     public void onClick(View v) {
+
         Intent intent = new Intent();
+
+        String tag = (String)v.getTag();
+
+        try
+        {
+            Integer t = Integer.parseInt(tag);
+
+            if (t != null && t.intValue() != 8)
+            {
+                int a = PreferencesUtils.getInt(getActivity(), "land");
+                if (a == 0) {
+                    intent.setClass(getActivity(), Logn.class);
+                    getActivity().startActivity(intent);
+
+                    return;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            int a = PreferencesUtils.getInt(getActivity(), "land");
+            if (a == 0) {
+                intent.setClass(getActivity(), Logn.class);
+                getActivity().startActivity(intent);
+
+                return;
+            }
+        }
 
         if(v.getTag() instanceof  String)
         {
             switch ((String)v.getTag()) {
                 case "0":
-                    int a = PreferencesUtils.getInt(getActivity(), "land");
-                    if (a == 0) {
-                        intent.setClass(getActivity(), Logn.class);
-                        getActivity().startActivity(intent);
-                    } else {
-                        intent.setClass(getActivity(), MyInfo.class);
-                        getActivity().startActivity(intent);
-                    }
+                    intent.setClass(getActivity(), MyInfo.class);
+                    getActivity().startActivity(intent);
                     break;
 
                 case "1":
                     intent.setClass(getActivity(), MyMinePage.class);
                     getActivity().startActivity(intent);
                 break;
+
+                case "2":
+                    intent.setClass(getActivity(), MyCity.class);
+                    getActivity().startActivity(intent);
+                    break;
+
+                case "3":
+                    intent.setClass(getActivity(), Mymessage.class);
+                    getActivity().startActivity(intent);
+                    break;
+
+                case "4":
+                    intent.setClass(getActivity(), MyCollect.class);
+                    getActivity().startActivity(intent);
+                    break;
+
+                case "5":
+                    intent.setClass(getActivity(), GoodsCenter.class);
+                    getActivity().startActivity(intent);
+                    break;
+
+                case "6":
+                    intent.setClass(getActivity(), MyVipcard.class);
+                    getActivity().startActivity(intent);
+                    break;
+
+                case "7":
+                    intent.setClass(getActivity(), MyYouhuiquan.class);
+                    getActivity().startActivity(intent);
+                    break;
 
                 case "8":
                     intent.setClass(getActivity(), SetActivity.class);
@@ -199,17 +243,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
     }
 
-//    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            int a = intent.getExtras().getInt("meeage");
-//            if (a == 0) {
-//                handler.sendEmptyMessage(1);
-//            } else if (a == 1) {
-//                handler.sendEmptyMessage(2);
-//            }
-//        }
-//    };
+
+
+
+
 
 
     @Override
@@ -247,5 +284,36 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 }
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        XNetUtil.APPPrintln("onStart %%%%%%%%%%");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        XNetUtil.APPPrintln("onResume *********");
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        XNetUtil.APPPrintln("onAttach #########");
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser) {
+
+            XNetUtil.APPPrintln("isVisibleToUser ~~~~~~~~~~~~~~~");
+
+        }
     }
 }

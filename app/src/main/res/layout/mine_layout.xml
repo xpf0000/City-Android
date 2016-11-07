@@ -94,7 +94,7 @@
                         android:layout_height="wrap_content"
                         android:text="wwww"
                         android:textColor="@color/linecolor"
-                        android:textSize="18sp" />
+                        android:textSize="15sp" />
                 </LinearLayout>
 
                 <ImageView

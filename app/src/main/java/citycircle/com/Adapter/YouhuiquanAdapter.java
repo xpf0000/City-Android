@@ -23,7 +23,7 @@ public class YouhuiquanAdapter extends BaseAdapter {
 
     public List<YouhuiquanModel> dataArr = new ArrayList<>();
     private Context context;
-
+    public int type = 0;
     public YouhuiquanAdapter(Context context) {
         this.context = context;
     }
@@ -71,14 +71,15 @@ public class YouhuiquanAdapter extends BaseAdapter {
             // 实例化一个封装类ListItemView，并实例化它的两个域
             listItemView = new ListItemView();
             listItemView.name = (TextView) convertView
-                    .findViewById(R.id.dhrecard_cell_name);
+                    .findViewById(R.id.myyouhuiquan_cell_name);
             listItemView.time = (TextView) convertView
-                    .findViewById(R.id.dhrecard_cell_time);
-            listItemView.yu = (TextView) convertView
-                    .findViewById(R.id.dhrecard_cell_yu);
-            listItemView.num = (TextView) convertView
-                    .findViewById(R.id.dhrecard_cell_num);
-
+                    .findViewById(R.id.myyouhuiquan_cell_time);
+            listItemView.price = (TextView) convertView
+                    .findViewById(R.id.myyouhuiquan_cell_price);
+            listItemView.dis = (TextView) convertView
+                    .findViewById(R.id.myyouhuiquan_cell_dis);
+            listItemView.state = (TextView) convertView
+                    .findViewById(R.id.myyouhuiquan_cell_state);
 
             // 将ListItemView对象传递给convertView
             convertView.setTag(listItemView);
@@ -89,15 +90,30 @@ public class YouhuiquanAdapter extends BaseAdapter {
 
 
 //        // 获取到mList中指定索引位置的资源
-//        String name = dataArr.get(position).getName();
-//        String time = dataArr.get(position).getCreate_time();
-//        String yu = "余额:"+dataArr.get(position).getHfbsy()+"个";
-//        String num = "+"+dataArr.get(position).getHfb();
-//
-//        listItemView.name.setText(name);
-//        listItemView.time.setText(time);
-//        listItemView.yu.setText(yu);
-//        listItemView.num.setText(num);
+
+
+        String time = dataArr.get(position).getS_time()+"至"+dataArr.get(position).getE_time();
+        String price = "￥"+dataArr.get(position).getMoney();
+        String dis = dataArr.get(position).getS_money();
+        dis = dis.equals("0") ? "无门槛使用":"满"+dis+"使用";
+
+        int state = dataArr.get(position).getOrlq();
+        String str = "";
+
+        if(type == 0)
+        {
+            str = dataArr.get(position).getOrlq() == 1? "已领取":"立即\r\n领取";
+        }
+        else
+        {
+            str = "已领取";
+        }
+
+
+        listItemView.time.setText(time);
+        listItemView.price.setText(price);
+        listItemView.dis.setText(dis);
+        listItemView.state.setText(str);
 
         // 返回convertView对象
         return convertView;
@@ -105,10 +121,11 @@ public class YouhuiquanAdapter extends BaseAdapter {
 
 
     class ListItemView {
+        TextView price;
         TextView name;
+        TextView dis;
         TextView time;
-        TextView yu;
-        TextView num;
+        TextView state;
     }
 
 }

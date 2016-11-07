@@ -46,6 +46,7 @@ import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.friends.Wechat;
 import model.UserModel;
 import util.DataCache;
+import util.XNotificationCenter;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
@@ -195,6 +196,8 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
                             APPDataCache.User.copy(user);
 
                         }
+
+                        XNotificationCenter.getInstance().postNotice("UserChanged",null);
 
                         PreferencesUtils.putInt(Logn.this, "land", 1);
                         Intent intent = new Intent();
