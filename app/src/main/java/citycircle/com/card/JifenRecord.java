@@ -1,6 +1,5 @@
-package citycircle.com.Activity;
+package citycircle.com.card;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,9 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -20,28 +17,28 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import java.util.ArrayList;
 import java.util.List;
 
-import citycircle.com.Adapter.MyWallAdapter;
+import citycircle.com.Adapter.JifenRecordAdapter;
 import citycircle.com.JsonMordel.WallJsonMo;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.Loadmore;
-import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
 import util.XNetUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
- * Created by admins on 2016/6/30.
+ * Created by X on 2016/11/8.
  */
-public class VipCardConInfo extends Fragment {
+
+public class JifenRecord extends Fragment {
     View view;
     SwipeRefreshLayout swipeRefreshLayout;
     ListView walletlist;
     WallJsonMo wallJsonMo;
     List<WallJsonMo.DataBean.InfoBean> list = new ArrayList<>();
     String url, username,id;
-    MyWallAdapter adapter;
+    JifenRecordAdapter adapter;
     int page=1;
     Loadmore loadmore;
 
@@ -59,7 +56,7 @@ public class VipCardConInfo extends Fragment {
         }
 
         username = APPDataCache.User.getUsername();
-        url = GlobalVariables.urlstr + "Hyk.getUserMoneys&username=" + username+"&page="+page+"&id="+id;
+        url = GlobalVariables.urlstr + "hyk.getCardjf&username=" + username+"&page="+page+"&id="+id;
 
         intview();
         setWalletlist();
@@ -73,11 +70,9 @@ public class VipCardConInfo extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
             Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.mywallet, null);
+        view = inflater.inflate(R.layout.jifenrecord, null);
         init();
-
         return view;
-
     }
 
     private void intview() {
@@ -89,7 +84,7 @@ public class VipCardConInfo extends Fragment {
             @Override
             public void loadmore() {
                 page++;
-                url = GlobalVariables.urlstr + "Hyk.getUserMoneys&username=" + username+"&page="+page+"&id="+id;
+                url = GlobalVariables.urlstr + "hyk.getCardjf&username=" + username+"&page="+page+"&id="+id;
                 getJson(0);
             }
         });
@@ -97,7 +92,7 @@ public class VipCardConInfo extends Fragment {
             @Override
             public void onRefresh() {
                 page=1;
-                url = GlobalVariables.urlstr + "Hyk.getUserMoneys&username=" + username+"&page="+page+"&id="+id;
+                url = GlobalVariables.urlstr + "hyk.getCardjf&username=" + username+"&page="+page+"&id="+id;
                 getJson(1);
             }
         });
@@ -135,7 +130,7 @@ public class VipCardConInfo extends Fragment {
         });
     }
     private void setWalletlist(){
-        adapter=new MyWallAdapter(list,getActivity());
+        adapter=new JifenRecordAdapter(list,getActivity());
         walletlist.setAdapter(adapter);
     }
 }

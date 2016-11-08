@@ -8,9 +8,11 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,14 +31,19 @@ import citycircle.com.MyViews.CallPhonePop;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
+import citycircle.com.card.CardGetedInfo;
+import citycircle.com.card.ShopsRenzheng;
+import citycircle.com.card.ShopsYouhuiquan;
 import okhttp3.Call;
+
+import static citycircle.com.MyAppService.LocationApplication.SW;
 
 /**
  * Created by admins on 2016/6/2.
  */
 public class ShopInfo extends Activity implements View.OnClickListener {
     ImageView back, shopimg;
-    TextView tell_phone, adress, title, vipcard, shophd;
+    TextView tell_phone, adress, title, shophd;
     String url, id, shopname;
     ShopinfoMo shopinfoMo;
     List<ShopinfoMo.DataBean.InfoBean> list = new ArrayList<>();
@@ -46,6 +53,8 @@ public class ShopInfo extends Activity implements View.OnClickListener {
     ImageLoadingListener animateFirstListener;
     CallPhonePop callPhonePop;
     WebView content;
+    LinearLayout youhuiquan;
+    LinearLayout renzheng;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,8 +73,6 @@ public class ShopInfo extends Activity implements View.OnClickListener {
         content.getSettings().setJavaScriptEnabled(true);
         content.getSettings().getJavaScriptEnabled();
         content.setWebChromeClient(new WebChromeClient());
-        vipcard = (TextView) findViewById(R.id.vipcard);
-        vipcard.setOnClickListener(this);
         shophd = (TextView) findViewById(R.id.shophd);
         shophd.setOnClickListener(this);
         title = (TextView) findViewById(R.id.title);
@@ -73,6 +80,11 @@ public class ShopInfo extends Activity implements View.OnClickListener {
         shopimg = (ImageView) findViewById(R.id.shopimg);
         tell_phone = (TextView) findViewById(R.id.tell_phone);
         adress = (TextView) findViewById(R.id.adress);
+        youhuiquan = (LinearLayout) findViewById(R.id.youhuiquan);
+        renzheng = (LinearLayout) findViewById(R.id.renzheng);
+
+        renzheng.setOnClickListener(this);
+        youhuiquan.setOnClickListener(this);
         back.setOnClickListener(this);
         tell_phone.setOnClickListener(this);
         ImageUtils = new ImageUtils();
@@ -80,6 +92,16 @@ public class ShopInfo extends Activity implements View.OnClickListener {
         ImageLoader.init(ImageLoaderConfiguration.createDefault(this));
         animateFirstListener = new ImageUtils.AnimateFirstDisplayListener();
         title.setText(shopname);
+
+
+        ViewGroup.LayoutParams layoutParams = shopimg.getLayoutParams();
+
+        int w = SW;
+        int h = (int)(w*7.0/16.0);
+
+        layoutParams.height = h;
+        shopimg.setLayoutParams(layoutParams);
+
     }
 
     private void getJson() {
@@ -95,10 +117,14 @@ public class ShopInfo extends Activity implements View.OnClickListener {
                 if (shopinfoMo.getData().getCode() == 0) {
                     list.addAll(shopinfoMo.getData().getInfo());
                     for (int i = 0; i < list.size(); i++) {
+
+                        if(list.get(i).getOrvip().equals("0"))
+                        {
+                            renzheng.setVisibility(View.GONE);
+                        }
+
                         String strs="电话:" + list.get(i).getTel();
-                        SpannableStringBuilder stringBuilders = new SpannableStringBuilder(strs);
-                        stringBuilders.setSpan(new ForegroundColorSpan(Color.parseColor("#21adfd")), 3, strs.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        tell_phone.setText(stringBuilders);
+                        tell_phone.setText(strs);
                         adress.setText("地址:" + list.get(i).getAddress());
                         String info = "<html>\r\n\t"
                                 + "<head>\r\n"
@@ -130,9 +156,15 @@ public class ShopInfo extends Activity implements View.OnClickListener {
             case R.id.back:
                 finish();
                 break;
-            case R.id.vipcard:
-                intent.setClass(ShopInfo.this, ShopVipcard.class);
-                ShopInfo.this.startActivity(intent);
+            case R.id.youhuiquan:
+                intent.putExtra("id", id);
+                intent.setClass(ShopInfo.this, ShopsYouhuiquan.class);
+                startActivity(intent);
+                break;
+            case R.id.renzheng:
+                intent.putExtra("id", id);
+                intent.setClass(ShopInfo.this, ShopsRenzheng.class);
+                startActivity(intent);
                 break;
             case R.id.shophd:
                 intent.setClass(ShopInfo.this, ShopCam.class);

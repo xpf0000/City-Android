@@ -2,6 +2,8 @@ package citycircle.com.JsonMordel;
 
 import java.util.List;
 
+import util.DateUtils;
+
 /**
  * Created by admins on 2016/6/21.
  */
@@ -92,6 +94,25 @@ public class WallJsonMo {
             private String shopname;
             private int xftype;
             private int cardtype;
+
+            private String jf="";
+            private String jfsy="";
+
+            public String getJf() {
+                return jf;
+            }
+
+            public void setJf(String jf) {
+                this.jf = jf;
+            }
+
+            public String getJfsy() {
+                return jfsy;
+            }
+
+            public void setJfsy(String jfsy) {
+                this.jfsy = jfsy;
+            }
 
             public String getMoney() {
                 return money;

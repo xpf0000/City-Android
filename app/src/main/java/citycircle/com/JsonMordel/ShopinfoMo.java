@@ -92,6 +92,15 @@ public class ShopinfoMo {
             private String address;
             private String info;
             private String id;
+            private String orvip;
+
+            public String getOrvip() {
+                return orvip;
+            }
+
+            public void setOrvip(String orvip) {
+                this.orvip = orvip;
+            }
 
             public String getLogo() {
                 return logo;

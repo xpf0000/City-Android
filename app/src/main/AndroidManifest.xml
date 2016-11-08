@@ -269,9 +269,6 @@
         <activity
             android:name=".Activity.SearchVip"
             android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".Activity.VipCardConInfo"
-            android:screenOrientation="portrait"></activity>
 
         <meta-data
             android:name="UMENG_APPKEY"
@@ -438,6 +435,24 @@
         <activity
             android:name=".user.MyYouhuiquan"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".card.ShopsYouhuiquan"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".card.ShopsRenzheng"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".card.CardGetedInfo"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".card.XiaofeiRecord"
             android:screenOrientation="portrait"></activity>
 
 

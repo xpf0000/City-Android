@@ -102,6 +102,15 @@ public class VipInfo {
             private String address;
             private String info;
             private String shopid;
+            private String jifen;
+
+            public String getJifen() {
+                return jifen;
+            }
+
+            public void setJifen(String jifen) {
+                this.jifen = jifen;
+            }
 
             public String getId() {
                 return id;

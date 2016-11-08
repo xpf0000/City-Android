@@ -34,6 +34,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.Loadmore;
 import citycircle.com.Utils.PreferencesUtils;
+import citycircle.com.card.CardGetedInfo;
 import okhttp3.Call;
 
 /**
@@ -209,7 +210,7 @@ public class Alrece extends Fragment implements View.OnClickListener, AdapterVie
                 } else {
                     intent.putExtra("id", arrayList.get(position).get("hcmid"));
                     intent.putExtra("orlq", Integer.parseInt(arrayList.get(position).get("orlq")));
-                    intent.setClass(getActivity(), VipcardInfo.class);
+                    intent.setClass(getActivity(), CardGetedInfo.class);
                 }
                 getActivity().startActivity(intent);
                 break;

@@ -5,6 +5,7 @@ import java.util.List;
 import model.BannerModel;
 import model.GoodsModel;
 import model.HFBModel;
+import model.RenzhengModel;
 import model.UserModel;
 import model.YouhuiquanModel;
 import retrofit2.http.GET;
@@ -84,6 +85,19 @@ public interface ServicesAPI {
             @Query("uid") String uid,
             @Query("page") int page,
             @Query("perNumber") int perNumber
+    );
+
+    @GET("?service=jifen.getYHQList")  //商家优惠券
+    Observable<HttpResult<List<YouhuiquanModel>>> jifenGetYHQList(
+            @Query("shopid") String shopid,
+            @Query("uid") String uid,
+            @Query("page") int page,
+            @Query("perNumber") int perNumber
+    );
+
+    @GET("?service=hyk.getShopVIPInfo")  //商家认证信息
+    Observable<HttpResult<List<RenzhengModel>>> hykGetShopVIPInfo(
+            @Query("id") String id
     );
 
 

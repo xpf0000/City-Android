@@ -1,4 +1,4 @@
-package citycircle.com.Activity;
+package citycircle.com.card;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -29,6 +29,9 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import citycircle.com.Activity.Logn;
+import citycircle.com.Activity.ShopInfo;
+import citycircle.com.Activity.VipCardConInfo;
 import citycircle.com.JsonMordel.VipInfo;
 import citycircle.com.MyViews.CallPhonePop;
 import citycircle.com.R;
@@ -38,11 +41,15 @@ import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
 
 /**
- * Created by admins on 2016/5/31.
+ * Created by X on 2016/11/8.
  */
-public class VipcardInfo extends Activity implements View.OnClickListener {
+
+public class CardGetedInfo extends Activity implements View.OnClickListener {
+
+    LinearLayout yu,jifen;
     CardView cardView;
-    TextView shopinfo, cardtype, titile, callphone, adress, shengyu, info, shiy;
+    TextView shopinfo, cardtype, titile, callphone,
+            adress, shengyu, info, number,shengyutitle,nowjifen;
     ImageView back, logo;
     VipInfo vipInfo;
     String url, username, id, shopid, addurl;
@@ -55,22 +62,16 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
     int a;
     Button btn_lq;
     ScrollView slay;
-    int orlq;
     CallPhonePop callPhonePop;
     WebView content;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.vipcardinfo);
+        setContentView(R.layout.cardgetedinfo);
         a = PreferencesUtils.getInt(this, "land");
         id = getIntent().getStringExtra("id");
-        orlq=getIntent().getIntExtra("orlq",0);
-        if (orlq == 0) {
-            url = GlobalVariables.urlstr + "Hyk.getArticle&id=" + id;
-        } else {
-            username = PreferencesUtils.getString(this, "userid");
-            url = GlobalVariables.urlstr + "Hyk.getArticleYLQ&id=" + id + "&uid=" + username;
-        }
+        username = PreferencesUtils.getString(this, "userid");
+        url = GlobalVariables.urlstr + "Hyk.getArticleYLQ&id=" + id + "&uid=" + username;
         intview();
         slay.setVisibility(View.GONE);
         getjson();
@@ -86,15 +87,21 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
         content.setWebChromeClient(new WebChromeClient());
         btn_lq = (Button) findViewById(R.id.btn_lq);
         info = (TextView) findViewById(R.id.info);
-        shiy = (TextView) findViewById(R.id.shiy);
         shengyulay = (LinearLayout) findViewById(R.id.shengyulay);
         shengyu = (TextView) findViewById(R.id.shengyu);
         cardView = (CardView) findViewById(R.id.cardview);
+        number = (TextView) findViewById(R.id.number);
         shopinfo = (TextView) findViewById(R.id.shopinfo);
         cardtype = (TextView) findViewById(R.id.cardtype);
         titile = (TextView) findViewById(R.id.titile);
+        shengyutitle = (TextView) findViewById(R.id.shengyutitle);
+        nowjifen = (TextView) findViewById(R.id.nowjifen);
         callphone = (TextView) findViewById(R.id.callphone);
         callphone.setOnClickListener(this);
+
+        yu = (LinearLayout) findViewById(R.id.vipcardinfo_yu);
+        jifen = (LinearLayout) findViewById(R.id.vipcardinfo_jifen);
+
         adress = (TextView) findViewById(R.id.adress);
         back = (ImageView) findViewById(R.id.back);
         logo = (ImageView) findViewById(R.id.logo);
@@ -106,13 +113,15 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
         ImageLoader = ImageLoader.getInstance();
         ImageLoader.init(ImageLoaderConfiguration.createDefault(this));
         animateFirstListener = new ImageUtils.AnimateFirstDisplayListener();
+
+
     }
 
     private void getjson() {
         OkHttpUtils.get().url(url).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
-                Toast.makeText(VipcardInfo.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CardGetedInfo.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -126,9 +135,8 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
                         cardtype.setText(list.get(i).getType());
                         titile.setText(list.get(i).getShopname());
                         String strs="电话:" + list.get(i).getTel();
-                        SpannableStringBuilder stringBuilders = new SpannableStringBuilder(strs);
-                        stringBuilders.setSpan(new ForegroundColorSpan(Color.parseColor("#21adfd")), 3, strs.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        callphone.setText(stringBuilders);
+                        callphone.setText(strs);
+
                         adress.setText("地址:" + list.get(i).getAddress());
                         String infos = "<html>\r\n\t"
                                 + "<head>\r\n"
@@ -142,6 +150,7 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
                                 + "</head>\r\n" + "<body style=\"width:[width]\">\r\n"
                                 + list.get(i).getInfo() + "\r\n</body>" + "</html>";
                         content.loadDataWithBaseURL(null,infos , "text/html", "utf-8", null);
+
                         String color = list.get(i).getColor().replace("#","");
                         color = "#"+color;
 
@@ -151,44 +160,35 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
                             e.printStackTrace();
                             cardView.setCardBackgroundColor(Color.parseColor("#232323"));
                         }
-
                         options = ImageUtils.setCirclelmageOptions();
                         ImageLoader.displayImage(list.get(i).getLogo(), logo, options, animateFirstListener);
-                        if (orlq == 0) {
-                            shengyu.setText("未领取");
-                            shiy.setVisibility(View.INVISIBLE);
-                            info.setText("用户须知");
-                            shengyulay.setVisibility(View.GONE);
+                        btn_lq.setVisibility(View.GONE);
+                        shengyulay.setVisibility(View.VISIBLE);
+
+                        number.setText("NO."+list.get(i).getId());
+
+                        nowjifen.setText(list.get(i).getJifen());
+
+                        if (cardtype.getText().equals("打折卡")) {
+                            shengyutitle.setText("当前折扣:");
+                            String str = "" + list.get(i).getValues();
+                            shengyu.setText(str);
+                        } else if (cardtype.getText().equals("计次卡")) {
+                            shengyutitle.setText("剩余次数:");
+                            String str = "" + list.get(i).getValues();
+                            shengyu.setText(str);
+                        } else if (cardtype.getText().equals("充值卡")) {
+                            String str = "" + list.get(i).getValues();
+                            shengyu.setText(str);
                         } else {
-                            btn_lq.setVisibility(View.GONE);
-                            shengyulay.setVisibility(View.VISIBLE);
-                            SpannableStringBuilder stringBuilder;
-                            if (cardtype.getText().equals("打折卡")) {
-                                String str = "打折额度:" + list.get(i).getValues();
-                                stringBuilder = new SpannableStringBuilder(str);
-                                stringBuilder.setSpan(new ForegroundColorSpan(Color.parseColor("#21ADFD")), 4, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                shengyu.setText(stringBuilder);
-                            } else if (cardtype.getText().equals("计次卡")) {
-                                String str = "剩余次数:" + list.get(i).getValues();
-                                stringBuilder = new SpannableStringBuilder(str);
-                                stringBuilder.setSpan(new ForegroundColorSpan(Color.parseColor("#21ADFD")), 4, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                shengyu.setText(stringBuilder);
-                            } else if (cardtype.getText().equals("充值卡")) {
-                                String str = "剩余金额:" + list.get(i).getValues();
-                                stringBuilder = new SpannableStringBuilder(str);
-                                stringBuilder.setSpan(new ForegroundColorSpan(Color.parseColor("#21ADFD")), 4, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                shengyu.setText(stringBuilder);
-                            } else {
-                                String str = "剩余积分:" + list.get(i).getValues();
-                                stringBuilder = new SpannableStringBuilder(str);
-                                stringBuilder.setSpan(new ForegroundColorSpan(Color.parseColor("#21ADFD")), 4, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                shengyu.setText(stringBuilder);
-                            }
+                            yu.setVisibility(View.GONE);
+                            String str = "" + list.get(i).getValues();
+                            nowjifen.setText(str);
                         }
                     }
                     slay.setVisibility(View.VISIBLE);
                 } else {
-                    Toast.makeText(VipcardInfo.this, R.string.nomore, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CardGetedInfo.this, R.string.nomore, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -198,7 +198,7 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
         OkHttpUtils.get().url(addurl).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
-                Toast.makeText(VipcardInfo.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CardGetedInfo.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -209,16 +209,15 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
                     JSONObject jsonObject2=jsonObject1.getJSONObject("info");
                     id=jsonObject2.getString("id");
                     username=jsonObject2.getString("uid");
-                    orlq=1;
                     url = GlobalVariables.urlstr + "Hyk.getArticleYLQ&id=" + id + "&uid=" + username;
                     getjson();
-                    Toast.makeText(VipcardInfo.this, "领取成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CardGetedInfo.this, "领取成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent();
                     intent.setAction("com.servicedemo4");
                     intent.putExtra("getmeeage", "12");
-                    VipcardInfo.this.sendBroadcast(intent);
+                    CardGetedInfo.this.sendBroadcast(intent);
                 } else {
-                    Toast.makeText(VipcardInfo.this, jsonObject1.getString("msg"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CardGetedInfo.this, jsonObject1.getString("msg"), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -231,7 +230,7 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
                 Intent intent = new Intent();
                 intent.putExtra("id", shopid);
                 intent.putExtra("shopname", titile.getText());
-                intent.setClass(VipcardInfo.this, ShopInfo.class);
+                intent.setClass(CardGetedInfo.this, ShopInfo.class);
                 startActivity(intent);
                 break;
             case R.id.back:
@@ -239,14 +238,14 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
                 break;
             case R.id.btn_lq:
 //                Toast.makeText(this,"领取",Toast.LENGTH_SHORT).show();
-                int a = PreferencesUtils.getInt(VipcardInfo.this, "land");
+                int a = PreferencesUtils.getInt(CardGetedInfo.this, "land");
                 if (a == 0) {
                     Intent intent1 = new Intent();
-                    intent1.setClass(VipcardInfo.this, Logn.class);
-                    VipcardInfo.this.startActivity(intent1);
+                    intent1.setClass(CardGetedInfo.this, Logn.class);
+                    CardGetedInfo.this.startActivity(intent1);
                 } else {
-                    String username = PreferencesUtils.getString(VipcardInfo.this, "username");
-                    String uid = PreferencesUtils.getString(VipcardInfo.this, "userid");
+                    String username = PreferencesUtils.getString(CardGetedInfo.this, "username");
+                    String uid = PreferencesUtils.getString(CardGetedInfo.this, "userid");
                     addurl = GlobalVariables.urlstr + "Hyk.addCard&username=" + username + "&cardid=" + id + "&uid=" + uid;
                     getCard();
                 }
@@ -255,11 +254,11 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
             case R.id.shengyulay:
                 Intent intent1 = new Intent();
                 intent1.putExtra("id",id);
-                intent1.setClass(VipcardInfo.this, VipCardConInfo.class);
-                VipcardInfo.this.startActivity(intent1);
+                intent1.setClass(CardGetedInfo.this, XiaofeiRecord.class);
+                CardGetedInfo.this.startActivity(intent1);
                 break;
             case R.id.callphone:
-                callPhonePop.showpop(VipcardInfo.this, list.get(0).getTel());
+                callPhonePop.showpop(CardGetedInfo.this, list.get(0).getTel());
                 break;
         }
     }

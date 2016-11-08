@@ -51,10 +51,19 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@color/white"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="vertical">
+                android:background="#ffffff"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="10dp"
+                >
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@mipmap/tel_icon"
+                    android:id="@+id/imageView2"/>
 
                 <TextView
                     android:id="@+id/tell_phone"
@@ -62,69 +71,154 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/ui_10_dip"
                     android:layout_weight="1"
-                    android:drawableLeft="@mipmap/card_phone"
-                    android:drawablePadding="5dp"
                     android:gravity="center_vertical"
-                    android:textSize="16dp" />
+                    android:textSize="16dp"
+                    />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/linecolor"></View>
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/linecolor"></View>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:background="#ffffff"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="10dp"
+                >
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@mipmap/zuobiao"
+                    />
 
                 <TextView
                     android:id="@+id/adress"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/ui_10_dip"
-                    android:layout_weight="1"
-                    android:drawableLeft="@mipmap/card_addressx"
-                    android:drawablePadding="5dp"
                     android:gravity="center_vertical"
-                    android:textSize="16dp" />
+                    android:textSize="16dp"
+                    />
+
             </LinearLayout>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/ui_10_dip"
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/vipcard"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/ui_10_dip"
-                    android:visibility="gone"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="1"
-                    android:drawableLeft="@mipmap/card_vip"
-                    android:drawablePadding="5dp"
-                    android:drawableRight="@mipmap/card_go"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:text="会员卡"
-                    android:textSize="16dp" />
+                    android:background="#ffffff"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="10dp"
+                    >
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@mipmap/youhui_icon"
+                        />
+
+                    <TextView
+                        android:id="@+id/shophd"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/ui_10_dip"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:drawablePadding="8dp"
+                        android:drawableRight="@mipmap/card_go"
+                        android:gravity="center_vertical"
+                        android:text="优惠活动"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="@color/linecolor"></View>
 
+                <LinearLayout
+                    android:id="@+id/youhuiquan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:background="#ffffff"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="10dp"
+                    >
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@mipmap/youhuiquan"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/ui_10_dip"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:drawableRight="@mipmap/card_go"
+                        android:drawablePadding="8dp"
+                        android:gravity="center_vertical"
+                        android:text="优惠券"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/renzheng"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:background="#ffffff"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="10dp"
+                android:layout_marginTop="10dp"
+                >
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@mipmap/renzheng"
+                    />
+
                 <TextView
-                    android:id="@+id/shophd"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/ui_10_dip"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
-                    android:drawableLeft="@mipmap/card_huodong"
-                    android:drawablePadding="5dp"
                     android:drawableRight="@mipmap/card_go"
+                    android:drawablePadding="8dp"
                     android:gravity="center_vertical"
-                    android:text="优惠活动"
+                    android:text="认证信息"
                     android:textSize="16dp" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -134,21 +228,44 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/ui_10_dip"
-                    android:text="商家介绍"
-                    android:textColor="#333333"
-                    android:textSize="16sp" />
+                    android:gravity="center_vertical"
+                    android:background="#ffffff"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="10dp"
+                    >
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@mipmap/shopinfo_icon"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/ui_10_dip"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="商家信息"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
 
                 <WebView
                     android:id="@+id/content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/ui_10_dip"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:textColor="#666666"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:layout_weight="1"
+                    />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -1,6 +1,7 @@
 package citycircle.com.Fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.umeng.update.UmengUpdateAgent;
 
@@ -20,9 +22,16 @@ import java.util.ArrayList;
 import citycircle.com.Activity.AttaFragment;
 import citycircle.com.Activity.CamFragment;
 import citycircle.com.Activity.LocalFragment;
+import citycircle.com.Activity.Logn;
 import citycircle.com.Activity.RecommFragment;
 import citycircle.com.Activity.SearchNews;
+import citycircle.com.MyAppService.LocationApplication;
 import citycircle.com.R;
+import util.XActivityindicator;
+import util.XNetUtil;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 /**
  * Created by admins on 2015/11/14.
@@ -38,6 +47,8 @@ public class HomeFragment extends Fragment {
     RecommFragment recommFragment;
     CamFragment camFragment;
     ImageView search;
+    TextView qiandao;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,6 +60,8 @@ public class HomeFragment extends Fragment {
         return view;
     }
     private void setView(){
+
+        qiandao = (TextView) view.findViewById(R.id.qiandao) ;
         search=(ImageView)view.findViewById(R.id.search) ;
         viewPager=(ViewPager)view.findViewById(R.id.viewpager);
         viewPager.setOffscreenPageLimit(4);
@@ -65,7 +78,46 @@ public class HomeFragment extends Fragment {
                 getActivity().startActivity(intent);
             }
         });
+
+        qiandao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doQD(v);
+            }
+        });
     }
+
+    private void doQD(final View v)
+    {
+        String uid = APPDataCache.User.getUid();
+        String uname = APPDataCache.User.getUsername();
+
+        if(uid.equals(""))
+        {
+            Intent intent = new Intent();
+            intent.setClass(getActivity(), Logn.class);
+            getActivity().startActivity(intent);
+            return;
+        }
+
+        LocationApplication.context = getActivity();
+        XActivityindicator.create(getActivity()).show();
+        v.setEnabled(false);
+        XNetUtil.Handle(APPService.jifenAddQiandao(uid,uname), "签到成功", "签到失败", new XNetUtil.OnHttpResult<Boolean>() {
+            @Override
+            public void onError(Throwable e) {
+                XNetUtil.APPPrintln(e);
+                v.setEnabled(true);
+            }
+
+            @Override
+            public void onSuccess(Boolean aBoolean) {
+                v.setEnabled(!aBoolean);
+            }
+        });
+    }
+
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 //        ArrayList<Fragment> arrayList=new ArrayList<>();
 
