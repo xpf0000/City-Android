@@ -32,6 +32,7 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
+import util.XNotificationCenter;
 
 public class MainActivity extends FragmentActivity implements CompoundButton.OnCheckedChangeListener {
     private RadioButton home, rb_lehui, rb_subscribe, rb_mall, rb_vipcard;
@@ -156,6 +157,9 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
                     transaction.show(MallFragment);
                     break;
                 case R.id.rb_mall:
+
+                    XNotificationCenter.getInstance().postNotice("MinePageShow",null);
+
                     if (MemberFragment == null) {
                         MemberFragment = new MineFragment();
                         transaction.add(R.id.all_content, MemberFragment);

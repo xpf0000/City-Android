@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -32,7 +33,8 @@ import citycircle.com.Utils.HttpRequest;
 public class SeraSale extends Activity implements View.OnClickListener{
     ListView list;
     EditText search;
-    ImageView searchbt,back;
+    ImageView back;
+    LinearLayout searchbt;
     String url,urlstr,key;
     ArrayList<HashMap<String, String>> array = new ArrayList<HashMap<String, String>>();
     HashMap<String, String> hashMap;
@@ -48,7 +50,7 @@ public class SeraSale extends Activity implements View.OnClickListener{
     public void intview(){
         list=(ListView)findViewById(R.id.list);
         search=(EditText)findViewById(R.id.search);
-        searchbt=(ImageView)findViewById(R.id.searchbt);
+        searchbt=(LinearLayout)findViewById(R.id.searchbt);
         searchbt.setOnClickListener(this);
         back=(ImageView)findViewById(R.id.back);
         back.setOnClickListener(this);

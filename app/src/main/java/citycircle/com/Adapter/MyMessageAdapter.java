@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.readystatesoftware.viewbadger.BadgeView;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class MyMessageAdapter extends BaseAdapter {
         convertView= LayoutInflater.from(context).inflate(R.layout.mymessagelist,null);
         getItem.item=(TextView)convertView.findViewById(R.id.item);
         getItem.look=(TextView)convertView.findViewById(R.id.look);
-        getItem.drable=(ImageView)convertView.findViewById(R.id.drable);
+        getItem.drable=(RoundedImageView)convertView.findViewById(R.id.drable);
         getItem.item.setText(arrayList.get(position).get("item").toString());
         getItem.look.setText(arrayList.get(position).get("items").toString());
         Drawable image =context.getResources().getDrawable(Integer.parseInt(arrayList.get(position).get("drable").toString()));
@@ -69,6 +70,6 @@ public class MyMessageAdapter extends BaseAdapter {
     }
     public class getItem{
         TextView item,look;
-        ImageView drable;
+        RoundedImageView drable;
     }
 }

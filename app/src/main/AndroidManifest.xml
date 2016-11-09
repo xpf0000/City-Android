@@ -448,6 +448,16 @@
             android:screenOrientation="portrait"></activity>
 
         <activity
+            android:name=".card.CardDoCZ1"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".card.CardDoCZ2"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
             android:name=".card.CardGetedInfo"
             android:screenOrientation="portrait"></activity>
 

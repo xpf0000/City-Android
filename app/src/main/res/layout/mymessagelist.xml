@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="11dp">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:gravity="center_vertical"
+              android:orientation="horizontal"
+              android:padding="11dp">
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/drable"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:riv_corner_radius="20dp"
+        android:scaleType="fitXY"
+        app:riv_border_width="0dp"
+        app:riv_border_color="@color/white"
+        />
 
    <LinearLayout
        android:orientation="vertical"

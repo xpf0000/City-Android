@@ -36,7 +36,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="20dp"
         android:background="@color/white"
         android:padding="10dp">
 
@@ -50,7 +49,8 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@mipmap/find_phone" />
+                android:padding="1dp"
+                android:src="@mipmap/found_1" />
 
             <TextView
                 android:textSize="18sp"
@@ -82,7 +82,8 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@mipmap/find_jiaoyu" />
+                android:src="@mipmap/found_2"
+                android:id="@+id/imageView3"/>
 
             <TextView
                 android:textSize="18sp"
@@ -114,7 +115,7 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@mipmap/find_wuye" />
+                android:src="@mipmap/found_3" />
 
             <TextView
                 android:textSize="18sp"
@@ -135,7 +136,6 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
         android:background="@color/linecolor"></LinearLayout>
     <LinearLayout
         android:id="@+id/sales"
@@ -143,14 +143,13 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:padding="@dimen/ui_10_dip"
-        android:layout_marginTop="@dimen/ui_10_dip"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/find_myx" />
+            android:src="@mipmap/found_4" />
 
         <TextView
             android:textSize="18sp"
@@ -160,5 +159,12 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="我的工作" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/ui_10_dip"
+            android:src="@mipmap/go_arrow_icon" />
+
     </LinearLayout>
 </LinearLayout>

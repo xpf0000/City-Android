@@ -100,7 +100,6 @@ public class HomeFragment extends Fragment {
             return;
         }
 
-        LocationApplication.context = getActivity();
         XActivityindicator.create(getActivity()).show();
         v.setEnabled(false);
         XNetUtil.Handle(APPService.jifenAddQiandao(uid,uname), "签到成功", "签到失败", new XNetUtil.OnHttpResult<Boolean>() {

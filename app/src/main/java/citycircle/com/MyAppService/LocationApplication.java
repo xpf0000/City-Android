@@ -1,8 +1,10 @@
 package citycircle.com.MyAppService;
 
+import android.app.Activity;
 import android.app.Application;
 import android.app.Service;
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.multidex.MultiDex;
 import android.util.DisplayMetrics;
@@ -93,6 +95,47 @@ public class LocationApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                XNetUtil.APPPrintln("onActivityCreated: "+activity);
+                context = activity;
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                context = activity;
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
+
+
+
 
         context = getApplicationContext();
 
@@ -214,4 +257,5 @@ public class LocationApplication extends Application {
             }
         });
     }
+
 }

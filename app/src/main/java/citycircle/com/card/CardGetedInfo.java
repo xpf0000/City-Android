@@ -162,7 +162,16 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
                         }
                         options = ImageUtils.setCirclelmageOptions();
                         ImageLoader.displayImage(list.get(i).getLogo(), logo, options, animateFirstListener);
-                        btn_lq.setVisibility(View.GONE);
+
+                        if(list.get(i).getType().equals("打折卡") || list.get(i).getType().equals("积分卡"))
+                        {
+                            btn_lq.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+                            btn_lq.setVisibility(View.VISIBLE);
+                        }
+
                         shengyulay.setVisibility(View.VISIBLE);
 
                         number.setText("NO."+list.get(i).getId());
@@ -244,10 +253,22 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
                     intent1.setClass(CardGetedInfo.this, Logn.class);
                     CardGetedInfo.this.startActivity(intent1);
                 } else {
-                    String username = PreferencesUtils.getString(CardGetedInfo.this, "username");
-                    String uid = PreferencesUtils.getString(CardGetedInfo.this, "userid");
-                    addurl = GlobalVariables.urlstr + "Hyk.addCard&username=" + username + "&cardid=" + id + "&uid=" + uid;
-                    getCard();
+
+                    Intent intent1 = new Intent();
+                    intent1.putExtra("id", shopid);
+                    intent1.putExtra("sname", titile.getText());
+
+                    if(cardtype.getText().toString().equals("充值卡"))
+                    {
+                        intent1.setClass(CardGetedInfo.this, CardDoCZ1.class);
+                    }
+                    else
+                    {
+                        intent1.setClass(CardGetedInfo.this, CardDoCZ2.class);
+                    }
+
+                    CardGetedInfo.this.startActivity(intent1);
+
                 }
 
                 break;

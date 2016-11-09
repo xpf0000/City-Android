@@ -2,6 +2,7 @@ package citycircle.com.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,6 +26,8 @@ import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.List;
+
 import citycircle.com.Activity.Logn;
 import citycircle.com.Activity.MyCity;
 import citycircle.com.Activity.MyCollect;
@@ -32,6 +35,7 @@ import citycircle.com.Activity.MyInfo;
 import citycircle.com.Activity.MyVipcard;
 import citycircle.com.Activity.Mymessage;
 import citycircle.com.Activity.SetActivity;
+import citycircle.com.MyAppService.LocationApplication;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
@@ -41,11 +45,14 @@ import citycircle.com.hfb.GoodsCenter;
 import citycircle.com.hfb.HfbCenter;
 import citycircle.com.user.MyMinePage;
 import citycircle.com.user.MyYouhuiquan;
+import model.UserModel;
 import okhttp3.Call;
+import util.XActivityindicator;
 import util.XNetUtil;
 import util.XNotificationCenter;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 /**
  * Created by admins on 2015/11/14.
@@ -56,7 +63,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     LinearLayout left;
     LinearLayout right;
 
-    TextView name, vip,seting;
+    TextView name, vip,seting,leftnum,rightnum;
     com.nostra13.universalimageloader.core.ImageLoader ImageLoader;
     DisplayImageOptions options;
     citycircle.com.Utils.ImageUtils ImageUtils;
@@ -70,6 +77,12 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.mine_layout, container, false);
 
+        XNotificationCenter.getInstance().addObserver("MinePageShow", new XNotificationCenter.OnNoticeListener() {
+            @Override
+            public void OnNotice(Object obj) {
+                getHFB();
+            }
+        });
         XNetUtil.APPPrintln("onCreateView &&&&&&&&&&&&&&");
 
         intview();
@@ -114,6 +127,9 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         mine = (LinearLayout) view.findViewById(R.id.mine_layout);
         left = (LinearLayout) view.findViewById(R.id.mine_left);
         right = (LinearLayout) view.findViewById(R.id.mine_right);
+
+        leftnum = (TextView) view.findViewById(R.id.mine_leftnum);
+        rightnum = (TextView) view.findViewById(R.id.mine_rightnum);
 
         left.setOnClickListener(this);
         right.setOnClickListener(this);
@@ -231,8 +247,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                     break;
 
                 case "right":
-                    intent.setClass(getActivity(), SetActivity.class);
-                    getActivity().startActivity(intent);
+                    doQD(v);
                     break;
 
                 default:
@@ -242,10 +257,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         }
 
     }
-
-
-
-
 
 
 
@@ -289,7 +300,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-
+        getHFB();
         XNetUtil.APPPrintln("onStart %%%%%%%%%%");
     }
 
@@ -316,4 +327,61 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
         }
     }
+
+
+    public void doQD(final View v) {
+        String uid = APPDataCache.User.getUid();
+        String uname = APPDataCache.User.getUsername();
+
+        XActivityindicator.create(getActivity()).show();
+        v.setEnabled(false);
+        XNetUtil.Handle(APPService.jifenAddQiandao(uid,uname), "签到成功", "签到失败", new XNetUtil.OnHttpResult<Boolean>() {
+            @Override
+            public void onError(Throwable e) {
+                XNetUtil.APPPrintln(e);
+                v.setEnabled(true);
+            }
+
+            @Override
+            public void onSuccess(Boolean aBoolean) {
+                v.setEnabled(!aBoolean);
+                if(aBoolean)
+                {
+                    getHFB();
+                }
+            }
+        });
+
+    }
+
+    private void getHFB()
+    {
+        String uid = APPDataCache.User.getUid();
+        String uname = APPDataCache.User.getUsername();
+        XNetUtil.Handle(APPService.jifenGetUinfo(uid,uname), new XNetUtil.OnHttpResult<List<UserModel>>() {
+            @Override
+            public void onError(Throwable e) {
+
+                XNetUtil.APPPrintln("!!!!!! jifenGetUinfo error: "+e);
+
+            }
+
+            @Override
+            public void onSuccess(List<UserModel> arrs) {
+
+                XNetUtil.APPPrintln(arrs.toString());
+
+                if(arrs.size() > 0)
+                {
+                    UserModel u = arrs.get(0);
+                    leftnum.setText(u.getHfb());
+                    rightnum.setText(u.getWqd()+"/7");
+                }
+
+            }
+        });
+    }
+
+
+
 }
