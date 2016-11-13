@@ -1,6 +1,7 @@
 package citycircle.com.MyAppService;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.app.Service;
 import android.content.Context;
@@ -32,7 +33,11 @@ import com.robin.lazy.cache.disk.naming.HashCodeFileNameGenerator;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
+import citycircle.com.Activity.MainActivity;
 import citycircle.com.R;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -44,6 +49,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import util.DataCache;
 import util.ServicesAPI;
 import util.XNetUtil;
+import util.XNotificationCenter;
 
 public class LocationApplication extends Application {
     public LocationClient mLocationClient;
@@ -72,6 +78,8 @@ public class LocationApplication extends Application {
 
     static public DataCache APPDataCache;
 
+    private boolean isActive = false;
+
     /**
      * 创建全局变量 全局变量一般都比较倾向于创建一个单独的数据类文件，并使用static静态变量
      *
@@ -84,6 +92,8 @@ public class LocationApplication extends Application {
     public WindowManager.LayoutParams getMywmParams() {
         return wmParams;
     }
+
+    private List<WeakReference<Activity>> vcArrs = new ArrayList<>();
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -111,6 +121,15 @@ public class LocationApplication extends Application {
             @Override
             public void onActivityResumed(Activity activity) {
                 context = activity;
+                WeakReference<Activity> item = new WeakReference<Activity>(activity);
+                vcArrs.add(item);
+
+                if (!isActive)
+                {
+                    isActive = true;
+                    APPDataCache.User.checkToken();
+                    XNetUtil.APPPrintln("APP is BecomeActive!!!!!!");
+                }
             }
 
             @Override
@@ -120,7 +139,11 @@ public class LocationApplication extends Application {
 
             @Override
             public void onActivityStopped(Activity activity) {
-
+                if (!isAppOnForeground()) {
+                    //app 进入后台
+                    isActive = false;
+                    //全局变量isActive = false 记录当前已经进入后台
+                }
             }
 
             @Override
@@ -198,6 +221,30 @@ public class LocationApplication extends Application {
                 Service.VIBRATOR_SERVICE);
         mLocationClient.start();
 
+
+        XNotificationCenter.getInstance().addObserver("AccountLogout", new XNotificationCenter.OnNoticeListener() {
+
+            @Override
+            public void OnNotice(Object obj) {
+
+                for(WeakReference<Activity> item : vcArrs)
+                {
+                    if(item.get() != null)
+                    {
+                        if(item.get() instanceof MainActivity)
+                        {
+                            continue;
+                        }
+                        item.get().finish();
+                    }
+                }
+
+                XNotificationCenter.getInstance().postNotice("ShowAccountLogout",null);
+
+            }
+        });
+
+
         System.out.println("================init============");
     }
 
@@ -256,6 +303,35 @@ public class LocationApplication extends Application {
                 Log.d(TAG, "init cloudchannel failed -- errorcode:" + errorCode + " -- errorMessage:" + errorMessage);
             }
         });
+    }
+
+
+    /**
+     * 程序是否在前台运行
+     *
+     * @return
+     */
+    public boolean isAppOnForeground() {
+        // Returns a list of application processes that are running on the
+        // device
+
+        ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        String packageName = getApplicationContext().getPackageName();
+
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager
+                .getRunningAppProcesses();
+        if (appProcesses == null)
+            return false;
+
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            // The name of the process that this object is associated with.
+            if (appProcess.processName.equals(packageName)
+                    && appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

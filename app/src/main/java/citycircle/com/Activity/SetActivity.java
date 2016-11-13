@@ -213,7 +213,9 @@ public class SetActivity extends Activity {
                     ShareSDK.removeCookieOnAuthorize(true);
                 }
 
+                APPDataCache.User.unRegistNotice();
                 APPDataCache.User.reSet();
+
                 XNotificationCenter.getInstance().postNotice("UserChanged",null);
 
                 PreferencesUtils.putInt(SetActivity.this, "land", 0);

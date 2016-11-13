@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.bigkoo.alertview.AlertView;
 import com.umeng.analytics.MobclickAgent;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -24,6 +25,7 @@ import java.util.TimerTask;
 
 import citycircle.com.Fragment.CityCircleFragment;
 import citycircle.com.Fragment.FoundFragment;
+import citycircle.com.Fragment.GroupFragment;
 import citycircle.com.Fragment.HomeFragment;
 import citycircle.com.Fragment.MineFragment;
 import citycircle.com.Fragment.VipCardFragment;
@@ -32,7 +34,10 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
+import util.XActivityindicator;
 import util.XNotificationCenter;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 public class MainActivity extends FragmentActivity implements CompoundButton.OnCheckedChangeListener {
     private RadioButton home, rb_lehui, rb_subscribe, rb_mall, rb_vipcard;
@@ -42,7 +47,7 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
     public CityCircleFragment LehuiFragment;
     public FoundFragment MallFragment;
     public MineFragment MemberFragment;
-    public VipCardFragment vipCardFragment;
+    public GroupFragment groupFragment;
     TextView badge;
 
     @Override
@@ -67,6 +72,37 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
             GlobalVariables.types = false;
         }
 
+        XNotificationCenter.getInstance().addObserver("ShowAccountLogout", new XNotificationCenter.OnNoticeListener() {
+            @Override
+            public void OnNotice(Object obj) {
+                showAccountLogout();
+            }
+        });
+
+    }
+
+    private void showAccountLogout()
+    {
+        AlertView Alert = new AlertView("提醒", "您的账户已在其他设备登录", null, null,
+                new String[]{"确定"},
+                this, AlertView.Style.Alert, new com.bigkoo.alertview.OnItemClickListener() {
+            @Override
+            public void onItemClick(Object o, int position) {
+                if (position == 0) {
+
+                }
+            }
+        });
+
+        XActivityindicator.setAlert(Alert);
+
+        Alert.show();
+        badge.setVisibility(View.GONE);
+        home.setChecked(true);
+        PreferencesUtils.putInt(this, "land", 0);
+        PreferencesUtils.putString(this, "userid", null);
+        APPDataCache.User.unRegistNotice();
+        APPDataCache.User.reSet();
     }
 
     @Override
@@ -112,8 +148,8 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
                     if (MemberFragment != null) {
                         transaction.hide(MemberFragment);
                     }
-                    if (vipCardFragment != null) {
-                        transaction.hide(vipCardFragment);
+                    if (groupFragment != null) {
+                        transaction.hide(groupFragment);
                     }
                     transaction.show(HomeFragment);
                     break;
@@ -132,8 +168,8 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
                     if (MemberFragment != null) {
                         transaction.hide(MemberFragment);
                     }
-                    if (vipCardFragment != null) {
-                        transaction.hide(vipCardFragment);
+                    if (groupFragment != null) {
+                        transaction.hide(groupFragment);
                     }
                     transaction.show(LehuiFragment);
                     break;
@@ -151,8 +187,8 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
                     if (LehuiFragment != null) {
                         transaction.hide(LehuiFragment);
                     }
-                    if (vipCardFragment != null) {
-                        transaction.hide(vipCardFragment);
+                    if (groupFragment != null) {
+                        transaction.hide(groupFragment);
                     }
                     transaction.show(MallFragment);
                     break;
@@ -174,15 +210,15 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
                     if (LehuiFragment != null) {
                         transaction.hide(LehuiFragment);
                     }
-                    if (vipCardFragment != null) {
-                        transaction.hide(vipCardFragment);
+                    if (groupFragment != null) {
+                        transaction.hide(groupFragment);
                     }
                     transaction.show(MemberFragment);
                     break;
                 case R.id.rb_vipcard:
-                    if (vipCardFragment == null) {
-                        vipCardFragment = new VipCardFragment();
-                        transaction.add(R.id.all_content, vipCardFragment);
+                    if (groupFragment == null) {
+                        groupFragment = new GroupFragment();
+                        transaction.add(R.id.all_content, groupFragment);
                     }
                     if (HomeFragment != null) {
                         transaction.hide(HomeFragment);
@@ -197,7 +233,7 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
                     if (MemberFragment != null) {
                         transaction.hide(MemberFragment);
                     }
-                    transaction.show(vipCardFragment);
+                    transaction.show(groupFragment);
                     break;
             }
             transaction.commitAllowingStateLoss();

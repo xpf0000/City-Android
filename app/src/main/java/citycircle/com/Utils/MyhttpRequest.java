@@ -23,7 +23,7 @@ public class MyhttpRequest {
 
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-			conn.setConnectTimeout(5000);
+			conn.setConnectTimeout(15000);
 			// 这是请求方式为POST
 			conn.setRequestMethod(method);
 			// 设置post请求必要的请求头

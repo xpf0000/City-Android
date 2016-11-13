@@ -195,6 +195,8 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
 
                             APPDataCache.User.copy(user);
 
+                            APPDataCache.User.registNotice();
+
                         }
 
                         XNotificationCenter.getInstance().postNotice("UserChanged",null);
@@ -255,6 +257,13 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
                             PreferencesUtils.putString(Logn.this, "truename", jsonObject6.getString("truename"));
                             PreferencesUtils.putString(Logn.this, "birthday", jsonObject6.getString("birthday"));
                             PreferencesUtils.putString(Logn.this, "address", jsonObject6.getString("address"));
+
+                            // JSON串转用户组对象
+                            UserModel user = JSON.parseObject(jsonObject6.toJSONString(), UserModel.class);
+
+                            APPDataCache.User.copy(user);
+
+                            APPDataCache.User.registNotice();
                         }
                         PreferencesUtils.putInt(Logn.this, "land", 1);
                         Intent intent = new Intent();

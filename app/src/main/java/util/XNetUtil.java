@@ -72,6 +72,7 @@ public class XNetUtil {
 
                     @Override
                     public void onError(Throwable e) {
+                        Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
                         res.onError(e);
                     }
 

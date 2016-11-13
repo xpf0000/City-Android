@@ -53,7 +53,7 @@
                 android:layout_weight="1"
                 android:checked="false"
                 android:drawableTop="@drawable/select_vip"
-                android:text="会员卡"
+                android:text="商圈"
                 android:textSize="12sp"
                 android:layout_marginRight="15dp"
                 />

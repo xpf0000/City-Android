@@ -17,7 +17,7 @@ public class HttpRequest {
 
 			url = new URL(urlStr);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setConnectTimeout(3000);
+			conn.setConnectTimeout(15000);
 			// 设置发送请求的方式
 			conn.setRequestMethod("GET");
 			// 设置返回信息的格式类型

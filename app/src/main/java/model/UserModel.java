@@ -1,10 +1,17 @@
 package model;
 
+import com.alibaba.sdk.android.push.CommonCallback;
+import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
+
 import java.io.Serializable;
 
+import util.HttpResult;
 import util.ModelUtil;
 import util.XAPPUtil;
 import util.XNetUtil;
+import util.XNotificationCenter;
+
+import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 /**
  * Created by X on 2016/11/4.
@@ -55,6 +62,16 @@ public class UserModel implements Serializable {
     private String danyuanid;
     private String birthday;
     private String address;
+    private String token;
+
+    public String getToken() {
+        token = token == null ? "" : token;
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
 
     @Override
@@ -107,6 +124,7 @@ public class UserModel implements Serializable {
         danyuanid = u.danyuanid;
         birthday = u.birthday;
         address = u.address;
+        token = u.token;
 
         save();
     }
@@ -184,6 +202,7 @@ public class UserModel implements Serializable {
     }
 
     public String getUsername() {
+        username = username == null? "" : username;
         return username;
     }
 
@@ -262,4 +281,69 @@ public class UserModel implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
+
+
+    public void unRegistNotice()
+    {
+        PushServiceFactory.getCloudPushService().removeAlias(getToken(),new CommonCallback() {
+            @Override
+            public void onSuccess(String s) {
+                XNetUtil.APPPrintln("removeAlias success!!!!!!");
+            }
+
+            @Override
+            public void onFailed(String s, String s1) {
+                XNetUtil.APPPrintln("removeAlias fail!!!!!! "+s+" | "+s1);
+            }
+        });
+    }
+
+    public void registNotice()
+    {
+        if(getToken().equals(""))
+        {
+            return;
+        }
+
+        PushServiceFactory.getCloudPushService().addAlias(getToken(), new CommonCallback() {
+            @Override
+            public void onSuccess(String s) {
+                XNetUtil.APPPrintln("addAlias success!!!!!!");
+            }
+
+            @Override
+            public void onFailed(String s, String s1) {
+                XNetUtil.APPPrintln("addAlias fail!!!!!! "+s+" | "+s1);
+            }
+        });
+
+    }
+
+    public void checkToken()
+    {
+        if(getToken().equals(""))
+        {
+            return;
+        }
+
+        XNetUtil.HandleReturnAll(APPService.userGetOrLine(getToken()), new XNetUtil.OnHttpResult<HttpResult<Object>>() {
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onSuccess(HttpResult<Object> res) {
+
+                if(res.getData().getCode() == 1)
+                {
+                    XNotificationCenter.getInstance().postNotice("AccountLogout",null);
+                }
+            }
+        });
+
+
+    }
+
 }

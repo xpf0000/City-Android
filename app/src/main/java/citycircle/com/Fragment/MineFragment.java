@@ -80,6 +80,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         XNotificationCenter.getInstance().addObserver("MinePageShow", new XNotificationCenter.OnNoticeListener() {
             @Override
             public void OnNotice(Object obj) {
+                show();
                 getHFB();
             }
         });
@@ -91,6 +92,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             @Override
             public void OnNotice(Object obj) {
                 show();
+                getHFB();
             }
         });
 
@@ -358,6 +360,15 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     {
         String uid = APPDataCache.User.getUid();
         String uname = APPDataCache.User.getUsername();
+
+        if(uid.equals("") || uname.equals(""))
+        {
+            leftnum.setText("0");
+            rightnum.setText("0/7");
+
+            return;
+        }
+
         XNetUtil.Handle(APPService.jifenGetUinfo(uid,uname), new XNetUtil.OnHttpResult<List<UserModel>>() {
             @Override
             public void onError(Throwable e) {

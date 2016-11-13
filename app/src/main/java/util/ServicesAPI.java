@@ -4,6 +4,7 @@ import java.util.List;
 
 import model.BannerModel;
 import model.GoodsModel;
+import model.GroupModel;
 import model.HFBModel;
 import model.RenzhengModel;
 import model.UserModel;
@@ -100,7 +101,15 @@ public interface ServicesAPI {
             @Query("id") String id
     );
 
+    @POST("?service=user.getOrLine")//检测token
+    Observable<HttpResult<Object>> userGetOrLine(@Query("token") String token);
 
+
+    @GET("?service=hyk.getShopTJList")  //商圈推荐商家
+    Observable<HttpResult<List<GroupModel>>> hykGetShopTJList(
+            @Query("page") int page,
+            @Query("perNumber") int perNumber
+    );
 
 
 }
