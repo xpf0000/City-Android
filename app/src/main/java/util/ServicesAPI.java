@@ -111,6 +111,13 @@ public interface ServicesAPI {
             @Query("perNumber") int perNumber
     );
 
+    @GET("?service=Hyk.getShopSearch")  //商圈商家搜索
+    Observable<HttpResult<List<GroupModel>>> hykGetShopSearch(
+            @Query("keyword") String keyword,
+            @Query("page") int page,
+            @Query("perNumber") int perNumber
+    );
+
 
 }
 

@@ -40,10 +40,40 @@
         android:padding="10dp">
 
         <LinearLayout
+            android:id="@+id/card"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="1dp"
+                android:src="@mipmap/found_0" />
+
+            <TextView
+                android:textSize="18sp"
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/ui_10_dip"
+                android:gravity="center_vertical"
+                android:text="会员卡" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/linecolor"></LinearLayout>
+
+        <LinearLayout
             android:id="@+id/YellowPages"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -60,11 +90,6 @@
                 android:layout_marginLeft="@dimen/ui_10_dip"
                 android:gravity="center_vertical"
                 android:text="常用电话" />
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/ui_10_dip"
-                android:src="@mipmap/go_arrow_icon" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="fill_parent"
@@ -93,11 +118,6 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="教育培训" />
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/ui_10_dip"
-                android:src="@mipmap/go_arrow_icon" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="fill_parent"
@@ -125,11 +145,6 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="我的物业" />
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/ui_10_dip"
-                android:src="@mipmap/go_arrow_icon" />
         </LinearLayout>
 
     </LinearLayout>
@@ -159,12 +174,6 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="我的工作" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/ui_10_dip"
-            android:src="@mipmap/go_arrow_icon" />
 
     </LinearLayout>
 </LinearLayout>

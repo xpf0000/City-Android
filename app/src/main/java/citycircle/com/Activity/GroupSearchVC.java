@@ -1,16 +1,16 @@
-package citycircle.com.Fragment;
+package citycircle.com.Activity;
 
-import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -19,41 +19,45 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import citycircle.com.Activity.ShopInfo;
-import citycircle.com.Activity.VipcardInfo;
-import citycircle.com.Adapter.GroupVCAdapter;
+import citycircle.com.Adapter.GroupSearchAdapter;
 import citycircle.com.R;
+import citycircle.com.hfb.DHRecord;
 import model.GroupModel;
+import model.HFBModel;
+import util.BaseActivity;
 import util.XNetUtil;
-import util.XNotificationCenter;
 
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 /**
- * Created by X on 2016/11/13.
+ * Created by X on 2016/11/14.
  */
 
-public class GroupFragment extends Fragment implements View.OnClickListener{
+public class GroupSearchVC extends BaseActivity {
 
     private PullToRefreshListView list;
-    private Context context;
+    private GroupSearchAdapter adapter;
+    private List<GroupModel> dataArr = new ArrayList<>();
+
     private int page = 1;
     private boolean end = false;
-    private GroupVCAdapter adapter;
-    private List<Object> dataArr = new ArrayList<>();
-    View view;
 
-    @Nullable
+    private EditText search;
+    private TextView btn;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.groupvc, container, false);
+    protected void setupUi() {
+        setContentView(R.layout.groupsearch);
+        setPageTitle("商家搜索");
 
-        dataArr.add(1);
-        dataArr.add(1);
-        dataArr.add(1);
+        search = (EditText) findViewById(R.id.search_txt);
+        btn = (TextView) findViewById(R.id.search_btn);
+        list = (PullToRefreshListView) findViewById(R.id.groupseach_list);
 
+        adapter = new GroupSearchAdapter(mContext);
 
-        list = (PullToRefreshListView) view.findViewById(R.id.groupvc_list);
+        list.setAdapter(adapter);
 
         list.setMode(PullToRefreshBase.Mode.BOTH);
 
@@ -81,41 +85,47 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
         list.getRefreshableView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 toinfo(position);
-
             }
         });
 
-        adapter = new GroupVCAdapter(getActivity());
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm =  (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                if(imm != null) {
+                    imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(),
+                            0);
+                }
+                page = 1;
+                end = false;
+                    getData();
+            }
+        });
 
-        list.setAdapter(adapter);
-
-        adapter.notifyDataSetChanged();
-
+        String key = getIntent().getStringExtra("key");
+        search.setText(key);
         getData();
 
-        return view;
+    }
+
+    @Override
+    protected void setupData() {
 
     }
 
     private void toinfo(int p)
     {
-        if(p < 4)
-        {
-            return;
-        }
 
-        GroupModel m = (GroupModel) dataArr.get(p-1);
+        GroupModel m = dataArr.get(p-1);
 
         Intent intent = new Intent();
         intent.putExtra("id", m.getId());
         intent.putExtra("shopname", m.getName());
-        intent.setClass(getActivity(), ShopInfo.class);
+        intent.setClass(this, ShopInfo.class);
         startActivity(intent);
 
     }
-
 
     private void getData() {
 
@@ -141,7 +151,7 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
                 protected void onPostExecute(Void aVoid) {
 
                     list.onRefreshComplete();
-                    Toast.makeText(getActivity(), "没有更多了",
+                    Toast.makeText(mContext, "没有更多了",
                             Toast.LENGTH_SHORT).show();
 
                     super.onPostExecute(aVoid);
@@ -151,30 +161,29 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
             return;
         }
 
-        XNetUtil.Handle(APPService.hykGetShopTJList(page, 20), new XNetUtil.OnHttpResult<List<GroupModel>>() {
+        String key = search.getText().toString();
+
+        XNetUtil.Handle(APPService.hykGetShopSearch(key, page, 20), new XNetUtil.OnHttpResult<List<GroupModel>>() {
             @Override
             public void onError(Throwable e) {
-                list.onRefreshComplete();
+
                 XNetUtil.APPPrintln(e);
             }
 
             @Override
-            public void onSuccess(List<GroupModel> arrs) {
+            public void onSuccess(List<GroupModel> models) {
 
                 if(page == 1)
                 {
                     dataArr.clear();
-                    dataArr.add(1);
-                    dataArr.add(1);
-                    dataArr.add(1);
                 }
 
-                if(arrs.size() > 0)
+                if(models.size() > 0)
                 {
-                    dataArr.addAll(arrs);
+                    dataArr.addAll(models);
                 }
 
-                if(arrs.size() == 20)
+                if(models.size() == 20)
                 {
                     end = false;
                     page += 1;
@@ -183,7 +192,6 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
                 {
                     end = true;
                 }
-
                 adapter.dataArr = dataArr;
                 adapter.notifyDataSetChanged();
                 list.onRefreshComplete();
@@ -192,8 +200,4 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
 
     }
 
-    @Override
-    public void onClick(View view) {
-
-    }
 }

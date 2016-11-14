@@ -3,7 +3,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="10dp"
-    android:paddingBottom="8dp"
     >
 
     <TextView
@@ -14,7 +13,23 @@
         android:text="为您推荐"
         android:layout_alignParentBottom="true"
         android:paddingTop="16dp"
+        android:paddingBottom="8dp"
         />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/app_separator_offx"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#d8d8d8"/>
+
+    </LinearLayout>
 
 </LinearLayout>
 

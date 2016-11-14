@@ -1,6 +1,7 @@
 package citycircle.com.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import citycircle.com.Activity.GroupSearchVC;
+import citycircle.com.Activity.Logn;
 import citycircle.com.R;
 import model.GroupModel;
 
@@ -65,7 +68,7 @@ public class GroupVCAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        SearchBar searchBar;
+        final SearchBar searchBar;
         Cell cell;
 
         if(getItemViewType(position) == 0)
@@ -91,6 +94,22 @@ public class GroupVCAdapter extends BaseAdapter {
             {
                 searchBar = (SearchBar) convertView.getTag();
             }
+
+
+
+            searchBar.btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent = new Intent();
+                    intent.putExtra("key",searchBar.txt.getText().toString());
+
+                    intent.setClass(context, GroupSearchVC.class);
+                    context.startActivity(intent);
+
+                }
+            });
+
         }
         else if(getItemViewType(position) == 2)
         {

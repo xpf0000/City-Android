@@ -291,18 +291,28 @@ public class LocationApplication extends Application {
         System.out.println("+++++++++++");
     }
     private void initCloudChannel(Context applicationContext) {
-        PushServiceFactory.init(applicationContext);
-        CloudPushService pushService = PushServiceFactory.getCloudPushService();
-        pushService.register(applicationContext, new CommonCallback() {
-            @Override
-            public void onSuccess(String response) {
-                Log.d(TAG, "init cloudchannel success");
-            }
-            @Override
-            public void onFailed(String errorCode, String errorMessage) {
-                Log.d(TAG, "init cloudchannel failed -- errorcode:" + errorCode + " -- errorMessage:" + errorMessage);
-            }
-        });
+
+        try
+        {
+            PushServiceFactory.init(applicationContext);
+            CloudPushService pushService = PushServiceFactory.getCloudPushService();
+            pushService.register(applicationContext, new CommonCallback() {
+                @Override
+                public void onSuccess(String response) {
+                    Log.d(TAG, "init cloudchannel success");
+                }
+                @Override
+                public void onFailed(String errorCode, String errorMessage) {
+                    Log.d(TAG, "init cloudchannel failed -- errorcode:" + errorCode + " -- errorMessage:" + errorMessage);
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
     }
 
 

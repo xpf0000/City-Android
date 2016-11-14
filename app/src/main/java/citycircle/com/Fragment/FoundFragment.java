@@ -30,7 +30,7 @@ import citycircle.com.Utils.PreferencesUtils;
  */
 public class FoundFragment extends Fragment implements View.OnClickListener, OnItemClickListener, OnDismissListener {
     View view;
-    LinearLayout tYellowPages, sale, sales, Property;
+    LinearLayout tYellowPages, sale, sales, Property,card;
     private AlertView mAlertView;
     int type=0;
     @Nullable
@@ -50,6 +50,9 @@ public class FoundFragment extends Fragment implements View.OnClickListener, OnI
         sales.setOnClickListener(this);
         Property = (LinearLayout) view.findViewById(R.id.Property);
         Property.setOnClickListener(this);
+
+        card = (LinearLayout) view.findViewById(R.id.card);
+        card.setOnClickListener(this);
     }
 
     @Override
@@ -58,6 +61,10 @@ public class FoundFragment extends Fragment implements View.OnClickListener, OnI
         int oaland = PreferencesUtils.getInt(getActivity(), "oaland");
         int land = PreferencesUtils.getInt(getActivity(), "land");
         switch (v.getId()) {
+            case R.id.card:
+                intent.setClass(getActivity(), VipCardFragment.class);
+                getActivity().startActivity(intent);
+                break;
             case R.id.YellowPages:
                 intent.setClass(getActivity(), TelYelloePage.class);
                 getActivity().startActivity(intent);
