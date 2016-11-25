@@ -62,11 +62,14 @@ public class MyVipcardAdapter extends BaseAdapter {
         getItem.cardtype=(TextView)convertView.findViewById(R.id.cardtype);
         getItem.orlq=(TextView)convertView.findViewById(R.id.orlq);
         getItem.logo=(ImageView)convertView.findViewById(R.id.logo);
+        String color = arrayList.get(position).get("color").replace("#","");
+        color = "#"+color;
         try{
-            getItem.cardView.setCardBackgroundColor(Color.parseColor(arrayList.get(position).get("color")));
+            getItem.cardView.setCardBackgroundColor(Color.parseColor(color));
         }catch (Exception e){
             getItem.cardView.setCardBackgroundColor(Color.parseColor("#232323"));
         }
+
         getItem.cardtype.setText(arrayList.get(position).get("type"));
         getItem.titile.setText(arrayList.get(position).get("shopname"));
         options=ImageUtils.setCirclelmageOptions();

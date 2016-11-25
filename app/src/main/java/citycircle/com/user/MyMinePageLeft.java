@@ -132,7 +132,7 @@ public class MyMinePageLeft extends Fragment {
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
                             if (type==1){
                                 page++;
-                                url = GlobalVariables.urlstr + "Quan.getListAll&page=" + page + "&uid=" + uid;
+                                url = GlobalVariables.urlstr + "quan.getMyList&page=" + page + "&uid=" + uid;
                                 getnews(0);
                             }
                         }
@@ -169,7 +169,7 @@ public class MyMinePageLeft extends Fragment {
                     getnewme = GlobalVariables.urlstr + "Quan.getNewsTop&username=" + username;
                 }
 //                newsurl = "http://appapi.rexian.cn:8080/HKCityApi/news/newsFocusList?areaID=1&pageSize=10&pageIndex=" + page;
-                url = GlobalVariables.urlstr + "Quan.getListAll&page=" + page + "&uid=" + uid;
+                url = GlobalVariables.urlstr + "quan.getMyList&page=" + page + "&uid=" + uid;
                 getnews(0);
             }
         });
@@ -262,7 +262,7 @@ public class MyMinePageLeft extends Fragment {
 //                        addarray.clear();
                         uid=PreferencesUtils.getString(getActivity(),"userid");
                         int pagenumber = page * 10;
-                        url = GlobalVariables.urlstr + "Quan.getListAll&page=" + 1 + "&perNumber=" + pagenumber+"&uid="+uid;
+                        url = GlobalVariables.urlstr + "quan.getMyList&page=" + 1 + "&perNumber=" + pagenumber+"&uid="+uid;
                         getnews(1);
                     } else {
                         Toast.makeText(getActivity(), "失败", Toast.LENGTH_SHORT).show();
@@ -303,7 +303,7 @@ public class MyMinePageLeft extends Fragment {
                         popupWindow.dismiss();
                         uid=PreferencesUtils.getString(getActivity(),"userid");
                         int pagenumber = page * 10;
-                        url = GlobalVariables.urlstr + "Quan.getListAll&page=" + 1 + "&perNumber=" + pagenumber+"&uid="+uid;
+                        url = GlobalVariables.urlstr + "quan.getMyList&page=" + 1 + "&perNumber=" + pagenumber+"&uid="+uid;
                         getnews(1);
 //                        handler.sendEmptyMessage(6);
                     } else {
@@ -431,7 +431,7 @@ public class MyMinePageLeft extends Fragment {
                 addarray.clear();
                 page = 1;
 //                newsurl = "http://appapi.rexian.cn:8080/HKCityApi/news/newsFocusList?areaID=1&pageSize=10&pageIndex=" + page;
-                url = GlobalVariables.urlstr + "Quan.getListAll&page=" + page+"&uid="+uid;
+                url = GlobalVariables.urlstr + "quan.getMyList&page=" + page+"&uid="+uid;
                 getnews(0);
             }
         }, 2000);

@@ -119,7 +119,7 @@ public class HfbCenter extends BaseActivity {
     public void doQD(final View v) {
         XActivityindicator.create(this).show();
         v.setEnabled(false);
-        XNetUtil.Handle(APPService.jifenAddQiandao(uid,uname), "签到成功", "签到失败", new XNetUtil.OnHttpResult<Boolean>() {
+        XNetUtil.Handle(APPService.jifenAddQiandao(uid,uname), "签到成功,获得1怀府币", "签到失败", new XNetUtil.OnHttpResult<Boolean>() {
             @Override
             public void onError(Throwable e) {
                 XNetUtil.APPPrintln(e);

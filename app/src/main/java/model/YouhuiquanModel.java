@@ -15,6 +15,33 @@ public class YouhuiquanModel {
     private String s_money="";
     private int orlq=0;
 
+    private long s_time_unix = 0;
+    private long e_time_unix = 0;
+
+    public long getS_time_unix() {
+        if(!s_time.contains("-") && s_time_unix == 0)
+        {
+            s_time_unix = Long.parseLong(s_time);
+        }
+        return s_time_unix;
+    }
+
+    public void setS_time_unix(long s_time_unix) {
+        this.s_time_unix = s_time_unix;
+    }
+
+    public long getE_time_unix() {
+        if(!e_time.contains("-") && e_time_unix == 0)
+        {
+            e_time_unix = Long.parseLong(e_time);
+        }
+        return e_time_unix;
+    }
+
+    public void setE_time_unix(long e_time_unix) {
+        this.e_time_unix = e_time_unix;
+    }
+
     public String getId() {
         return id;
     }
@@ -35,6 +62,7 @@ public class YouhuiquanModel {
 
         if(!s_time.contains("-"))
         {
+            s_time_unix = Long.parseLong(s_time);
             s_time = DateUtils.unixToStr(s_time,"yyyy-MM-dd");
         }
 
@@ -49,6 +77,7 @@ public class YouhuiquanModel {
 
         if(!e_time.contains("-"))
         {
+            e_time_unix = Long.parseLong(e_time);
             e_time = DateUtils.unixToStr(e_time,"yyyy-MM-dd");
         }
 

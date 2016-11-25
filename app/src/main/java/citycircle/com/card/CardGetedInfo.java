@@ -39,6 +39,7 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
 import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
+import util.XNotificationCenter;
 
 /**
  * Created by X on 2016/11/8.
@@ -64,6 +65,13 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
     ScrollView slay;
     CallPhonePop callPhonePop;
     WebView content;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        XNotificationCenter.getInstance().removeObserver("PaySuccess");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +83,14 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
         intview();
         slay.setVisibility(View.GONE);
         getjson();
+
+        XNotificationCenter.getInstance().addObserver("PaySuccess", new XNotificationCenter.OnNoticeListener() {
+
+            @Override
+            public void OnNotice(Object obj) {
+                getjson();
+            }
+        });
     }
 
     private void intview() {
@@ -174,7 +190,7 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
 
                         shengyulay.setVisibility(View.VISIBLE);
 
-                        number.setText("NO."+list.get(i).getId());
+                        number.setText("NO."+list.get(i).getCardnumber());
 
                         nowjifen.setText(list.get(i).getJifen());
 
@@ -203,35 +219,6 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
         });
     }
 
-    private void getCard() {
-        OkHttpUtils.get().url(addurl).build().execute(new StringCallback() {
-            @Override
-            public void onError(Call call, Exception e) {
-                Toast.makeText(CardGetedInfo.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onResponse(String response) {
-                JSONObject jsonObject = JSON.parseObject(response);
-                JSONObject jsonObject1 = jsonObject.getJSONObject("data");
-                if (jsonObject1.getIntValue("code") == 0) {
-                    JSONObject jsonObject2=jsonObject1.getJSONObject("info");
-                    id=jsonObject2.getString("id");
-                    username=jsonObject2.getString("uid");
-                    url = GlobalVariables.urlstr + "Hyk.getArticleYLQ&id=" + id + "&uid=" + username;
-                    getjson();
-                    Toast.makeText(CardGetedInfo.this, "领取成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent();
-                    intent.setAction("com.servicedemo4");
-                    intent.putExtra("getmeeage", "12");
-                    CardGetedInfo.this.sendBroadcast(intent);
-                } else {
-                    Toast.makeText(CardGetedInfo.this, jsonObject1.getString("msg"), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -254,18 +241,17 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
                     CardGetedInfo.this.startActivity(intent1);
                 } else {
 
+                    String type = vipInfo.getData().getInfo().get(0).getType();
+                    String cardid = vipInfo.getData().getInfo().get(0).getCardid();
+                    String id = vipInfo.getData().getInfo().get(0).getId();
                     Intent intent1 = new Intent();
-                    intent1.putExtra("id", shopid);
+                    intent1.putExtra("type", type);
+                    intent1.putExtra("shopid", shopid);
+                    intent1.putExtra("cardid", cardid);
+                    intent1.putExtra("id", id);
                     intent1.putExtra("sname", titile.getText());
 
-                    if(cardtype.getText().toString().equals("充值卡"))
-                    {
-                        intent1.setClass(CardGetedInfo.this, CardDoCZ1.class);
-                    }
-                    else
-                    {
-                        intent1.setClass(CardGetedInfo.this, CardDoCZ2.class);
-                    }
+                    intent1.setClass(CardGetedInfo.this, CardDoCZ2.class);
 
                     CardGetedInfo.this.startActivity(intent1);
 

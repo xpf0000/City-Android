@@ -9,11 +9,30 @@ import android.widget.EditText;
 import com.robin.lazy.cache.CacheLoaderManager;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import citycircle.com.MyAppService.LocationApplication;
 import citycircle.com.R;
 
 public class XAPPUtil {
+
+    public static Date serverTime()
+    {
+        Date now = new Date();
+        return  new Date(now.getTime()+LocationApplication.serverTimeInterval);
+    }
+
+    public static long serverUnix()
+    {
+        Date now = new Date();
+        return  now.getTime()+LocationApplication.serverTimeInterval;
+    }
+
+    public static long serverUnixSecond()
+    {
+        Date now = new Date();
+        return  (now.getTime()+LocationApplication.serverTimeInterval)/1000;
+    }
 
     final static public boolean APPCheckIsLogin()
     {

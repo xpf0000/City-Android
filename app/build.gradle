@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId "citycircle.com"
         minSdkVersion 14
-        targetSdkVersion 24
+        targetSdkVersion 22
         versionCode 10
         versionName "3.4"
         multiDexEnabled true
@@ -99,5 +99,5 @@ dependencies {
     //compile project(':PullToRefresh')
     compile 'com.bigkoo:pickerview:2.1.1'
     compile 'com.kevin:pulltorefresh:1.0.8'
-
+    compile files('libs/alipaySingle-20161009.jar')
 }

@@ -133,6 +133,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         leftnum = (TextView) view.findViewById(R.id.mine_leftnum);
         rightnum = (TextView) view.findViewById(R.id.mine_rightnum);
 
+
         left.setOnClickListener(this);
         right.setOnClickListener(this);
 
@@ -151,6 +152,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
         vip = (TextView) view.findViewById(R.id.vip);
         seting=(TextView)view.findViewById(R.id.seting);
+        seting.setOnClickListener(this);
+
         head = (ImageView) view.findViewById(R.id.head);
         name = (TextView) view.findViewById(R.id.name);
 
@@ -239,6 +242,11 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                     break;
 
                 case "8":
+                    intent.setClass(getActivity(), SetActivity.class);
+                    getActivity().startActivity(intent);
+                    break;
+
+                case "seting":
                     intent.setClass(getActivity(), SetActivity.class);
                     getActivity().startActivity(intent);
                     break;
@@ -337,7 +345,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
         XActivityindicator.create(getActivity()).show();
         v.setEnabled(false);
-        XNetUtil.Handle(APPService.jifenAddQiandao(uid,uname), "签到成功", "签到失败", new XNetUtil.OnHttpResult<Boolean>() {
+        XNetUtil.Handle(APPService.jifenAddQiandao(uid,uname), "签到成功,获得1怀府币", "签到失败", new XNetUtil.OnHttpResult<Boolean>() {
             @Override
             public void onError(Throwable e) {
                 XNetUtil.APPPrintln(e);

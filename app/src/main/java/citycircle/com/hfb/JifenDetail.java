@@ -224,7 +224,15 @@ public class JifenDetail extends BaseActivity {
             String name = dataArr.get(position).getName();
             String time = dataArr.get(position).getCreate_time();
             String yu = "余额:"+dataArr.get(position).getHfbsy()+"个";
-            String num = "+"+dataArr.get(position).getHfb();
+            String num = "";
+            if(dataArr.get(position).getType().equals("4"))
+            {
+                num = "-"+dataArr.get(position).getHfb();
+            }
+            else
+            {
+                num = "+"+dataArr.get(position).getHfb();
+            }
 
             listItemView.name.setText(name);
             listItemView.time.setText(time);

@@ -48,6 +48,7 @@ public class XNetUtil {
                     @Override
                     public void onError(Throwable e) {
                         res.onError(e);
+                        Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override

@@ -34,8 +34,15 @@ import com.robin.lazy.cache.disk.naming.HashCodeFileNameGenerator;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import citycircle.com.Activity.MainActivity;
 import citycircle.com.R;
@@ -79,6 +86,8 @@ public class LocationApplication extends Application {
     static public DataCache APPDataCache;
 
     private boolean isActive = false;
+
+    public static long serverTimeInterval;
 
     /**
      * 创建全局变量 全局变量一般都比较倾向于创建一个单独的数据类文件，并使用static静态变量
@@ -187,6 +196,20 @@ public class LocationApplication extends Application {
                 }
 
                 Response response = chain.proceed(request);
+                String date = response.header("Date");
+                SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US);
+                format.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                try {
+
+                    Date serverdate = format.parse(date);
+                    Date localdate = new Date();
+
+                    serverTimeInterval = serverdate.getTime() - localdate.getTime();
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
                 return response;
             }

@@ -103,6 +103,15 @@ public class VipInfo {
             private String info;
             private String shopid;
             private String jifen;
+            private String cardid;
+
+            public String getCardid() {
+                return cardid;
+            }
+
+            public void setCardid(String cardid) {
+                this.cardid = cardid;
+            }
 
             public String getJifen() {
                 return jifen;

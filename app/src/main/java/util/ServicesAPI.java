@@ -3,6 +3,7 @@ package util;
 import java.util.List;
 
 import model.BannerModel;
+import model.ChongzhiModel;
 import model.GoodsModel;
 import model.GroupModel;
 import model.HFBModel;
@@ -116,6 +117,28 @@ public interface ServicesAPI {
             @Query("keyword") String keyword,
             @Query("page") int page,
             @Query("perNumber") int perNumber
+    );
+
+    @GET("?service=Hyk.getCardProduct")  //会员卡充值金额列表
+    Observable<HttpResult<List<ChongzhiModel>>> hykGetCardProduct(
+            @Query("id") String id
+    );
+
+    @GET("?service=Jifen.getUYHQList")  //用户领取的商家优惠列表
+    Observable<HttpResult<List<YouhuiquanModel>>> jifenGetUYHQList(
+            @Query("shopid") String shopid,
+            @Query("uid") String uid,
+            @Query("page") int page,
+            @Query("perNumber") int perNumber
+    );
+
+    @POST("?service=Hyk.paySign")  //支付
+    Observable<HttpResult<Object>> hykPaySign(
+            @Query("uid") String uid,
+            @Query("username") String username,
+            @Query("mcardid") String mcardid,
+            @Query("cpid") String cpid,
+            @Query("yhqid") String yhqid
     );
 
 
