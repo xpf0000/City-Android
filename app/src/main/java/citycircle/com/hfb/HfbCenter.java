@@ -31,6 +31,7 @@ import util.BaseActivity;
 import util.XAPPUtil;
 import util.XActivityindicator;
 import util.XGridView;
+import util.XHtmlVC;
 import util.XNetUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -181,34 +182,11 @@ public class HfbCenter extends BaseActivity {
 
     public void doDH(final View v,final GoodsModel model) {
 
-        AlertView alert = new AlertView("提醒", "确定要兑换该商品?", null, null, new String[]{"取消","确定"}, this, AlertView.Style.Alert, new OnItemClickListener() {
-            @Override
-            public void onItemClick(Object o, int position) {
-
-                if(position == 1)
-                {
-                    XActivityindicator.create(HfbCenter.this).show();
-                    v.setEnabled(false);
-                    XNetUtil.Handle(APPService.jifenAddDH(uid,uname,model.getId()), "兑换成功", "兑换失败", new XNetUtil.OnHttpResult<Boolean>() {
-                        @Override
-                        public void onError(Throwable e) {
-                            XNetUtil.APPPrintln(e);
-                            v.setEnabled(true);
-                        }
-
-                        @Override
-                        public void onSuccess(Boolean aBoolean) {
-                            v.setEnabled(true);
-                        }
-                    });
-                }
-
-            }
-        });
-
-        XActivityindicator.setAlert(alert);
-
-        alert.show();
+        String id = model.getId();
+        Bundle bundle = new Bundle();
+        bundle.putString("url","file:///android_asset/duihuaninfo.html?id="+id);
+        bundle.putString("title","兑换详情");
+        pushVC(XHtmlVC.class,bundle);
 
     }
 
@@ -240,7 +218,6 @@ public class HfbCenter extends BaseActivity {
     }
 
     public void toDetail(View v) {
-
         pushVC(JifenDetail.class);
 
     }

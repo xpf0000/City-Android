@@ -46,6 +46,7 @@ import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.friends.Wechat;
 import model.UserModel;
 import util.DataCache;
+import util.XNetUtil;
 import util.XNotificationCenter;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -224,11 +225,19 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
                 case 4:
                     JSONObject jsonObject2 = JSON.parseObject(therdstr);
                     JSONObject jsonObject3 = jsonObject2.getJSONObject("data");
+
+                    XNetUtil.APPPrintln("login str: "+therdstr);
+
                     if (jsonObject3.getIntValue("code") == 0) {
                         urlstr = therdstr;
                         handler.sendEmptyMessage(1);
 
-                    } else {
+                    }
+                    else if(jsonObject3.getIntValue("code") == 1)
+                    {
+
+                    }
+                    else {
                         mAlertViewExt.show();
 //                        openRegister = GlobalVariables.urlstr + "User.openRegister&openid=" + userid + "&nickname=" + nickname + "&sex=" + sex + "&headimage=" + headimage;
 

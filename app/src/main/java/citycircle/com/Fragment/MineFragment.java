@@ -63,7 +63,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     LinearLayout left;
     LinearLayout right;
 
-    TextView name, vip,seting,leftnum,rightnum;
+    TextView name, vip,leftnum,rightnum;
     com.nostra13.universalimageloader.core.ImageLoader ImageLoader;
     DisplayImageOptions options;
     citycircle.com.Utils.ImageUtils ImageUtils;
@@ -151,8 +151,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         }
 
         vip = (TextView) view.findViewById(R.id.vip);
-        seting=(TextView)view.findViewById(R.id.seting);
-        seting.setOnClickListener(this);
 
         head = (ImageView) view.findViewById(R.id.head);
         name = (TextView) view.findViewById(R.id.name);

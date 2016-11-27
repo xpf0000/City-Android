@@ -38,6 +38,7 @@ import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
 import citycircle.com.Utils.PreferencesUtils;
 import cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager;
+import util.XNetUtil;
 
 /**
  * Created by admins on 2016/1/30.
@@ -82,6 +83,9 @@ public class PropertyHome extends Activity implements View.OnClickListener {
         houseurl = GlobalVariables.urlstr + "user.getHouseList&uid=" + uid + "&username=" + username;
         url = GlobalVariables.urlstr + "Wuye.getUserNewsCount&uid=" + uid + "&username=" + username;
         adduel = GlobalVariables.urlstr + "News.getGuanggao&typeid=93";
+
+        XNetUtil.APPPrintln("url: "+url);
+
         intview();
         getHuose();
 
@@ -268,6 +272,9 @@ public class PropertyHome extends Activity implements View.OnClickListener {
                 super.run();
                 HttpRequest httpRequest = new HttpRequest();
                 urlstr = httpRequest.doGet(url);
+
+                XNetUtil.APPPrintln("urlstr: "+urlstr);
+
                 if (addurlstr == null) {
                     addurlstr = httpRequest.doGet(adduel);
                     housestr = httpRequest.doGet(houseurl);

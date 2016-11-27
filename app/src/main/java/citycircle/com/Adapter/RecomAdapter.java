@@ -23,9 +23,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import citycircle.com.Activity.NewsInfoActivity;
+import citycircle.com.MyAppService.LocationApplication;
 import citycircle.com.MyViews.MyGridView;
 import citycircle.com.R;
 import citycircle.com.Utils.ImageUtils;
+import util.DensityUtil;
 
 /**
  * Created by admins on 2016/6/13.
@@ -88,6 +90,18 @@ public class RecomAdapter extends BaseAdapter {
                 url=jsonObject.getString("url");
             }
             ImageLoader.displayImage(url,getitem.banner,options,animateFirstListener);
+
+
+
+            ViewGroup.LayoutParams layoutParams = getitem.banner.getLayoutParams();
+
+            int w = LocationApplication.SW - DensityUtil.dip2px(context,20);
+            int h = (int)(w*7.0/16.0);
+
+            layoutParams.height = h;
+            getitem.banner.setLayoutParams(layoutParams);
+
+
         }else {
 
             String url = null;

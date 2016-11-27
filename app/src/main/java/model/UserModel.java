@@ -4,6 +4,7 @@ import com.alibaba.sdk.android.push.CommonCallback;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 
 import java.io.Serializable;
+import java.util.List;
 
 import util.HttpResult;
 import util.ModelUtil;
@@ -11,6 +12,7 @@ import util.XAPPUtil;
 import util.XNetUtil;
 import util.XNotificationCenter;
 
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 /**
@@ -344,6 +346,44 @@ public class UserModel implements Serializable {
         });
 
 
+    }
+
+
+
+    public void getUinfo()
+    {
+        String uid = getUid();
+        String uname = getUsername();
+
+        if(uid.equals("") || uname.equals(""))
+        {
+            return;
+        }
+
+        XNetUtil.Handle(APPService.jifenGetUinfo(uid,uname), new XNetUtil.OnHttpResult<List<UserModel>>() {
+            @Override
+            public void onError(Throwable e) {
+
+                XNetUtil.APPPrintln("!!!!!! jifenGetUinfo error: "+e);
+
+            }
+
+            @Override
+            public void onSuccess(List<UserModel> arrs) {
+
+                XNetUtil.APPPrintln(arrs.toString());
+
+                if(arrs.size() > 0)
+                {
+                    UserModel u = arrs.get(0);
+                    setHfb(u.getHfb());
+                    setQdday(u.getQdday());
+                    setWqd(u.getWqd());
+                    setOrqd(u.getOrqd());
+                }
+
+            }
+        });
     }
 
 }

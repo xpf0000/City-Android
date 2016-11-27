@@ -18,6 +18,7 @@ public class DataCache {
         if(model != null)
         {
             User = model;
+            User.getUinfo();
         }
         else
         {

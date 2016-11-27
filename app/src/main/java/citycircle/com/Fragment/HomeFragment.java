@@ -28,6 +28,7 @@ import citycircle.com.Activity.SearchNews;
 import citycircle.com.MyAppService.LocationApplication;
 import citycircle.com.R;
 import util.XActivityindicator;
+import util.XHtmlVC;
 import util.XNetUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -89,6 +90,7 @@ public class HomeFragment extends Fragment {
 
     private void doQD(final View v)
     {
+
         String uid = APPDataCache.User.getUid();
         String uname = APPDataCache.User.getUsername();
 
@@ -97,6 +99,17 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent();
             intent.setClass(getActivity(), Logn.class);
             getActivity().startActivity(intent);
+            return;
+        }
+
+        if(APPDataCache.User.getOrqd() == 1)
+        {
+            Intent intent = new Intent();
+            intent.setClass(getActivity(), XHtmlVC.class);
+            intent.putExtra("url","file:///android_asset/index.html?uid="+uid+"&uname="+uname);
+            intent.putExtra("title","每日签到");
+            getActivity().startActivity(intent);
+
             return;
         }
 
@@ -111,7 +124,11 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onSuccess(Boolean aBoolean) {
-                v.setEnabled(!aBoolean);
+                v.setEnabled(true);
+                if(aBoolean)
+                {
+                    APPDataCache.User.setOrqd(1);
+                }
             }
         });
     }

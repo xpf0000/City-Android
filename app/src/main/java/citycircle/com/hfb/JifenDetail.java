@@ -41,7 +41,7 @@ public class JifenDetail extends BaseActivity {
     @Override
     protected void setupUi() {
         setContentView(R.layout.jifendetail);
-        setPageTitle("兑换记录");
+        setPageTitle("明细列表");
 
         uid = APPDataCache.User.getUid();
         uname = APPDataCache.User.getUsername();

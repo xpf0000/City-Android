@@ -49,8 +49,7 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
 
     LinearLayout yu,jifen;
     CardView cardView;
-    TextView shopinfo, cardtype, titile, callphone,
-            adress, shengyu, info, number,shengyutitle,nowjifen;
+    TextView cardtype, titile, shengyu, info, number,shengyutitle,nowjifen;
     ImageView back, logo;
     VipInfo vipInfo;
     String url, username, id, shopid, addurl;
@@ -107,21 +106,17 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
         shengyu = (TextView) findViewById(R.id.shengyu);
         cardView = (CardView) findViewById(R.id.cardview);
         number = (TextView) findViewById(R.id.number);
-        shopinfo = (TextView) findViewById(R.id.shopinfo);
         cardtype = (TextView) findViewById(R.id.cardtype);
         titile = (TextView) findViewById(R.id.titile);
         shengyutitle = (TextView) findViewById(R.id.shengyutitle);
         nowjifen = (TextView) findViewById(R.id.nowjifen);
-        callphone = (TextView) findViewById(R.id.callphone);
-        callphone.setOnClickListener(this);
 
         yu = (LinearLayout) findViewById(R.id.vipcardinfo_yu);
         jifen = (LinearLayout) findViewById(R.id.vipcardinfo_jifen);
 
-        adress = (TextView) findViewById(R.id.adress);
         back = (ImageView) findViewById(R.id.back);
         logo = (ImageView) findViewById(R.id.logo);
-        shopinfo.setOnClickListener(this);
+
         btn_lq.setOnClickListener(this);
         back.setOnClickListener(this);
         shengyulay.setOnClickListener(this);
@@ -150,10 +145,7 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
                         shopid = list.get(i).getShopid();
                         cardtype.setText(list.get(i).getType());
                         titile.setText(list.get(i).getShopname());
-                        String strs="电话:" + list.get(i).getTel();
-                        callphone.setText(strs);
 
-                        adress.setText("地址:" + list.get(i).getAddress());
                         String infos = "<html>\r\n\t"
                                 + "<head>\r\n"
                                 + "<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\"/>"
@@ -217,6 +209,15 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
                 }
             }
         });
+    }
+
+    public void toInfo(View v)
+    {
+        Intent intent = new Intent();
+        intent.putExtra("id", shopid);
+        intent.putExtra("shopname", titile.getText());
+        intent.setClass(CardGetedInfo.this, ShopInfo.class);
+        startActivity(intent);
     }
 
     @Override

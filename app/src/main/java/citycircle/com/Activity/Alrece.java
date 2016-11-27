@@ -36,6 +36,7 @@ import citycircle.com.Utils.Loadmore;
 import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.card.CardGetedInfo;
 import okhttp3.Call;
+import util.XNetUtil;
 
 /**
  * Created by admins on 2016/7/21.
@@ -75,6 +76,9 @@ public class Alrece extends Fragment implements View.OnClickListener, AdapterVie
             username = PreferencesUtils.getString(getActivity(), "username");
             url = GlobalVariables.urlstr + "Hyk.getList&category_id=" + category_id + "&typeid=" + typeid + "&page=" + page + "&username=" + username + "&perNumber=20";
         }
+
+        XNetUtil.APPPrintln(url);
+
         intview();
         setadapter();
         getjson(0);

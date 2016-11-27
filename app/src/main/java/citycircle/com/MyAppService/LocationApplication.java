@@ -173,7 +173,7 @@ public class LocationApplication extends Application {
 
         CacheLoaderManager.getInstance().init(this, new HashCodeFileNameGenerator(), 1024 * 1024 * 64, 200, 50);
 
-        APPDataCache = new DataCache();
+
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         SW = displayMetrics.widthPixels;
         SH = displayMetrics.heightPixels;
@@ -267,6 +267,7 @@ public class LocationApplication extends Application {
             }
         });
 
+        APPDataCache = new DataCache();
 
         System.out.println("================init============");
     }

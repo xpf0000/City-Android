@@ -41,7 +41,7 @@ public class SetActivity extends Activity {
     CheckSwitchButton mPush;
     Button logout;
     ImageView back;
-    LinearLayout update,cleaner,about,free;
+    LinearLayout update,cleaner,about,free,pass;
     File cacheDir;
     String dd;
     TextView shuliang;
@@ -74,9 +74,20 @@ public class SetActivity extends Activity {
         about=(LinearLayout)findViewById(R.id.about);
         cleaner=(LinearLayout)findViewById(R.id.cleaner);
         update=(LinearLayout)findViewById(R.id.update);
+        pass=(LinearLayout)findViewById(R.id.pass);
         back=(ImageView)findViewById(R.id.back);
         logout=(Button)findViewById(R.id.logout);
         shuliang.setText(dd+"M");
+
+        pass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent();
+                intent.setClass(SetActivity.this,UpPassword.class);
+                SetActivity.this.startActivity(intent);
+            }
+        });
+
         free.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,6 +96,7 @@ public class SetActivity extends Activity {
                 SetActivity.this.startActivity(intent);
             }
         });
+
         about.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

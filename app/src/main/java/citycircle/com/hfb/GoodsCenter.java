@@ -2,6 +2,7 @@ package citycircle.com.hfb;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +29,7 @@ import model.GoodsModel;
 import util.BaseActivity;
 import util.NetworkImageHolderView;
 import util.XActivityindicator;
+import util.XHtmlVC;
 import util.XInterface;
 import util.XNetUtil;
 
@@ -116,38 +118,11 @@ public class GoodsCenter extends BaseActivity {
 
     public void doDH(final View v,final int p) {
 
-        v.setEnabled(false);
-
-        AlertView alert = new AlertView("提醒", "确定要兑换该商品?", null, null, new String[]{"取消","确定"}, this, AlertView.Style.Alert, new OnItemClickListener() {
-            @Override
-            public void onItemClick(Object o, int position) {
-
-                if(position == 1)
-                {
-                    GoodsModel model = dataArr.get(p);
-
-                    XActivityindicator.create(GoodsCenter.this).show();
-                    v.setEnabled(false);
-                    XNetUtil.Handle(APPService.jifenAddDH(uid,uname,model.getId()), "兑换成功", "兑换失败", new XNetUtil.OnHttpResult<Boolean>() {
-                        @Override
-                        public void onError(Throwable e) {
-                            XNetUtil.APPPrintln(e);
-                            v.setEnabled(true);
-                        }
-
-                        @Override
-                        public void onSuccess(Boolean aBoolean) {
-                            v.setEnabled(true);
-                        }
-                    });
-                }
-
-            }
-        });
-
-        XActivityindicator.setAlert(alert);
-
-        alert.show();
+        String id = dataArr.get(p).getId();
+        Bundle bundle = new Bundle();
+        bundle.putString("url","file:///android_asset/duihuaninfo.html?id="+id);
+        bundle.putString("title","兑换详情");
+        pushVC(XHtmlVC.class,bundle);
 
     }
 

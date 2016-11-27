@@ -11,6 +11,8 @@ import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.PreferencesUtils;
 import util.XNotificationCenter;
 
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+
 /**
  * Created by admins on 2016/8/9.
  */
@@ -25,7 +27,11 @@ public class Message extends MessageReceiver {
 
         if(cPushMessage.getTitle().equals("账号在其它设备已登陆"))
         {
-            XNotificationCenter.getInstance().postNotice("AccountLogout",null);
+            if(!APPDataCache.User.getUid().equals(""))
+            {
+                XNotificationCenter.getInstance().postNotice("AccountLogout",null);
+            }
+
         }
 
 

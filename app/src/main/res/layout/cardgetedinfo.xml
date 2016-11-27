@@ -62,6 +62,8 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:clickable="true"
+                            android:onClick="toInfo"
                             >
 
                             <ImageView
@@ -119,17 +121,6 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="10dp"
                                 android:layout_marginBottom="10dp"
-                                />
-
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="点击进入商家详情"
-                                android:textColor="@color/white"
-                                android:textSize="16sp"
-                                android:layout_centerVertical="true"
-                                android:layout_centerHorizontal="true"
                                 />
 
                         </RelativeLayout>
@@ -247,66 +238,6 @@
 
                         </LinearLayout>
 
-                    </LinearLayout>
-
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@color/white"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/shopinfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/ui_10_dip"
-                            android:layout_marginRight="@dimen/ui_10_dip"
-                            android:layout_weight="1"
-                            android:drawableRight="@mipmap/card_go"
-                            android:gravity="center_vertical"
-                            android:text="商家信息"
-                            android:textSize="16dp" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:background="@color/linecolor"></View>
-
-                        <TextView
-                            android:id="@+id/callphone"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/ui_10_dip"
-                            android:layout_marginRight="@dimen/ui_10_dip"
-                            android:layout_weight="1"
-                            android:drawableLeft="@mipmap/card_phone"
-                            android:drawablePadding="5dp"
-                            android:gravity="center_vertical"
-                            android:textColor="#333333"
-                            android:textSize="16dp" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:background="@color/linecolor"></View>
-
-                        <TextView
-                            android:id="@+id/adress"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/ui_10_dip"
-                            android:drawableLeft="@mipmap/card_addressx"
-                            android:drawablePadding="5dp"
-                            android:gravity="center_vertical"
-                            android:textSize="16dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="#333333"
-                            />
                     </LinearLayout>
 
                     <TextView
