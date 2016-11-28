@@ -105,18 +105,10 @@ public class LocaAdapter extends BaseAdapter {
             }
             ImgAdapter newPhotoAdapter=new ImgAdapter(imgList,context);
             getitem.nwsgrid.setAdapter(newPhotoAdapter);
-            getitem.nwsgrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int positions, long id) {
-                    Intent intent=new Intent();
-                    intent.putExtra("id", arrayList.get(position).get("id"));
-                    intent.putExtra("title", arrayList.get(position).get("title"));
-                    intent.putExtra("description", arrayList.get(position).get("description"));
-                    intent.putExtra("url", arrayList.get(position).get("url"));
-                    intent.setClass(context, NewsInfoActivity.class);
-                    context.startActivity(intent);
-                }
-            });
+            getitem.nwsgrid.setClickable(false);
+            getitem.nwsgrid.setPressed(false);
+            getitem.nwsgrid.setEnabled(false);
+
         }
         return convertView;
     }

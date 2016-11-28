@@ -18,6 +18,7 @@ public class XNetUtil {
     {
         void onError(Throwable e);
         void onSuccess(T t);
+
     }
 
     final static public <T> void APPPrintln(T t)
@@ -113,6 +114,36 @@ public class XNetUtil {
 
     }
 
+
+    public static <T> void HandleBool(Observable<HttpResult<T>> obj,String success,String fail,final OnHttpResult<Result<T>> res) {
+
+        obj
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(new HttpResultFuncBoolAndResult<T>(success,fail))
+                .subscribe(new Subscriber<Result<T>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        XActivityindicator.hide();
+                        Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
+                        res.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(Result<T> r) {
+                        res.onSuccess(r);
+                    }
+                });
+
+    }
+
+
+
     /**
      * 用来统一处理Http的resultCode,并将HttpResult的Data部分剥离出来返回给subscriber
      *
@@ -182,5 +213,73 @@ public class XNetUtil {
         }
     }
 
+
+
+    private static class HttpResultFuncBoolAndResult<T> implements Func1<HttpResult<T>, Result<T>> {
+
+        private String success = "";
+        private String fail = "";
+
+        public HttpResultFuncBoolAndResult(String s,String f) {
+
+            this.success = s;
+            this.fail = f;
+        }
+
+        @Override
+        public Result<T> call(HttpResult<T> httpResult) {
+
+            XActivityindicator.hide();
+            Result<T> r = new Result<T>();
+            r.setHttpResult(httpResult);
+
+            if (httpResult.getRet() != 200) {
+
+                XActivityindicator.create(LocationApplication.context).showErrorWithStatus(fail);
+                r.setSuccess(false);
+                return r;
+            }
+            else
+            {
+                if(httpResult.getData().getCode() != 0)
+                {
+                    String msg = httpResult.getData().getMsg();
+                    msg = msg.length() == 0 ? fail : msg;
+                    XActivityindicator.create(LocationApplication.context).showErrorWithStatus(msg);
+                    r.setSuccess(false);
+                    return r;
+                }
+            }
+
+            if(success != null)
+            {
+                XActivityindicator.create(LocationApplication.context).showSuccessWithStatus(success);
+            }
+            r.setSuccess(true);
+            return r;
+        }
+    }
+
+    public static class Result<T>
+    {
+        private boolean success = false;
+        private HttpResult<T> httpResult;
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public void setSuccess(boolean success) {
+            this.success = success;
+        }
+
+        public HttpResult<T> getHttpResult() {
+            return httpResult;
+        }
+
+        public void setHttpResult(HttpResult<T> httpResult) {
+            this.httpResult = httpResult;
+        }
+    }
 
 }

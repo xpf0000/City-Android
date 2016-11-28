@@ -120,7 +120,7 @@ public class GoodsCenter extends BaseActivity {
 
         String id = dataArr.get(p).getId();
         Bundle bundle = new Bundle();
-        bundle.putString("url","file:///android_asset/duihuaninfo.html?id="+id);
+        bundle.putString("url","file:///android_asset/duihuaninfo.html?id="+id+"&uid="+uid+"&uname="+uname);
         bundle.putString("title","兑换详情");
         pushVC(XHtmlVC.class,bundle);
 

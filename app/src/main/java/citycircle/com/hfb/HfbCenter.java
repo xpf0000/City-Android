@@ -184,7 +184,7 @@ public class HfbCenter extends BaseActivity {
 
         String id = model.getId();
         Bundle bundle = new Bundle();
-        bundle.putString("url","file:///android_asset/duihuaninfo.html?id="+id);
+        bundle.putString("url","file:///android_asset/duihuaninfo.html?id="+id+"&uid="+uid+"&uname="+uname);
         bundle.putString("title","兑换详情");
         pushVC(XHtmlVC.class,bundle);
 

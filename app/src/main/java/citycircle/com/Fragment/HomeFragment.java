@@ -15,7 +15,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.readystatesoftware.viewbadger.BadgeView;
 import com.umeng.update.UmengUpdateAgent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
@@ -23,16 +27,19 @@ import citycircle.com.Activity.AttaFragment;
 import citycircle.com.Activity.CamFragment;
 import citycircle.com.Activity.LocalFragment;
 import citycircle.com.Activity.Logn;
+import citycircle.com.Activity.Mymessage;
 import citycircle.com.Activity.RecommFragment;
 import citycircle.com.Activity.SearchNews;
 import citycircle.com.MyAppService.LocationApplication;
 import citycircle.com.R;
+import citycircle.com.Utils.MyEventBus;
 import util.XActivityindicator;
 import util.XHtmlVC;
 import util.XNetUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 import static citycircle.com.MyAppService.LocationApplication.APPService;
+import static citycircle.com.MyAppService.LocationApplication.context;
 
 /**
  * Created by admins on 2015/11/14.
@@ -47,13 +54,17 @@ public class HomeFragment extends Fragment {
     LocalFragment localFragment;
     RecommFragment recommFragment;
     CamFragment camFragment;
-    ImageView search;
+    ImageView search,message;
     TextView qiandao;
+    private BadgeView badge;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.home_layout, container, false);
+
+        EventBus.getDefault().register(this);
+
         UmengUpdateAgent.update(getActivity());
 //        PushAgent mPushAgent = PushAgent.getInstance(getActivity());
 //        mPushAgent.enable();
@@ -64,6 +75,7 @@ public class HomeFragment extends Fragment {
 
         qiandao = (TextView) view.findViewById(R.id.qiandao) ;
         search=(ImageView)view.findViewById(R.id.search) ;
+        message=(ImageView)view.findViewById(R.id.message) ;
         viewPager=(ViewPager)view.findViewById(R.id.viewpager);
         viewPager.setOffscreenPageLimit(4);
         adapter=new SectionsPagerAdapter(getChildFragmentManager());
@@ -80,12 +92,29 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent();
+                intent.setClass(getActivity(), Mymessage.class);
+                getActivity().startActivity(intent);
+            }
+        });
+
         qiandao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 doQD(v);
             }
         });
+
+        badge = new BadgeView(context, message);
+        badge.setText("");
+        badge.setTextSize(10);
+        badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+        badge.setBadgeMargin(message.getWidth()/5);
+        badge.hide();
+
     }
 
     private void doQD(final View v)
@@ -133,6 +162,20 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    @Subscribe
+    public void getEventmsg(MyEventBus myEventBus) {
+        if (myEventBus.getMsg().equals("show")) {
+            badge.show();
+        } else {
+            badge.hide();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 //        ArrayList<Fragment> arrayList=new ArrayList<>();
@@ -193,4 +236,7 @@ public class HomeFragment extends Fragment {
             return null;
         }
     }
+
+
+
 }

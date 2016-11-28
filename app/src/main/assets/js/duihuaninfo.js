@@ -1,13 +1,22 @@
 
 var vm;
 var id = "";
+var uid = "";
+var uname="";
+
+var need = -1;
+var has = -1;
+var running = false;
 
 requirejs(['main'], function (main) {  
 	
 		require(['avalon','net'], function() {
 	     	
 	     	id = $.getUrlParam('id');
-	     		 
+	     	uid = $.getUrlParam('uid');
+		 	uname = $.getUrlParam('uname');
+		 	
+	     	 
 	 			vm = avalon.define({
 	    
 		  		$id: "duihuaninfo",
@@ -15,11 +24,6 @@ requirejs(['main'], function (main) {
 		  		info:{
 			  		
 			  		content : ''
-		  		},
-
-		  		reload: function()
-		  		{
-		  		    getinfo();
 		  		},
 		  		
 		  		doDH: function()
@@ -29,18 +33,19 @@ requirejs(['main'], function (main) {
 		  		
 		  		alertClick:function(item)
 		  		{
+			  		if(running)
+			  		{
+				  		return;
+			  		}
+			  		
 			  		if(item == 0)
 			  		{
 				  		$('#alertBG').addClass("hidden")
 			  		}
 			  		else
-			  		{
-				  		var item = vm.info;
-				  		item.msg = "兑换商品"
-				  		item.type = '2';
-				  		sendMsgToAPP(item);
-				  		
+			  		{		  		
 				  		$('#alertBG').addClass("hidden")
+				  		dh();
 			  		}
 			  		
 		  		},
@@ -52,7 +57,7 @@ requirejs(['main'], function (main) {
 		  		
 	  		
 		  		getinfo();
-
+		  		getUInfo();
 				
 				function getinfo()
 		  		 {
@@ -74,7 +79,9 @@ requirejs(['main'], function (main) {
 					  		 		item.content = '';
 				  		 		}
 				  		
-				  		 		vm.info = item;				  		 					  		 		
+				  		 		vm.info = item;	
+				  		 		need = item["hfb"];	
+				  		 		check();		  		 					  		 
 				  		 		
 			  		 		}
 
@@ -82,6 +89,90 @@ requirejs(['main'], function (main) {
 
 					});
 				}
+				
+				
+				function getUInfo()
+		  		 {
+			  		 
+		  		 	var url = BaseUrl+"jifen.getUinfo&uid="+uid+"&username="+uname;
+
+		  		 	XHttpGet( url, function(data) 
+		  		 	{
+			  			var arr = data.data.info;
+		  		 		
+		  		 		if(arr)
+		  		 		{
+			  		 		if(arr.length > 0)
+			  		 		{
+				  		 		var item = arr[0];
+				  		 		has = item["hfb"];
+				  		 		check();		  		 					  		 		
+			  		 		}
+
+						}
+
+					});
+				}
+				
+				function check()
+				{
+					if(need == null || has == null)
+					{
+						return
+					}
+					
+					if(need < 0 || has < 0)
+					{
+						return
+					}
+					
+					if(has < need)
+					{
+						$('#bugou').removeClass("hidden")
+					}
+				}
+
+				function dh()
+				{
+					if(running)
+					{
+						return;
+					}
+					
+					sendMsgToAPP({'msg':'开始兑换商品','type':'2'});
+					
+					running = true;
+					
+					var url = BaseUrl+"jifen.AddDH&uid="+uid+"&username="+uname+"&id="+id;
+
+		  		 	XHttpGet( url, function(data) 
+		  		 	{
+			  			var code = data.data.code;
+		  		 		
+		  		 		if(code == 0)
+		  		 		{
+			  		 		var id = data.data.info.id;
+			  		 		sendMsgToAPP({'msg':'商品兑换成功','type':'2','id':id});
+			  		 		running = false;
+			  		 		return;
+						}
+						
+						var msg = data.data.msg;
+						if(msg == null)
+						{
+							msg = "";
+						}
+						
+						msg = msg == "" ? "兑换失败" : msg;
+						
+						sendMsgToAPP({'msg':'商品兑换失败','type':'2','info':msg});
+						running = false;
+
+					});
+					
+					
+				}
+
 	
 		
 	})
@@ -90,6 +181,11 @@ requirejs(['main'], function (main) {
      
    
 });
+
+function toGoodsCenter()
+{
+	sendMsgToAPP({'msg':'跳转怀府币商城','type':'3'});
+}
 
 function doDH()
 {
@@ -109,11 +205,6 @@ function alertClick(item)
 				  		
 	}
 */
-}
-
-function reload()
-{
-    vm.reload();
 }
 
 

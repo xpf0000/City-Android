@@ -24,7 +24,10 @@
         android:layout_marginRight="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:numColumns="3"></citycircle.com.MyViews.MyGridView>
+        android:numColumns="3"
+        android:focusable="false"
+        android:clickable="false"
+        ></citycircle.com.MyViews.MyGridView>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

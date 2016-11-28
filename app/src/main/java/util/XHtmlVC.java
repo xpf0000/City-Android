@@ -16,6 +16,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bigkoo.alertview.AlertView;
 import com.bigkoo.alertview.OnItemClickListener;
+import com.bigkoo.svprogresshud.SVProgressHUD;
+import com.bigkoo.svprogresshud.listener.OnDismissListener;
+import com.google.gson.internal.LinkedTreeMap;
 import com.handmark.pulltorefresh.library.extras.PullToRefreshWebView2;
 
 import java.util.ArrayList;
@@ -93,20 +96,43 @@ public class XHtmlVC extends BaseActivity {
         String msg=obj.getString("msg");
         if(type.equals("1") && msg.equals("兑换商品"))
         {
+            String uid = APPDataCache.User.getUid();
+            String uname = APPDataCache.User.getUsername();
             String id = obj.getString("id");
             Bundle bundle = new Bundle();
-            bundle.putString("url","file:///android_asset/duihuaninfo.html?id="+id);
+            bundle.putString("url","file:///android_asset/duihuaninfo.html?id="+id+"&uid="+uid+"&uname="+uname);
             bundle.putString("title","兑换详情");
             pushVC(XHtmlVC.class,bundle);
 
         }
 
-        if(type.equals("2") && msg.equals("兑换商品"))
+        if(type.equals("2") && msg.equals("开始兑换商品"))
         {
-            String id = obj.getString("id");
+            XActivityindicator.create(mContext).show();
+        }
 
-            doDH(id);
+        if(type.equals("2") && msg.equals("商品兑换成功"))
+        {
+            final String id=obj.getString("id");
+            SVProgressHUD hud = XActivityindicator.create(mContext);
+            hud.showSuccessWithStatus("兑换成功");
+            hud.setOnDismissListener(new OnDismissListener() {
+                @Override
+                public void onDismiss(SVProgressHUD hud) {
 
+                    Bundle bundle = new Bundle();
+                    bundle.putString("url","file:///android_asset/duihuansuccess.html?id="+id);
+                    bundle.putString("title","兑换详情");
+                    pushVC(XHtmlVC.class,bundle);
+
+                }
+            });
+        }
+
+        if(type.equals("2") && msg.equals("商品兑换失败"))
+        {
+            String info=obj.getString("info");
+            XActivityindicator.create(mContext).showErrorWithStatus(info);
         }
 
         if(type.equals("3") && msg.equals("跳转怀府币商城"))
@@ -115,35 +141,7 @@ public class XHtmlVC extends BaseActivity {
         }
     }
 
-    private boolean running = false;
-    public void doDH(String id) {
 
-        if(running){return;}
-        running = true;
-
-        String uid = APPDataCache.User.getUid();
-        String uname = APPDataCache.User.getUsername();
-
-        XActivityindicator.create(mContext).show();
-
-        XNetUtil.Handle(APPService.jifenAddDH(uid,uname,id), "兑换成功", "兑换失败", new XNetUtil.OnHttpResult<Boolean>() {
-            @Override
-            public void onError(Throwable e) {
-                XNetUtil.APPPrintln(e);
-                running = false;
-            }
-
-            @Override
-            public void onSuccess(Boolean aBoolean) {
-                running = false;
-                if(aBoolean)
-                {
-                    web.getRefreshableView().loadUrl("javascript:reload()");
-                }
-            }
-        });
-
-    }
 
 
     @Override

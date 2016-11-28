@@ -50,6 +50,7 @@ public class XActivityindicator {
 
         if(hud != null)
         {
+            hud.setOnDismissListener(null);
             hud.dismissImmediately();
             hud = null;
         }

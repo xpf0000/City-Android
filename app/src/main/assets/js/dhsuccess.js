@@ -1,40 +1,52 @@
 
 var vm;
+var id = "";
 
-var hfb = "";
-var time = "";
-var jifen = "";
-var sname = "";
 
 requirejs(['main'], function (main) {  
 	
 		require(['avalon','net'], function() {
-	     		
-	     		hfb = $.getUrlParam('hfb');
-	     		time = $.getUrlParam('time');
-	     		jifen = $.getUrlParam('jifen');
-	     		sname = $.getUrlParam('sname');
-	     		 
+	     	
+	     	id = $.getUrlParam('id');
+		 	
+	     	 
 	 			vm = avalon.define({
 	    
 		  		$id: "success",
 		  		
-		  		hfb : "",
-		  		time : "",
-		  		jifen : "",
-		  		sname : "",
+		  		info:{},
+		  				
 		  		
 		  		});
 		  		
-		  		vm.hfb = hfb;
-		  		vm.time = time;
-		  		vm.jifen = jifen;
-		  		vm.sname = sname;
-		  		
-		  		
-  				
-	});
+		  		getinfo();
 	
+				function getinfo()
+		  		 {
+			  		 
+		  		 	var url = BaseUrl+"Jifen.getDhinfo&id="+id;
+
+		  		 	XHttpGet( url, function(data) 
+		  		 	{
+			  			var arr = data.data.info;
+		  		 		
+		  		 		if(arr)
+		  		 		{
+			  		 		if(arr.length > 0)
+			  		 		{
+				  		 		var item = arr[0];				  		 		
+				  		 		vm.info = item;		
+			  		 		}
+
+						}
+
+					});
+				}
+
+	})
+	
+	
+     
    
 });
 

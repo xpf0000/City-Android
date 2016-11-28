@@ -28,6 +28,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.Loadmore;
 import citycircle.com.Utils.PreferencesUtils;
+import citycircle.com.card.CardGetedInfo;
 import okhttp3.Call;
 
 /**
@@ -210,11 +211,12 @@ public class MyVipcard extends Activity implements View.OnClickListener, Adapter
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (parent.getId()) {
             case R.id.viplist:
+
                 Intent intent = new Intent();
                 intent.putExtra("id", arrayList.get(position).get("id"));
-                intent.putExtra("orlq", 1);
-                intent.setClass(MyVipcard.this, VipcardInfo.class);
+                intent.setClass(MyVipcard.this, CardGetedInfo.class);
                 MyVipcard.this.startActivity(intent);
+
                 break;
 
         }

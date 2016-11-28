@@ -204,12 +204,17 @@
                 android:tag="1"
                 >
 
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@mipmap/my_icon1"
+                    android:layout_marginRight="8dp"
+                    />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="@mipmap/my_icon1"
-                    android:drawablePadding="@dimen/ui_10_dip"
                     android:gravity="center_vertical"
                     android:text="我的主页"
                     android:textSize="18sp" />
@@ -246,13 +251,16 @@
                 android:padding="11dp"
                 android:tag="2"
                 >
-
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@mipmap/my_icon2"
+                    android:layout_marginRight="8dp"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="@mipmap/my_icon2"
-                    android:drawablePadding="@dimen/ui_10_dip"
                     android:gravity="center_vertical"
                     android:text="我的发布"
                     android:textSize="18sp" />
@@ -289,13 +297,16 @@
                 android:padding="11dp"
                 android:tag="3"
                 >
-
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@mipmap/my_icon3"
+                    android:layout_marginRight="8dp"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="@mipmap/my_icon3"
-                    android:drawablePadding="@dimen/ui_10_dip"
                     android:gravity="center_vertical"
                     android:text="消息"
                     android:textSize="18sp" />
@@ -332,13 +343,16 @@
                 android:padding="11dp"
                 android:tag="4"
                 >
-
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@mipmap/my_icon4"
+                    android:layout_marginRight="8dp"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="@mipmap/my_icon4"
-                    android:drawablePadding="@dimen/ui_10_dip"
                     android:gravity="center_vertical"
                     android:text="收藏"
                     android:textSize="18sp" />
@@ -358,13 +372,16 @@
                 android:orientation="horizontal"
                 android:padding="11dp"
                 android:tag="5">
-
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@mipmap/my_icon5"
+                    android:layout_marginRight="8dp"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="@mipmap/my_icon5"
-                    android:drawablePadding="@dimen/ui_10_dip"
                     android:gravity="center_vertical"
                     android:text="兑换商城"
                     android:textSize="18sp" />
@@ -400,13 +417,16 @@
                 android:orientation="horizontal"
                 android:padding="11dp"
                 android:tag="6">
-
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@mipmap/my_icon6"
+                    android:layout_marginRight="8dp"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="@mipmap/my_icon6"
-                    android:drawablePadding="@dimen/ui_10_dip"
                     android:gravity="center_vertical"
                     android:text="会员卡"
                     android:textSize="18sp" />
@@ -442,13 +462,16 @@
                 android:orientation="horizontal"
                 android:padding="11dp"
                 android:tag="7">
-
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@mipmap/my_icon7"
+                    android:layout_marginRight="8dp"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="@mipmap/my_icon7"
-                    android:drawablePadding="@dimen/ui_10_dip"
                     android:gravity="center_vertical"
                     android:text="优惠券"
                     android:textSize="18sp" />
@@ -470,13 +493,16 @@
                 android:layout_marginBottom="20dp"
                 android:tag="8"
                 >
-
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@mipmap/my_icon8"
+                    android:layout_marginRight="8dp"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="@mipmap/my_icon8"
-                    android:drawablePadding="@dimen/ui_10_dip"
                     android:gravity="center_vertical"
                     android:text="设置"
                     android:textSize="18sp" />
