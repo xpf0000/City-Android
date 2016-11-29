@@ -20,6 +20,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.Emailtest;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
+import util.XNetUtil;
 
 /**
  * Created by admins on 2015/12/4.
@@ -164,6 +165,9 @@ public class UpPasswords extends Activity implements View.OnClickListener {
                 } else {
                     numbers = number.getText().toString().trim();
                     smurl = GlobalVariables.urlstr + "User.smsSend&mobile=" + number.getText().toString().trim() + "&type=2";
+
+                    XNetUtil.APPPrintln("smurl: "+smurl);
+
                     getstr(0);
                     gettime();
                 }

@@ -29,7 +29,7 @@
             android:textSize="17sp" />
         <TextView
             android:id="@+id/delect"
-            android:text="清空"
+            android:text="编辑"
             android:textColor="@color/white"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"

@@ -39,7 +39,10 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
 import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
+import util.XHtmlVC;
 import util.XNotificationCenter;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by X on 2016/11/8.
@@ -218,6 +221,25 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
         intent.putExtra("shopname", titile.getText());
         intent.setClass(CardGetedInfo.this, ShopInfo.class);
         startActivity(intent);
+    }
+
+    public void toDH(View v)
+    {
+        VipInfo.DataBean.InfoBean info = list.get(0);
+        String uid = APPDataCache.User.getUid();
+        String uname = APPDataCache.User.getUsername();
+        String cid = info.getId();
+        String sname = info.getShopname();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("url","file:///android_asset/duihuan.html?cid="+cid+"&uid="+uid+"&uname="+uname+"&sname="+sname);
+        bundle.putString("title","兑换详情");
+        bundle.putBoolean("isPush", true);
+
+        Intent intentActive = new Intent(this, XHtmlVC.class);
+        intentActive.putExtras(bundle);
+        startActivity(intentActive);
+        overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
     }
 
     @Override

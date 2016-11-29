@@ -26,6 +26,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
+import util.XNetUtil;
 
 /**
  * Created by admins on 2016/6/27.
@@ -76,29 +77,66 @@ public class MyMessageList extends Activity {
         delect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                list.clear();
-                PreferencesUtils.putString(MyMessageList.this,"messagelist"+type+uid,null);
+//                list.clear();
+//                PreferencesUtils.putString(MyMessageList.this,"messagelist"+type+uid,null);
+//                myMessageItem.notifyDataSetChanged();
+
+                if(delect.getText().toString().equals("编辑"))
+                {
+                    delect.setText("删除");
+                    myMessageItem.editing = true;
+                }
+                else
+                {
+                    doDel();
+                }
+
                 myMessageItem.notifyDataSetChanged();
+
             }
         });
         viplist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent=new Intent();
-                list.get(position).setKan("0");
-                String json=JSON.toJSONString(list);
-                PreferencesUtils.putString(MyMessageList.this,"messagelist"+type+uid,json);
-                myMessageItem.notifyDataSetChanged();
-                intent.putExtra("title",list.get(position).getTitle());
-                intent.putExtra("times",list.get(position).getCreate_time());
-                intent.putExtra("contents",list.get(position).getContent());
-                intent.setClass(MyMessageList.this,MessageContent.class);
-                MyMessageList.this.startActivity(intent);
+
+                if(myMessageItem.editing)
+                {
+                    if(myMessageItem.checkedArr.contains(position))
+                    {
+                        myMessageItem.checkedArr.remove(position);
+                    }
+                    else
+                    {
+                        myMessageItem.checkedArr.add(position);
+                    }
+
+                    myMessageItem.notifyDataSetChanged();
+                }
+                else
+                {
+                    Intent intent=new Intent();
+                    list.get(position).setKan("0");
+                    String json=JSON.toJSONString(list);
+                    PreferencesUtils.putString(MyMessageList.this,"messagelist"+type+uid,json);
+                    myMessageItem.notifyDataSetChanged();
+                    intent.putExtra("title",list.get(position).getTitle());
+                    intent.putExtra("times",list.get(position).getCreate_time());
+                    intent.putExtra("contents",list.get(position).getContent());
+                    intent.setClass(MyMessageList.this,MessageContent.class);
+                    MyMessageList.this.startActivity(intent);
+                }
+
             }
         });
         viplist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                if(myMessageItem.editing)
+                {
+                    return true;
+                }
+
                 myPopwindows=new MyPopwindows();
                 myPopwindows.showpop(MyMessageList.this,"删除信息？");
                 myPopwindows.setMyPopwindowswListener(new MyPopwindows.MyPopwindowsListener() {
@@ -113,6 +151,22 @@ public class MyMessageList extends Activity {
                 return true;
             }
         });
+    }
+
+    private void doDel() {
+
+        for(Integer i : myMessageItem.checkedArr)
+        {
+            list.remove(i.intValue());
+        }
+        myMessageItem.checkedArr.clear();
+
+        String json=JSON.toJSONString(list);
+        PreferencesUtils.putString(MyMessageList.this,"messagelist"+type+uid,json);
+
+        delect.setText("编辑");
+        myMessageItem.editing = false;
+
     }
 
     private void getJson() {

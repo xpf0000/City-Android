@@ -90,6 +90,19 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
         openRegister = GlobalVariables.urlstr + "User.openRegister";
 //                + "&openid=" + userid + "&nickname=" + nickname + "&sex=" + sex + "&headimage=" + headimage;
         intview();
+
+        XNotificationCenter.getInstance().addObserver("BindPhoneSuccess", new XNotificationCenter.OnNoticeListener() {
+            @Override
+            public void OnNotice(Object obj) {
+                bindPhoneSuccess();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        XNotificationCenter.getInstance().removeObserver("BindPhoneSuccess");
     }
 
     private void intview() {
@@ -233,14 +246,8 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
                         handler.sendEmptyMessage(1);
 
                     }
-                    else if(jsonObject3.getIntValue("code") == 1)
-                    {
-
-                    }
                     else {
                         mAlertViewExt.show();
-//                        openRegister = GlobalVariables.urlstr + "User.openRegister&openid=" + userid + "&nickname=" + nickname + "&sex=" + sex + "&headimage=" + headimage;
-
                     }
                     break;
                 case 5:
@@ -249,38 +256,15 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
                     JSONObject jsonObject5 = jsonObject4.getJSONObject("data");
                     int b = jsonObject5.getIntValue("code");
                     if (b == 0) {
+
                         JSONArray jsonArray = jsonObject5.getJSONArray("info");
-                        for (int i = 0; i < jsonArray.size(); i++) {
-                            JSONObject jsonObject6 = jsonArray.getJSONObject(i);
-                            PreferencesUtils.putString(Logn.this, "userid", jsonObject6.getString("uid"));
-                            PreferencesUtils.putString(Logn.this, "openid", jsonObject6.getString("openid"));
-                            PreferencesUtils.putString(Logn.this, "username", jsonObject6.getString("username"));
-                            setAccount(jsonObject6.getString("uid"));
-                            PreferencesUtils.putString(Logn.this, "nickname", jsonObject6.getString("nickname"));
-                            PreferencesUtils.putString(Logn.this, "headimage", jsonObject6.getString("headimage"));
-                            PreferencesUtils.putString(Logn.this, "mobile", jsonObject6.getString("mobile"));
-                            PreferencesUtils.putInt(Logn.this, "sex", jsonObject6.getIntValue("sex"));
-                            PreferencesUtils.putInt(Logn.this, "houseid", jsonObject6.getIntValue("houseid"));
-                            PreferencesUtils.putString(Logn.this, "houseids", jsonObject6.getString("houseid"));
-                            PreferencesUtils.putString(Logn.this, "fanghaoid", jsonObject6.getString("fanghaoid"));
-                            PreferencesUtils.putString(Logn.this, "truename", jsonObject6.getString("truename"));
-                            PreferencesUtils.putString(Logn.this, "birthday", jsonObject6.getString("birthday"));
-                            PreferencesUtils.putString(Logn.this, "address", jsonObject6.getString("address"));
+                        JSONObject jsonObject6 = jsonArray.getJSONObject(0);
+                        String uname = jsonObject6.getString("username");
+                        Intent intent1 = new Intent();
+                        intent1.putExtra("uname",uname);
+                        intent1.setClass(Logn.this, GetPhone.class);
+                        Logn.this.startActivity(intent1);
 
-                            // JSON串转用户组对象
-                            UserModel user = JSON.parseObject(jsonObject6.toJSONString(), UserModel.class);
-
-                            APPDataCache.User.copy(user);
-
-                            APPDataCache.User.registNotice();
-                        }
-                        PreferencesUtils.putInt(Logn.this, "land", 1);
-                        Intent intent = new Intent();
-                        intent.setAction("com.servicedemo4");
-                        intent.putExtra("getmeeage", "0");
-                        Logn.this.sendBroadcast(intent);
-                        Toast.makeText(Logn.this, "登陆成功", Toast.LENGTH_SHORT).show();
-                        finish();
                     } else {
                         handler.sendEmptyMessage(3);
                     }
@@ -288,6 +272,48 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
             }
         }
     };
+
+    private void bindPhoneSuccess() {
+        String str = openRegisterstr.toString();
+        JSONObject jsonObject4 = JSON.parseObject(str);
+        JSONObject jsonObject5 = jsonObject4.getJSONObject("data");
+        int b = jsonObject5.getIntValue("code");
+        if (b == 0) {
+            JSONArray jsonArray = jsonObject5.getJSONArray("info");
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject jsonObject6 = jsonArray.getJSONObject(i);
+                PreferencesUtils.putString(Logn.this, "userid", jsonObject6.getString("uid"));
+                PreferencesUtils.putString(Logn.this, "openid", jsonObject6.getString("openid"));
+                PreferencesUtils.putString(Logn.this, "username", jsonObject6.getString("username"));
+                setAccount(jsonObject6.getString("uid"));
+                PreferencesUtils.putString(Logn.this, "nickname", jsonObject6.getString("nickname"));
+                PreferencesUtils.putString(Logn.this, "headimage", jsonObject6.getString("headimage"));
+                PreferencesUtils.putString(Logn.this, "mobile", jsonObject6.getString("mobile"));
+                PreferencesUtils.putInt(Logn.this, "sex", jsonObject6.getIntValue("sex"));
+                PreferencesUtils.putInt(Logn.this, "houseid", jsonObject6.getIntValue("houseid"));
+                PreferencesUtils.putString(Logn.this, "houseids", jsonObject6.getString("houseid"));
+                PreferencesUtils.putString(Logn.this, "fanghaoid", jsonObject6.getString("fanghaoid"));
+                PreferencesUtils.putString(Logn.this, "truename", jsonObject6.getString("truename"));
+                PreferencesUtils.putString(Logn.this, "birthday", jsonObject6.getString("birthday"));
+                PreferencesUtils.putString(Logn.this, "address", jsonObject6.getString("address"));
+
+                // JSON串转用户组对象
+                UserModel user = JSON.parseObject(jsonObject6.toJSONString(), UserModel.class);
+
+                APPDataCache.User.copy(user);
+
+                APPDataCache.User.registNotice();
+            }
+            PreferencesUtils.putInt(Logn.this, "land", 1);
+            Intent intent = new Intent();
+            intent.setAction("com.servicedemo4");
+            intent.putExtra("getmeeage", "0");
+            Logn.this.sendBroadcast(intent);
+            Toast.makeText(Logn.this, "登陆成功", Toast.LENGTH_SHORT).show();
+
+            finish();
+        }
+    }
 
     @Override
     public void onClick(View v) {

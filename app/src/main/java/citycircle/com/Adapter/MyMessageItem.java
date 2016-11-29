@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import citycircle.com.JsonMordel.MessageList;
@@ -21,6 +23,10 @@ public class MyMessageItem extends BaseAdapter {
     List<MessageList.DataBean.InfoBean> list;
     Context context;
     int type;
+    public boolean editing = false;
+
+    public List<Integer> checkedArr = new ArrayList<>();
+
     public MyMessageItem( List<MessageList.DataBean.InfoBean> list,Context context,int type){
         this.list=list;
         this.context=context;
@@ -49,6 +55,7 @@ public class MyMessageItem extends BaseAdapter {
         getItem.time=(TextView)convertView.findViewById(R.id.time);
         getItem.title=(TextView)convertView.findViewById(R.id.title);
         getItem.name=(TextView)convertView.findViewById(R.id.name);
+        getItem.chechbox = (CheckBox) convertView.findViewById(R.id.checkbox);
         System.out.println("list.get(position).getKan():"+list.get(position).getKan());
         if (list.get(position).getTitle()==null||list.get(position).getTitle().length()==0){
             getItem.title.setVisibility(View.GONE);
@@ -76,11 +83,22 @@ public class MyMessageItem extends BaseAdapter {
                 break;
         }
 
+        if(!editing)
+        {
+            getItem.chechbox.setVisibility(View.GONE);
+        }
+        else
+        {
+            getItem.chechbox.setVisibility(View.VISIBLE);
+            getItem.chechbox.setChecked(checkedArr.contains(position));
+        }
+
         getItem.title.setText(list.get(position).getTitle());
         getItem.time.setText(DateUtils.getDateToStringss(Long.parseLong(list.get(position).getCreate_time())));
         return convertView;
     }
     public class getItem{
         TextView title,content,time,name;
+        CheckBox chechbox;
     }
 }

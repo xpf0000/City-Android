@@ -142,6 +142,8 @@
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
+                android:clickable="true"
+                android:onClick="toGuize"
                 >
 
                 <TextView
@@ -182,6 +184,7 @@
         android:layout_height="44dp"
         android:background="#ffffff"
         android:gravity="center_vertical"
+
         >
 
         <LinearLayout
@@ -204,6 +207,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center|right"
+            android:clickable="true"
+            android:onClick="toEditInfo"
             >
 
             <ImageView

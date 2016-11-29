@@ -71,6 +71,16 @@ public class HttpResult<T> {
 
         private Uinfo uinfo;
 
+        private Orderinfo orderinfo;
+
+        public Orderinfo getOrderinfo() {
+            return orderinfo;
+        }
+
+        public void setOrderinfo(Orderinfo orderinfo) {
+            this.orderinfo = orderinfo;
+        }
+
         public Uinfo getUinfo() {
             return uinfo;
         }
@@ -112,6 +122,44 @@ public class HttpResult<T> {
                     ", msg='" + msg + '\'' +
                     ", info=" + info.toString() +
                     '}';
+        }
+    }
+
+    public class Orderinfo
+    {
+
+        /**
+         * ordernumber : 1480387951676
+         * create_time : 1480387951
+         * money : 0.01
+         */
+
+        private String ordernumber;
+        private int create_time;
+        private String money;
+
+        public String getOrdernumber() {
+            return ordernumber;
+        }
+
+        public void setOrdernumber(String ordernumber) {
+            this.ordernumber = ordernumber;
+        }
+
+        public int getCreate_time() {
+            return create_time;
+        }
+
+        public void setCreate_time(int create_time) {
+            this.create_time = create_time;
+        }
+
+        public String getMoney() {
+            return money;
+        }
+
+        public void setMoney(String money) {
+            this.money = money;
         }
     }
 

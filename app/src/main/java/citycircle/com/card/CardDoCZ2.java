@@ -28,6 +28,7 @@ import util.HttpResult;
 import util.PayResult;
 import util.XActivityindicator;
 import util.XGridView;
+import util.XHtmlVC;
 import util.XNetUtil;
 import util.XNotificationCenter;
 
@@ -56,6 +57,9 @@ public class CardDoCZ2 extends BaseActivity  {
     private String sname = "";
     private YouhuiquanModel youhuiModel;
     private static final int SDK_PAY_FLAG = 1;
+
+    private String ordernumber = "";
+
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
 
@@ -75,7 +79,7 @@ public class CardDoCZ2 extends BaseActivity  {
                     // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                     Toast.makeText(mContext, "支付成功", Toast.LENGTH_SHORT).show();
                     XNotificationCenter.getInstance().postNotice("PaySuccess",null);
-                    doPop();
+                    success();
                 } else {
                     // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                     Toast.makeText(mContext, payResult.getMemo(), Toast.LENGTH_SHORT).show();
@@ -94,6 +98,19 @@ public class CardDoCZ2 extends BaseActivity  {
         this.youhuiModel = youhuiModel;
         youhuiquan_tv.setText(youhuiModel.getMoney()+"元");
 
+    }
+
+    private void success()
+    {
+        String uid = APPDataCache.User.getUid();
+        String uname = APPDataCache.User.getUsername();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("url","file:///android_asset/czsuccess.html?ordernumber="+ordernumber+"&uid="+uid+"&uname="+uname);
+        bundle.putString("title","充值");
+        pushVC(XHtmlVC.class,bundle);
+
+        finish();
     }
 
     public void setSelectRow(int row) {
@@ -222,6 +239,9 @@ public class CardDoCZ2 extends BaseActivity  {
             @Override
             public void onSuccess(HttpResult<Object> res) {
                 XActivityindicator.hide();
+
+                ordernumber = res.getData().getOrderinfo().getOrdernumber();
+
                 if(res.getData().getCode() == 0)
                 {
                     final String str = (String) res.getData().getInfo();
@@ -249,7 +269,7 @@ public class CardDoCZ2 extends BaseActivity  {
                 {
                     Toast.makeText(mContext, "支付成功", Toast.LENGTH_SHORT).show();
                     XNotificationCenter.getInstance().postNotice("PaySuccess",null);
-                    doPop();
+                    success();
                 }
                 else
                 {

@@ -1,5 +1,6 @@
 package citycircle.com.hfb;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +24,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 
+import citycircle.com.Activity.MyInfo;
 import citycircle.com.MyAppService.LocationApplication;
 import citycircle.com.R;
 import model.GoodsModel;
@@ -221,6 +223,25 @@ public class HfbCenter extends BaseActivity {
         pushVC(JifenDetail.class);
 
     }
+
+    public void toGuize(View v) {
+
+        Bundle bundle = new Bundle();
+        bundle.putString("url","怀府币规则");
+        bundle.putString("title","怀府币规则");
+        pushVC(XHtmlVC.class,bundle);
+
+    }
+
+    public void toEditInfo(View v) {
+
+        Intent intent = new Intent();
+        intent.setClass(mContext, MyInfo.class);
+        startActivity(intent);
+
+    }
+
+
 
 
 

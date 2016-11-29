@@ -7,6 +7,7 @@ import model.ChongzhiModel;
 import model.GoodsModel;
 import model.GroupModel;
 import model.HFBModel;
+import model.NewsModel;
 import model.RenzhengModel;
 import model.UserModel;
 import model.YouhuiquanModel;
@@ -141,6 +142,8 @@ public interface ServicesAPI {
             @Query("yhqid") String yhqid
     );
 
+    @GET("?service=News.getArticle&id=6892")  //怀府币规则
+    Observable<HttpResult<List<NewsModel>>> newsGetArticle();
 
 }
 

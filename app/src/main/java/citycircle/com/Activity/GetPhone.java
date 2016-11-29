@@ -23,6 +23,7 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.MyhttpRequest;
 import citycircle.com.Utils.PreferencesUtils;
+import util.XNotificationCenter;
 
 /**
  * Created by admins on 2015/12/11.
@@ -37,10 +38,12 @@ public class GetPhone extends Activity implements View.OnClickListener{
     TimerTask task;
     private int recLen = 60;
     Timer timer = new Timer();
+    String username="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.getphone);
+        username = getIntent().getStringExtra("uname");
         emtest = new Emailtest();
         intview();
     }
@@ -113,6 +116,9 @@ public class GetPhone extends Activity implements View.OnClickListener{
                         intent.setAction("com.servicedemo4");
                         intent.putExtra("getmeeage", "0");
                         GetPhone.this.sendBroadcast(intent);
+
+                        XNotificationCenter.getInstance().postNotice("BindPhoneSuccess",null);
+
                         finish();
                     }else {
                         Toast.makeText(GetPhone.this, "绑定失败", Toast.LENGTH_SHORT).show();
@@ -164,7 +170,7 @@ switch (v.getId()){
             String usernamenew = number.getText().toString();
             String passwords = password.getText().toString();
             url=GlobalVariables.urlstr+"User.openMobileAdd";
-            String username= PreferencesUtils.getString(GetPhone.this,"username");
+
             datastr="&username="+username+"&mobile="+usernamenew+"&password="+passwords+"&code="+codes;
             getStr(0);
         }

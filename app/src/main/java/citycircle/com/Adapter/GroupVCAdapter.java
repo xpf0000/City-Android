@@ -121,11 +121,19 @@ public class GroupVCAdapter extends BaseAdapter {
         else
         {
             if (convertView == null) {
+
                 convertView = LayoutInflater.from(context).inflate(
-                        R.layout.groupcell2, null);
+                        R.layout.groupsearchcell, null);
+
                 cell = new Cell();
-                cell.txt = (TextView) convertView.findViewById(R.id.txt);
-                cell.img = (ImageView) convertView.findViewById(R.id.img);
+                cell.name = (TextView) convertView
+                        .findViewById(R.id.name);
+                cell.txt = (TextView) convertView
+                        .findViewById(R.id.txt);
+                cell.img = (ImageView) convertView
+                        .findViewById(R.id.img);
+                cell.icon = (ImageView) convertView
+                        .findViewById(R.id.icon);
 
                 convertView.setTag(cell);
 
@@ -137,8 +145,35 @@ public class GroupVCAdapter extends BaseAdapter {
 
             GroupModel model = (GroupModel) dataArr.get(position);
 
-            ImageLoader.getInstance().displayImage(model.getUrl(),cell.img);
-            cell.txt.setText(model.getJdinfo());
+            // 获取到mList中指定索引位置的资源
+            String name = model.getName();
+            String txt = model.getJdinfo();
+            String img = model.getUrl();
+
+            cell.name.setText(name);
+            cell.txt.setText(txt);
+            ImageLoader.getInstance().displayImage(img,cell.img);
+
+            cell.txt.setVisibility(View.VISIBLE);
+
+            String level = model.getViplevel();
+
+            if (level.equals("1"))
+            {
+                cell.icon.setImageResource(R.mipmap.renzheng_icon);
+            }
+            else if (level.equals("2"))
+            {
+                cell.icon.setImageResource(R.mipmap.vip_icon);
+            }
+            else if (level.equals("3"))
+            {
+                cell.icon.setImageResource(R.mipmap.svip_icon);
+            }
+            else
+            {
+                cell.txt.setVisibility(View.GONE);
+            }
 
         }
 
@@ -170,8 +205,13 @@ public class GroupVCAdapter extends BaseAdapter {
     }
 
     class Cell {
-        ImageView img;
+//        ImageView img;
+//        TextView txt;
+
+        TextView name;
         TextView txt;
+        ImageView icon;
+        ImageView img;
     }
 
 }
