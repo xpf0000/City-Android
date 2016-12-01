@@ -233,7 +233,7 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
 
         Bundle bundle = new Bundle();
         bundle.putString("url","file:///android_asset/duihuan.html?cid="+cid+"&uid="+uid+"&uname="+uname+"&sname="+sname);
-        bundle.putString("title","兑换详情");
+        bundle.putString("title","积分兑换");
         bundle.putBoolean("isPush", true);
 
         Intent intentActive = new Intent(this, XHtmlVC.class);

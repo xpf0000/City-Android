@@ -48,6 +48,7 @@ import citycircle.com.user.MyYouhuiquan;
 import model.UserModel;
 import okhttp3.Call;
 import util.XActivityindicator;
+import util.XHtmlVC;
 import util.XNetUtil;
 import util.XNotificationCenter;
 
@@ -340,6 +341,17 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     public void doQD(final View v) {
         String uid = APPDataCache.User.getUid();
         String uname = APPDataCache.User.getUsername();
+
+        if(APPDataCache.User.getOrqd() == 1)
+        {
+            Intent intent = new Intent();
+            intent.setClass(getActivity(), XHtmlVC.class);
+            intent.putExtra("url","file:///android_asset/index.html?uid="+uid+"&uname="+uname);
+            intent.putExtra("title","每日签到");
+            getActivity().startActivity(intent);
+
+            return;
+        }
 
         XActivityindicator.create(getActivity()).show();
         v.setEnabled(false);

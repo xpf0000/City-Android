@@ -1,9 +1,11 @@
 package citycircle.com.hfb;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,6 +20,7 @@ import java.util.List;
 import citycircle.com.R;
 import model.HFBModel;
 import util.BaseActivity;
+import util.XHtmlVC;
 import util.XNetUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -75,7 +78,23 @@ public class DHRecord extends BaseActivity {
             }
         });
 
+        list.getRefreshableView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                toinfo(i);
+            }
+        });
+
         getData();
+    }
+
+    private void toinfo(int postion)
+    {
+        HFBModel model = dataArr.get(postion-1);
+        Bundle bundle = new Bundle();
+        bundle.putString("url","file:///android_asset/duihuansuccess.html?id="+model.getId());
+        bundle.putString("title","兑换详情");
+        pushVC(XHtmlVC.class,bundle);
     }
 
     @Override

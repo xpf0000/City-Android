@@ -33,12 +33,15 @@ import citycircle.com.Activity.SearchNews;
 import citycircle.com.MyAppService.LocationApplication;
 import citycircle.com.R;
 import citycircle.com.Utils.MyEventBus;
+import util.DataCache;
+import util.DensityUtil;
 import util.XActivityindicator;
 import util.XHtmlVC;
 import util.XNetUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 import static citycircle.com.MyAppService.LocationApplication.APPService;
+import static citycircle.com.MyAppService.LocationApplication.SW;
 import static citycircle.com.MyAppService.LocationApplication.context;
 
 /**
@@ -56,7 +59,7 @@ public class HomeFragment extends Fragment {
     CamFragment camFragment;
     ImageView search,message;
     TextView qiandao;
-    private BadgeView badge;
+    private TextView badge;
 
     @Nullable
     @Override
@@ -69,6 +72,9 @@ public class HomeFragment extends Fragment {
 //        PushAgent mPushAgent = PushAgent.getInstance(getActivity());
 //        mPushAgent.enable();
         setView();
+
+        APPDataCache.User.getMsgCount();
+
         return view;
     }
     private void setView(){
@@ -108,12 +114,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        badge = new BadgeView(context, message);
-        badge.setText("");
-        badge.setTextSize(10);
-        badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-        badge.setBadgeMargin(message.getWidth()/5);
-        badge.hide();
+        badge = (TextView) view.findViewById(R.id.badge) ;
+        badge.setVisibility(View.INVISIBLE);
 
     }
 
@@ -165,9 +167,9 @@ public class HomeFragment extends Fragment {
     @Subscribe
     public void getEventmsg(MyEventBus myEventBus) {
         if (myEventBus.getMsg().equals("show")) {
-            badge.show();
+            badge.setVisibility(View.VISIBLE);
         } else {
-            badge.hide();
+            badge.setVisibility(View.INVISIBLE);
         }
     }
 

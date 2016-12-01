@@ -17,6 +17,7 @@ public class DataCache {
 
         if(model != null)
         {
+            XNetUtil.APPPrintln("UserModel readed!!!!!!!!!!!!!");
             User = model;
             User.getUinfo();
         }

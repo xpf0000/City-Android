@@ -175,6 +175,8 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
         }.start();
     }
 
+    private boolean first = false;
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -242,8 +244,25 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
                     XNetUtil.APPPrintln("login str: "+therdstr);
 
                     if (jsonObject3.getIntValue("code") == 0) {
-                        urlstr = therdstr;
-                        handler.sendEmptyMessage(1);
+
+                        JSONObject obj = jsonObject3.getJSONArray("info").getJSONObject(0);
+                        String mobil = obj.getString("mobile");
+
+                        if(mobil.equals(""))
+                        {
+                            String uname = obj.getString("username");
+                            Intent intent1 = new Intent();
+                            intent1.putExtra("uname",uname);
+                            intent1.setClass(Logn.this, GetPhone.class);
+                            Logn.this.startActivity(intent1);
+
+                            first = false;
+                        }
+                        else
+                        {
+                            urlstr = therdstr;
+                            handler.sendEmptyMessage(1);
+                        }
 
                     }
                     else {
@@ -265,6 +284,8 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
                         intent1.setClass(Logn.this, GetPhone.class);
                         Logn.this.startActivity(intent1);
 
+                        first = true;
+
                     } else {
                         handler.sendEmptyMessage(3);
                     }
@@ -274,6 +295,15 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
     };
 
     private void bindPhoneSuccess() {
+
+        if(!first)
+        {
+            urlstr = therdstr;
+            handler.sendEmptyMessage(1);
+
+            return;
+        }
+
         String str = openRegisterstr.toString();
         JSONObject jsonObject4 = JSON.parseObject(str);
         JSONObject jsonObject5 = jsonObject4.getJSONObject("data");

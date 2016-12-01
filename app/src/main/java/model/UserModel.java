@@ -1,11 +1,25 @@
 package model;
 
+import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.sdk.android.push.CommonCallback;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.Serializable;
 import java.util.List;
 
+import citycircle.com.Activity.Mymessage;
+import citycircle.com.R;
+import citycircle.com.Utils.GlobalVariables;
+import citycircle.com.Utils.MyEventBus;
+import citycircle.com.Utils.PreferencesUtils;
+import okhttp3.Call;
 import util.HttpResult;
 import util.ModelUtil;
 import util.XAPPUtil;
@@ -14,6 +28,7 @@ import util.XNotificationCenter;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 import static citycircle.com.MyAppService.LocationApplication.APPService;
+import static citycircle.com.MyAppService.LocationApplication.context;
 
 /**
  * Created by X on 2016/11/4.
@@ -380,6 +395,60 @@ public class UserModel implements Serializable {
                     setQdday(u.getQdday());
                     setWqd(u.getWqd());
                     setOrqd(u.getOrqd());
+                }
+
+            }
+        });
+    }
+
+
+
+    public void getMsgCount() {
+
+        String uid = getUid();
+        String uname = getUsername();
+
+        XNetUtil.APPPrintln("getMsgCount uid: "+uid+" | uname: "+uname);
+
+        if(uid.equals("") || uname.equals(""))
+        {
+            return;
+        }
+
+        String url = GlobalVariables.urlstr + "user.getMessagesCount&uid=" + uid + "&username=" + uname;
+
+        XNetUtil.APPPrintln("url: "+url);
+
+        OkHttpUtils.get().url(url).build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e) {
+                Toast.makeText(context, R.string.intent_error, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(String response) {
+                JSONObject jsonObject = JSON.parseObject(response);
+                JSONObject jsonObject1 = jsonObject.getJSONObject("data");
+                if (jsonObject1.getIntValue("code") == 0) {
+                    JSONObject jsonObject2 = jsonObject1.getJSONObject("info");
+
+                    try
+                    {
+                        int c1 = Integer.parseInt(jsonObject2.getString("count1"));
+                        int c2 = Integer.parseInt(jsonObject2.getString("count2"));
+                        int c3 = Integer.parseInt(jsonObject2.getString("count3"));
+
+                        if(c1+c2+c3 > 0)
+                        {
+                            EventBus.getDefault().post(
+                                    new MyEventBus("show"));
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
                 }
 
             }

@@ -25,6 +25,7 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
+import util.XNetUtil;
 
 /**
  * Created by admins on 2016/6/3.
@@ -83,6 +84,9 @@ public class Mymessage extends Activity implements View.OnClickListener {
         String username = PreferencesUtils.getString(Mymessage.this, "username");
         String uid = PreferencesUtils.getString(Mymessage.this, "userid");
         url = GlobalVariables.urlstr + "user.getMessagesCount&uid=" + uid + "&username=" + username;
+
+        XNetUtil.APPPrintln("url: "+url);
+
         OkHttpUtils.get().url(url).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
@@ -99,6 +103,22 @@ public class Mymessage extends Activity implements View.OnClickListener {
                     message.add(jsonObject2.getString("count1"));
                     message.add(jsonObject2.getString("count2"));
                     message.add(jsonObject2.getString("count3"));
+                    try
+                    {
+                        int c1 = Integer.parseInt(jsonObject2.getString("count1"));
+                        int c2 = Integer.parseInt(jsonObject2.getString("count2"));
+                        int c3 = Integer.parseInt(jsonObject2.getString("count3"));
+
+                        if(c1+c2+c3 > 0)
+                        {
+                            EventBus.getDefault().post(
+                                    new MyEventBus("show"));
+                        }
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
 
                 }
                 list.clear();

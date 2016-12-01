@@ -31,6 +31,7 @@ import citycircle.com.Activity.PhotoLook;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.hfb.GoodsCenter;
+import citycircle.com.hfb.HfbCenter;
 import model.GoodsModel;
 import model.NewsModel;
 
@@ -149,7 +150,7 @@ public class XHtmlVC extends BaseActivity {
 
         if(type.equals("3") && msg.equals("跳转怀府币商城"))
         {
-            pushVC(GoodsCenter.class);
+            pushVC(HfbCenter.class);
         }
 
         if(type.equals("4") && msg.equals("积分兑换"))
@@ -178,6 +179,7 @@ public class XHtmlVC extends BaseActivity {
                 }
             });
 
+            XNotificationCenter.getInstance().postNotice("PaySuccess",null);
 
         }
 

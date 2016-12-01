@@ -61,7 +61,7 @@ requirejs(['main'], function (main) {
 				
 				function getinfo()
 		  		 {
-			  		 
+			  		need = -1;
 		  		 	var url = BaseUrl+"jifen.getproduct&id="+id;
 
 		  		 	XHttpGet( url, function(data) 
@@ -80,7 +80,7 @@ requirejs(['main'], function (main) {
 				  		 		}
 				  		
 				  		 		vm.info = item;	
-				  		 		need = item["hfb"];	
+				  		 		need = item["hfb"]*1;
 				  		 		check();		  		 					  		 
 				  		 		
 			  		 		}
@@ -93,7 +93,7 @@ requirejs(['main'], function (main) {
 				
 				function getUInfo()
 		  		 {
-			  		 
+                    has = -1;
 		  		 	var url = BaseUrl+"jifen.getUinfo&uid="+uid+"&username="+uname;
 
 		  		 	XHttpGet( url, function(data) 
@@ -105,7 +105,7 @@ requirejs(['main'], function (main) {
 			  		 		if(arr.length > 0)
 			  		 		{
 				  		 		var item = arr[0];
-				  		 		has = item["hfb"];
+				  		 		has = item["hfb"]*1;
 				  		 		check();		  		 					  		 		
 			  		 		}
 
@@ -118,17 +118,21 @@ requirejs(['main'], function (main) {
 				{
 					if(need == null || has == null)
 					{
-						return
+						return;
 					}
 					
 					if(need < 0 || has < 0)
 					{
-						return
+						return;
 					}
 					
 					if(has < need)
 					{
-						$('#bugou').removeClass("hidden")
+						$('#bugou').removeClass("hidden");
+					}
+					else
+					{
+					    $('#bugou').addClass("hidden");
 					}
 				}
 
@@ -151,6 +155,8 @@ requirejs(['main'], function (main) {
 		  		 		
 		  		 		if(code == 0)
 		  		 		{
+		  		 		    getinfo();
+                            getUInfo();
 			  		 		var id = data.data.info.id;
 			  		 		sendMsgToAPP({'msg':'商品兑换成功','type':'2','id':id});
 			  		 		running = false;
