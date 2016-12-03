@@ -237,7 +237,7 @@ public class HfbCenter extends BaseActivity {
     public void toGuize(View v) {
 
         Bundle bundle = new Bundle();
-        bundle.putString("url","怀府币规则");
+        bundle.putString("url","file:///android_asset/hfbguize.html?id=6892");
         bundle.putString("title","怀府币规则");
         pushVC(XHtmlVC.class,bundle);
 

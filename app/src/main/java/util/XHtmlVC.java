@@ -107,6 +107,15 @@ public class XHtmlVC extends BaseActivity {
     {
         String type=obj.getString("type");
         String msg=obj.getString("msg");
+
+        if(type.equals("0") && msg.equals("跳转签到规则"))
+        {
+            Bundle bundle = new Bundle();
+            bundle.putString("url","file:///android_asset/hfbguize.html?id=6886");
+            bundle.putString("title","签到规则");
+            pushVC(XHtmlVC.class,bundle);
+        }
+
         if(type.equals("1") && msg.equals("兑换商品"))
         {
             String uid = APPDataCache.User.getUid();
