@@ -50,7 +50,6 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
 
         dataArr.add(1);
         dataArr.add(1);
-        dataArr.add(1);
 
 
         list = (PullToRefreshListView) view.findViewById(R.id.groupvc_list);
@@ -101,7 +100,7 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
 
     private void toinfo(int p)
     {
-        if(p < 4)
+        if(p < 3)
         {
             return;
         }
@@ -164,7 +163,6 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
                 if(page == 1)
                 {
                     dataArr.clear();
-                    dataArr.add(1);
                     dataArr.add(1);
                     dataArr.add(1);
                 }

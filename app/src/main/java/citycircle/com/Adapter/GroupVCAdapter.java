@@ -75,13 +75,6 @@ public class GroupVCAdapter extends BaseAdapter {
         {
             if (convertView == null) {
                 convertView = LayoutInflater.from(context).inflate(
-                        R.layout.groupcell1, null);
-            }
-        }
-        else if(getItemViewType(position) == 1)
-        {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(context).inflate(
                         R.layout.groupsearchbar, null);
                 searchBar = new SearchBar();
                 searchBar.txt = (EditText) convertView.findViewById(R.id.txt);
@@ -111,7 +104,7 @@ public class GroupVCAdapter extends BaseAdapter {
             });
 
         }
-        else if(getItemViewType(position) == 2)
+        else if(getItemViewType(position) == 1)
         {
             if (convertView == null) {
                 convertView = LayoutInflater.from(context).inflate(
@@ -183,17 +176,17 @@ public class GroupVCAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
 
-        if(position < 3)
+        if(position < 2)
         {
             return position;
         }
 
-        return 3;
+        return 2;
     }
 
     @Override
     public int getViewTypeCount() {
-        return 4;
+        return 3;
     }
 
     /**

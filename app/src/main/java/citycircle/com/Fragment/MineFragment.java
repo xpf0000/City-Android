@@ -405,6 +405,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                     UserModel u = arrs.get(0);
                     leftnum.setText(u.getHfb());
                     rightnum.setText(u.getWqd()+"/7");
+                    APPDataCache.User.setOrqd(u.getOrqd());
                 }
 
             }

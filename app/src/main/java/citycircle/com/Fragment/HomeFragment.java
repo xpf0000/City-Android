@@ -156,10 +156,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSuccess(Boolean aBoolean) {
                 v.setEnabled(true);
-                if(aBoolean)
-                {
-                    APPDataCache.User.setOrqd(1);
-                }
+                APPDataCache.User.setOrqd(1);
             }
         });
     }

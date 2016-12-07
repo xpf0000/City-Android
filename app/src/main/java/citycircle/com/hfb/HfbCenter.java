@@ -142,6 +142,7 @@ public class HfbCenter extends BaseActivity {
             @Override
             public void onSuccess(Boolean aBoolean) {
                 v.setEnabled(!aBoolean);
+                APPDataCache.User.setOrqd(1);
                 if(aBoolean)
                 {
                     doneicon.setVisibility(View.VISIBLE);
@@ -176,7 +177,7 @@ public class HfbCenter extends BaseActivity {
                     XNetUtil.APPPrintln(u.toString());
 
                     tatle.setText(u.getHfb()+"个");
-
+                    APPDataCache.User.setOrqd(u.getOrqd());
                     if(u.getOrqd() != 1)
                     {
                         doneicon.setVisibility(View.INVISIBLE);
