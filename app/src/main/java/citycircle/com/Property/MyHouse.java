@@ -24,6 +24,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.PreferencesUtils;
+import util.XActivityindicator;
 
 /**
  * Created by 飞侠 on 2016/2/18.
@@ -91,6 +92,8 @@ public class MyHouse extends Activity {
         });
     }
 
+    private boolean running = false;
+
     private void gethouselist(final int type) {
         new Thread() {
             @Override
@@ -109,6 +112,14 @@ public class MyHouse extends Activity {
                         }
                     }
                 } else if (type == 2 || type == 3||type==4) {
+
+                    if(running)
+                    {
+                        return;
+                    }
+
+                    running = true;
+
                     updatestr = httpRequest.doGet(updatrurl);
                     if (updatestr.equals("网络超时")) {
                         handler.sendEmptyMessage(2);
@@ -154,6 +165,8 @@ public class MyHouse extends Activity {
                 case 2:
                     Refresh.setRefreshing(false);
                     Toast.makeText(MyHouse.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                    XActivityindicator.hide();
+                    running = false;
                     break;
                 case 3:
                     Refresh.setRefreshing(false);
@@ -181,8 +194,11 @@ public class MyHouse extends Activity {
                         Toast.makeText(MyHouse.this, jsonObject1.getString("msg"), Toast.LENGTH_SHORT).show();
                     }
                     adapter.notifyDataSetChanged();
+                    XActivityindicator.hide();
+                    running = false;
                     break;
                 case 7:
+                    XActivityindicator.create(MyHouse.this).show();
                     updatrurl = GlobalVariables.urlstr + "User.delHouse&uid=" + uid + "&username=" + username + "&id=" + array.get(GlobalVariables.position).get("id");
                     gethouselist(3);
                     break;
@@ -209,8 +225,11 @@ public class MyHouse extends Activity {
                             PreferencesUtils.putString(MyHouse.this, "houseid", "0");
                         }
                     }
+                    XActivityindicator.hide();
+                    running = false;
                     break;
                 case 9:
+                    XActivityindicator.create(MyHouse.this).show();
                     updatrurl = GlobalVariables.urlstr + "User.delHouse&uid=" + uid + "&username=" + username + "&id=" + array.get(GlobalVariables.position).get("id");
                     gethouselist(4);
                     break;

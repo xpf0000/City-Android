@@ -2,7 +2,9 @@ package citycircle.com.hfb;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,7 @@ import java.util.List;
 import citycircle.com.Activity.MyInfo;
 import citycircle.com.MyAppService.LocationApplication;
 import citycircle.com.R;
+import citycircle.com.Utils.XAlertView;
 import model.GoodsModel;
 import model.UserModel;
 import util.BaseActivity;
@@ -52,8 +55,8 @@ public class HfbCenter extends BaseActivity {
     private List<GoodsModel> dataArr = new ArrayList<>();
 
     private TextView tatle;
-    private TextView donetxt;
-    private ImageView doneicon;
+    private TextView donetxt,zltxt;
+    private ImageView doneicon,zlicon;
 
     private String uid = "";
     private String uname = "";
@@ -74,6 +77,10 @@ public class HfbCenter extends BaseActivity {
         tatle = (TextView) findViewById(R.id.hfbcenter_tatle);
         donetxt = (TextView) findViewById(R.id.hfbcenter_donetxt);
         doneicon = (ImageView) findViewById(R.id.hfbcenter_doneicon);
+
+        zltxt = (TextView) findViewById(R.id.zltxt);
+        zlicon = (ImageView) findViewById(R.id.zlicon);
+
         scroll = (ScrollView) findViewById(R.id.hfbcenter_scroll);
         gview = (XGridView) findViewById(R.id.hfbcenter_grid);
         gview.setScrollEnable(false);
@@ -132,7 +139,7 @@ public class HfbCenter extends BaseActivity {
 
         XActivityindicator.create(this).show();
         v.setEnabled(false);
-        XNetUtil.Handle(APPService.jifenAddQiandao(uid,uname), "签到成功,获得1怀府币", "签到失败", new XNetUtil.OnHttpResult<Boolean>() {
+        XNetUtil.Handle(APPService.jifenAddQiandao(uid,uname), null, "签到失败", new XNetUtil.OnHttpResult<Boolean>() {
             @Override
             public void onError(Throwable e) {
                 XNetUtil.APPPrintln(e);
@@ -145,6 +152,7 @@ public class HfbCenter extends BaseActivity {
                 APPDataCache.User.setOrqd(1);
                 if(aBoolean)
                 {
+                    qdSuccess();
                     doneicon.setVisibility(View.VISIBLE);
                     donetxt.setText("已完成");
                     int c = Color.parseColor("#21adfd");
@@ -155,8 +163,17 @@ public class HfbCenter extends BaseActivity {
 
     }
 
+    private void qdSuccess()
+    {
+        XAlertView alert = new XAlertView(mContext);
+        alert.show();
+    }
+
     private void getHFB()
     {
+        uid = APPDataCache.User.getUid();
+        uname = APPDataCache.User.getUsername();
+
         XNetUtil.Handle(APPService.jifenGetUinfo(uid,uname), new XNetUtil.OnHttpResult<List<UserModel>>() {
             @Override
             public void onError(Throwable e) {
@@ -184,6 +201,15 @@ public class HfbCenter extends BaseActivity {
                         donetxt.setText("还未签到");
                         int c = Color.parseColor("#333333");
                         donetxt.setTextColor(c);
+                    }
+
+                    if(u.getOrwsinfo().equals("1"))
+                    {
+                        zltxt.setText("已完成");
+                        int c = Color.parseColor("#21adfd");
+                        zltxt.setTextColor(c);
+                        Drawable d = ContextCompat.getDrawable(mContext,R.mipmap.duihao);
+                        zlicon.setImageDrawable(d);
                     }
 
 

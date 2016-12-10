@@ -1,6 +1,7 @@
 package citycircle.com.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,11 @@ import java.util.List;
 
 import citycircle.com.R;
 import citycircle.com.hfb.GWManageRight;
+import citycircle.com.user.MyMinePage;
 import model.HFBModel;
+import util.XNetUtil;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by X on 2016/11/6.
@@ -38,6 +43,51 @@ public class PaihangAdapter extends BaseAdapter {
     public PaihangAdapter(Context context) {
         this.context = context;
     }
+
+
+    View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+            if(dataArr.size() == 0)
+            {
+                return;
+            }
+            XNetUtil.APPPrintln("tag: "+view.getTag());
+            int tag = Integer.parseInt(view.getTag().toString());
+
+            String uname = "";
+            String uid = "";
+
+            if(tag < 3)
+            {
+                List<HFBModel> arr = (List<HFBModel>) dataArr.get(0);
+
+                if(tag < arr.size())
+                {
+                    HFBModel m = arr.get(tag);
+                    uname = m.getUsername();
+                    uid = m.getUid();
+                }
+
+            }
+            else
+            {
+                HFBModel m = (HFBModel) dataArr.get(tag-2);
+                uname = m.getUsername();
+                uid = m.getUid();
+            }
+
+
+            Intent intent = new Intent();
+
+            intent.putExtra("uid",uid);
+            intent.putExtra("uname",uname);
+            intent.setClass(context, MyMinePage.class);
+            context.startActivity(intent);
+
+        }
+    };
 
     /**
      * 返回item的个数
@@ -170,6 +220,10 @@ public class PaihangAdapter extends BaseAdapter {
 
             }
 
+            listItemView1.img1.setOnClickListener(clickListener);
+            listItemView1.img2.setOnClickListener(clickListener);
+            listItemView1.img3.setOnClickListener(clickListener);
+
         }
         else
         {
@@ -198,7 +252,15 @@ public class PaihangAdapter extends BaseAdapter {
 
             HFBModel model = (HFBModel) dataArr.get(position);
 
-            listItemView2.pm.setText((position+3)+"");
+            if(position+3 > 100)
+            {
+                listItemView2.pm.setText("100+");
+            }
+            else
+            {
+                listItemView2.pm.setText((position+3)+"");
+            }
+
             listItemView2.name.setText(model.getNickname());
 
             ImageLoader.getInstance().displayImage(model.getHeadimage(),listItemView2.img,options);
@@ -211,6 +273,9 @@ public class PaihangAdapter extends BaseAdapter {
             {
                 listItemView2.num.setText(model.getHfb()+"怀府币");
             }
+
+            listItemView2.img.setTag(""+(position+2));
+            listItemView2.img.setOnClickListener(clickListener);
 
         }
 
@@ -257,6 +322,10 @@ public class PaihangAdapter extends BaseAdapter {
         TextView num;
 
     }
+
+
+
+
 
 }
 

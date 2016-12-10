@@ -124,7 +124,9 @@ public class JifenRecord extends Fragment {
                     if (page!=1){
                         page--;
                     }
-                    Toast.makeText(getActivity(),R.string.nomore,Toast.LENGTH_SHORT).show();
+                    String msg = wallJsonMo.getData().getMsg();
+                    msg = msg == null ? "" : msg;
+                    Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT).show();
                 }
             }
         });

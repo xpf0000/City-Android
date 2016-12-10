@@ -31,6 +31,8 @@ import com.mob.tools.utils.UIHandler;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import citycircle.com.MyViews.MyDialog;
 import citycircle.com.R;
@@ -495,17 +497,34 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
     public void onItemClick(Object o, int position) {
         if (o == mAlertViewExt && position != AlertView.CANCELPOSITION) {
             String name = etName.getText().toString();
+
+            String regEx="[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+            Pattern p = Pattern.compile(regEx);
+            Matcher m = p.matcher(name);
+            if( m.find()){
+                Toast.makeText(this, "昵称不允许输入特殊符号！", Toast.LENGTH_LONG).show();
+                return;
+            }
+
             if (name.isEmpty()) {
                 Toast.makeText(this, "昵称不能为空", Toast.LENGTH_SHORT).show();
-            } else {
-                nickname = name;
-                try {
-                    dastr = "&openid=" + userid + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sex + "&headimage=" + headimage;
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                getUser(2);
+                return;
             }
+
+            if(name.length() < 3 || name.length() > 12)
+            {
+                Toast.makeText(this, "昵称长度为3-12位!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            nickname = name;
+            try {
+                dastr = "&openid=" + userid + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sex + "&headimage=" + headimage;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            getUser(2);
+
             return;
         }
 

@@ -25,6 +25,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -41,6 +42,7 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
 import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.PreferencesUtils;
+import citycircle.com.Utils.XAlertView;
 import citycircle.com.hfb.GoodsCenter;
 import citycircle.com.hfb.HfbCenter;
 import citycircle.com.user.MyMinePage;
@@ -69,7 +71,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     DisplayImageOptions options;
     citycircle.com.Utils.ImageUtils ImageUtils;
     ImageLoadingListener animateFirstListener;
-    ImageView head;
+    ImageView head,messageicon;
 
     String opid;
     String tel;
@@ -77,6 +79,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.mine_layout, container, false);
+
+        EventBus.getDefault().register(this);
 
         XNotificationCenter.getInstance().addObserver("MinePageShow", new XNotificationCenter.OnNoticeListener() {
             @Override
@@ -94,6 +98,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             public void OnNotice(Object obj) {
                 show();
                 getHFB();
+                APPDataCache.User.getUser();
             }
         });
 
@@ -110,6 +115,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             vip.setText("登录后查看更多");
             name.setText("点击登录");
             head.setImageResource(R.mipmap.my_face_icon);
+            messageicon.setImageResource(R.mipmap.my_icon3);
         }
         else
         {
@@ -122,6 +128,14 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
             vip.setText(n);
             name.setText(tel);
+
+            XNetUtil.APPPrintln("APPDataCache.msgshow: "+APPDataCache.msgshow);
+
+            if (APPDataCache.msgshow) {
+                messageicon.setImageResource(R.mipmap.my_icon3_1);
+            } else {
+                messageicon.setImageResource(R.mipmap.my_icon3);
+            }
         }
 
     }
@@ -154,6 +168,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         vip = (TextView) view.findViewById(R.id.vip);
 
         head = (ImageView) view.findViewById(R.id.head);
+        messageicon = (ImageView) view.findViewById(R.id.messageicon);
         name = (TextView) view.findViewById(R.id.name);
 
         ImageUtils = new ImageUtils();
@@ -171,25 +186,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
         String tag = (String)v.getTag();
 
-        try
+        if(!tag.equals("8"))
         {
-            Integer t = Integer.parseInt(tag);
-
-            if (t != null && t.intValue() != 8)
+            if(APPDataCache.User.getUid().equals(""))
             {
-                int a = PreferencesUtils.getInt(getActivity(), "land");
-                if (a == 0) {
-                    intent.setClass(getActivity(), Logn.class);
-                    getActivity().startActivity(intent);
-
-                    return;
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            int a = PreferencesUtils.getInt(getActivity(), "land");
-            if (a == 0) {
                 intent.setClass(getActivity(), Logn.class);
                 getActivity().startActivity(intent);
 
@@ -206,6 +206,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                     break;
 
                 case "1":
+                    intent.putExtra("uid",APPDataCache.User.getUid());
+                    intent.putExtra("uname",APPDataCache.User.getUsername());
                     intent.setClass(getActivity(), MyMinePage.class);
                     getActivity().startActivity(intent);
                 break;
@@ -310,6 +312,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     public void onStart() {
         super.onStart();
         getHFB();
+        APPDataCache.User.getUser();
         XNetUtil.APPPrintln("onStart %%%%%%%%%%");
     }
 
@@ -355,7 +358,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
         XActivityindicator.create(getActivity()).show();
         v.setEnabled(false);
-        XNetUtil.Handle(APPService.jifenAddQiandao(uid,uname), "签到成功,获得1怀府币", "签到失败", new XNetUtil.OnHttpResult<Boolean>() {
+        XNetUtil.Handle(APPService.jifenAddQiandao(uid,uname), null, "签到失败", new XNetUtil.OnHttpResult<Boolean>() {
             @Override
             public void onError(Throwable e) {
                 XNetUtil.APPPrintln(e);
@@ -367,11 +370,18 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 v.setEnabled(!aBoolean);
                 if(aBoolean)
                 {
+                    qdSuccess();
                     getHFB();
                 }
             }
         });
 
+    }
+
+    private void qdSuccess()
+    {
+        XAlertView alert = new XAlertView(getActivity());
+        alert.show();
     }
 
     private void getHFB()
@@ -410,6 +420,15 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
             }
         });
+    }
+
+    @Subscribe
+    public void getEventmsg(MyEventBus myEventBus) {
+        if (myEventBus.getMsg().equals("show")) {
+            messageicon.setImageResource(R.mipmap.my_icon3_1);
+        } else {
+            messageicon.setImageResource(R.mipmap.my_icon3);
+        }
     }
 
 

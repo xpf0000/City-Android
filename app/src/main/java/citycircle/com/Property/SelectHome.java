@@ -165,9 +165,7 @@ public class SelectHome extends Fragment implements OnItemClickListener, View.On
                         getActivity().finish();
 
                     } else {
-                        if (types!=1){
-                            Toast.makeText(getActivity(), jsonObject1.getString("msg"), Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(getActivity(), jsonObject1.getString("msg"), Toast.LENGTH_SHORT).show();
                     }
                     break;
             }

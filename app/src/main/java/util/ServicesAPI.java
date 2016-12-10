@@ -8,6 +8,7 @@ import model.GoodsModel;
 import model.GroupModel;
 import model.HFBModel;
 import model.NewsModel;
+import model.QuanModel;
 import model.RenzhengModel;
 import model.UserModel;
 import model.YouhuiquanModel;
@@ -144,6 +145,19 @@ public interface ServicesAPI {
 
     @GET("?service=News.getArticle&id=6892")  //怀府币规则
     Observable<HttpResult<List<NewsModel>>> newsGetArticle();
+
+
+    @GET("?service=Quan.getMyList")  //用户领取的商家优惠列表
+    Observable<HttpResult<List<QuanModel>>> quanGetMyList(
+            @Query("uid") String uid,
+            @Query("page") int page,
+            @Query("perNumber") int perNumber
+    );
+
+    @GET("?service=User.getUser")  //用户领取的商家优惠列表
+    Observable<HttpResult<List<UserModel>>> userGetUser(
+            @Query("username") String username
+    );
 
 }
 

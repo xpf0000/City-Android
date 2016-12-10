@@ -11,6 +11,8 @@ public class DataCache {
 
     public UserModel User = new UserModel();
 
+    public boolean msgshow = false;
+
     public DataCache() {
 
         UserModel model= CacheLoaderManager.getInstance().loadSerializable("UserModel");
@@ -20,6 +22,7 @@ public class DataCache {
             XNetUtil.APPPrintln("UserModel readed!!!!!!!!!!!!!");
             User = model;
             User.getUinfo();
+            User.getUser();
         }
         else
         {

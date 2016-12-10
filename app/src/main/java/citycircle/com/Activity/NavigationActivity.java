@@ -26,6 +26,7 @@ import citycircle.com.Adapter.NaPageadapter;
 import citycircle.com.R;
 import citycircle.com.Utils.ImageUtils;
 import citycircle.com.Utils.PreferencesUtils;
+import util.XNetUtil;
 
 /**
  * Created by admins on 2015/11/2.
@@ -125,6 +126,24 @@ public class NavigationActivity extends Activity {
             iv.setLayoutParams(layoutParams);
             iv.setBackgroundResource(resIds[i]);
             listViews.add(iv);
+
+            if(i == resIds.length-1)
+            {
+                iv.setClickable(true);
+                iv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        XNetUtil.APPPrintln("@@@@@@@@@@@@@@@ 000");
+
+                        PreferencesUtils.putInt(NavigationActivity.this, "frist", 0);
+                        PreferencesUtils.putInt(NavigationActivity.this, "ornew", 0);
+                        Intent intent = new Intent(NavigationActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                });
+            }
+
         }
         MyPageAdapter adapter = new MyPageAdapter();
         hviewpage.setAdapter(adapter);
@@ -181,6 +200,22 @@ public class NavigationActivity extends Activity {
         for (int i = 0; i < addarray.size(); i++) {
             item = inflater.inflate(R.layout.naviewpageimg, null);
             listViews.add(item);
+
+            if(i == addarray.size()-1)
+            {
+                item.setClickable(true);
+                item.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        XNetUtil.APPPrintln("@@@@@@@@@@@@@@@ 111");
+
+                        PreferencesUtils.putInt(NavigationActivity.this, "frist", 0);
+                        PreferencesUtils.putInt(NavigationActivity.this, "ornew", 0);
+                        Intent intent = new Intent(NavigationActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                });
+            }
         }
         myviewpageadapater = new NaPageadapter(listViews,
                 NavigationActivity.this, addarray);

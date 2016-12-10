@@ -54,11 +54,13 @@ import citycircle.com.Utils.UpUserHead;
 import citycircle.com.Utils.mDateUtil;
 import util.FileUtils;
 
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+
 /**
  * Created by admins on 2015/11/21.
  */
 public class MyInfo extends Activity implements View.OnClickListener {
-    TextView name, sex, tell_phone, truename,birthday,address;
+    TextView name, sex, tell_phone, truename,birthday,address,aihao,qianming;
     ImageView uesrhead, back;
     com.nostra13.universalimageloader.core.ImageLoader ImageLoader;
     DisplayImageOptions options;
@@ -69,14 +71,13 @@ public class MyInfo extends Activity implements View.OnClickListener {
     private static final int PHOTO_REQUEST_TAKEPHOTO = 1;// 拍照
     private static final int PHOTO_REQUEST_GALLERY = 2;// 从相册中选择
     private static final int PHOTO_REQUEST_CUT = 3;// 结果
-    String url, urlstr, upinfourl, upinfostr;
-    int sexs;
-    String username, nickname, headimage, true_name,birth_day,addr_ess;
+    String url, urlstr, upinfourl, upinfostr,sexs;
+    String username, nickname, headimage, true_name,birth_day,addr_ess,aihaostr,qianmingstr;
     UpUserHead upUserHead;
     Dialog dialog;
     View popView;
     PopupWindow popupWindow;
-    LinearLayout namelay, sexlay, truenamelay,birthdaylay,addresslay;
+    LinearLayout namelay, sexlay, truenamelay,birthdaylay,addresslay,aihaolay,qianminglay;
     View CheckView = null;
     private LayoutInflater inflater = null;
     PopupWindow menuWindow;
@@ -115,6 +116,12 @@ public class MyInfo extends Activity implements View.OnClickListener {
         truenamelay = (LinearLayout) findViewById(R.id.truenamelay);
         truenamelay.setOnClickListener(this);
         inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+
+        aihaolay = (LinearLayout) findViewById(R.id.aihaolay);
+        aihaolay.setOnClickListener(this);
+        qianminglay = (LinearLayout) findViewById(R.id.qianminglay);
+        qianminglay.setOnClickListener(this);
+
         namelay = (LinearLayout) findViewById(R.id.namelay);
         namelay.setOnClickListener(this);
         birthdaylay = (LinearLayout) findViewById(R.id.birthdaylay);
@@ -128,6 +135,10 @@ public class MyInfo extends Activity implements View.OnClickListener {
         uesrhead = (ImageView) findViewById(R.id.uesrhead);
         uesrhead.setOnClickListener(this);
         name = (TextView) findViewById(R.id.name);
+
+        aihao = (TextView) findViewById(R.id.aihao);
+        qianming = (TextView) findViewById(R.id.qianming);
+
         birthday = (TextView) findViewById(R.id.birthday);
         address = (TextView) findViewById(R.id.address);
 //        name.setOnClickListener(this);
@@ -151,7 +162,8 @@ public class MyInfo extends Activity implements View.OnClickListener {
                 birthday.setText(mDateUtil.getTime(date));
                 birth_day=birthday.getText().toString();
                 try {
-                    upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+"&birthday="+birth_day+"&address="+addr_ess;
+                    upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
+                            "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -195,13 +207,16 @@ public class MyInfo extends Activity implements View.OnClickListener {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:
-                    true_name = PreferencesUtils.getString(MyInfo.this, "truename");
-                    nickname = PreferencesUtils.getString(MyInfo.this, "nickname");
-                    headimage = PreferencesUtils.getString(MyInfo.this, "headimage");
-                    sexs = PreferencesUtils.getInt(MyInfo.this, "sex");
-                    headimage = PreferencesUtils.getString(MyInfo.this, "headimage");
-                    birth_day=PreferencesUtils.getString(MyInfo.this, "birthday");
-                    addr_ess=PreferencesUtils.getString(MyInfo.this, "address");
+
+                    true_name = APPDataCache.User.getTruename();
+                    nickname = APPDataCache.User.getNickname();
+                    headimage = APPDataCache.User.getHeadimage();
+                    sexs = APPDataCache.User.getSex();
+                    birth_day=APPDataCache.User.getBirthday();
+                    addr_ess=APPDataCache.User.getAddress();
+                    aihaostr = APPDataCache.User.getAihao();
+                    qianmingstr = APPDataCache.User.getQianming();
+
                     if (true_name==null){
                         true_name="";
                     }
@@ -210,7 +225,10 @@ public class MyInfo extends Activity implements View.OnClickListener {
                     name.setText(nickname);
                     tell_phone.setText(mobile);
                     truename.setText(true_name);
-                    if (sexs == 1) {
+                    aihao.setText(aihaostr);
+                    qianming.setText(qianmingstr);
+
+                    if (sexs.equals("1")) {
                         sex.setText("男");
                     } else {
                         sex.setText("女");
@@ -228,7 +246,8 @@ public class MyInfo extends Activity implements View.OnClickListener {
                     JSONObject jsonObject3 = jsonObject2.getJSONObject("data");
                     if (jsonObject3.getIntValue("code") == 0) {
                         String hedimg = jsonObject3.getString("msg");
-                        PreferencesUtils.putString(MyInfo.this, "headimage", hedimg);
+                        APPDataCache.User.setHeadimage(hedimg);
+                        APPDataCache.User.save();
                         handler.sendEmptyMessage(1);
                         Toast.makeText(MyInfo.this, "上传头像成功！", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent();
@@ -249,11 +268,17 @@ public class MyInfo extends Activity implements View.OnClickListener {
                     JSONObject jsonObject1 = jsonObject.getJSONObject("data");
                     if (jsonObject1.getIntValue("code") == 0) {
                         Toast.makeText(MyInfo.this, "修改成功！", Toast.LENGTH_SHORT).show();
-                        PreferencesUtils.putString(MyInfo.this, "nickname", nickname);
-                        PreferencesUtils.putInt(MyInfo.this, "sex", sexs);
-                        PreferencesUtils.putString(MyInfo.this, "truename", true_name);
-                        PreferencesUtils.putString(MyInfo.this, "birthday", birth_day);
-                        PreferencesUtils.putString(MyInfo.this, "address", addr_ess);
+
+                        APPDataCache.User.setNickname(nickname);
+                        APPDataCache.User.setSex(sexs);
+                        APPDataCache.User.setTruename(true_name);
+                        APPDataCache.User.setBirthday(birth_day);
+                        APPDataCache.User.setAddress(addr_ess);
+                        APPDataCache.User.setAihao(aihaostr);
+                        APPDataCache.User.setQianming(qianmingstr);
+
+                        APPDataCache.User.save();
+
                         Intent intent = new Intent();
                         intent.setAction("com.servicedemo4");
                         intent.putExtra("getmeeage", "0");
@@ -369,6 +394,12 @@ public class MyInfo extends Activity implements View.OnClickListener {
             case R.id.addresslay:
                 showpop("请输入地址", R.id.addresslay);
                 break;
+            case R.id.aihaolay:
+                showpop("请输入个人爱好", R.id.aihaolay);
+                break;
+            case R.id.qianminglay:
+                showpop("请输入个性签名", R.id.qianminglay);
+                break;
         }
 
     }
@@ -417,7 +448,8 @@ public class MyInfo extends Activity implements View.OnClickListener {
                         } else {
                             nickname = myviptxt.getText().toString();
                             try {
-                                upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+"&birthday="+birth_day+"&address="+addr_ess;
+                                upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
+                                        "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();
                             }
@@ -430,7 +462,8 @@ public class MyInfo extends Activity implements View.OnClickListener {
                         } else {
                             true_name = myviptxt.getText().toString();
                             try {
-                                upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+"&birthday="+birth_day+"&address="+addr_ess;
+                                upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
+                                        "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();
                             }
@@ -444,7 +477,40 @@ public class MyInfo extends Activity implements View.OnClickListener {
                         } else {
                             addr_ess = myviptxt.getText().toString();
                             try {
-                                upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+"&birthday="+birth_day+"&address="+addr_ess;
+                                upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
+                                        "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                            type = 1;
+                            getuserinfo(1);
+                        }
+                        break;
+
+                    case R.id.aihaolay:
+                        if (myviptxt.getText().toString().trim().length() == 0) {
+                            popupWindow.dismiss();
+                        } else {
+                            aihaostr = myviptxt.getText().toString();
+                            try {
+                                upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
+                                        "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                            type = 1;
+                            getuserinfo(1);
+                        }
+                        break;
+
+                    case R.id.qianminglay:
+                        if (myviptxt.getText().toString().trim().length() == 0) {
+                            popupWindow.dismiss();
+                        } else {
+                            qianmingstr = myviptxt.getText().toString();
+                            try {
+                                upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
+                                        "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();
                             }
@@ -480,18 +546,20 @@ public class MyInfo extends Activity implements View.OnClickListener {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.man:
-                        sexs = 1;
+                        sexs = "1";
                         try {
-                            upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+"&birthday="+birth_day+"&address="+addr_ess;
+                            upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
+                                    "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
                         getuserinfo(1);
                         break;
                     case R.id.woman:
-                        sexs = 0;
+                        sexs = "0";
                         try {
-                            upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+"&birthday="+birth_day+"&address="+addr_ess;
+                            upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
+                                    "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }

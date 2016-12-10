@@ -100,4 +100,5 @@ dependencies {
     compile 'com.bigkoo:pickerview:2.1.1'
     compile 'com.kevin:pulltorefresh:1.0.8'
     compile files('libs/alipaySingle-20161009.jar')
+    compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3'
 }

@@ -23,6 +23,14 @@ public class HFBModel implements Serializable {
     private String qdday = "";
 
     private String type = "";
+    /**
+     * uid : 708
+     * username : 1472789008139
+     */
+
+    private String uid;
+    private String username;
+
 
     public String getType() {
         return type;
@@ -116,5 +124,21 @@ public class HFBModel implements Serializable {
 
     public void setQdday(String qdday) {
         this.qdday = qdday;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

@@ -28,6 +28,8 @@ import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
 import util.XNetUtil;
 
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+
 /**
  * Created by admins on 2016/6/27.
  */
@@ -103,7 +105,8 @@ public class MyMessageList extends Activity {
                 {
                     if(myMessageItem.checkedArr.contains(position))
                     {
-                        myMessageItem.checkedArr.remove(position);
+                        int i = myMessageItem.checkedArr.indexOf(position);
+                        myMessageItem.checkedArr.remove(i);
                     }
                     else
                     {
@@ -155,10 +158,20 @@ public class MyMessageList extends Activity {
 
     private void doDel() {
 
+        XNetUtil.APPPrintln(myMessageItem.checkedArr);
+
+        XNetUtil.APPPrintln("list.size(): "+list.size());
+
+        List<MessageList.DataBean.InfoBean> arr = new ArrayList<>();
+
         for(Integer i : myMessageItem.checkedArr)
         {
-            list.remove(i.intValue());
+            arr.add(list.get(i.intValue()));
         }
+
+        list.removeAll(arr);
+        arr.clear();
+        arr = null;
         myMessageItem.checkedArr.clear();
 
         String json=JSON.toJSONString(list);
@@ -187,6 +200,7 @@ public class MyMessageList extends Activity {
                 PreferencesUtils.putString(MyMessageList.this,"messagelist"+type+uid,json);
                 myMessageItem.notifyDataSetChanged();
 
+                APPDataCache.User.getMsgCount();
             }
         });
     }

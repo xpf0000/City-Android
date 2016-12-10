@@ -20,11 +20,14 @@ import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
 import com.umeng.update.UpdateStatus;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.text.DecimalFormat;
 
 import citycircle.com.MyViews.CheckSwitchButton;
 import citycircle.com.R;
+import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.PreferencesUtils;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
@@ -227,7 +230,8 @@ public class SetActivity extends Activity {
 
                 APPDataCache.User.unRegistNotice();
                 APPDataCache.User.reSet();
-
+                EventBus.getDefault().post(
+                        new MyEventBus("hidden"));
                 XNotificationCenter.getInstance().postNotice("UserChanged",null);
 
                 PreferencesUtils.putInt(SetActivity.this, "land", 0);

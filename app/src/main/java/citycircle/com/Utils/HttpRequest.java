@@ -8,8 +8,13 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
+import util.XNetUtil;
+
 public class HttpRequest {
 	public String doGet(String urlStr)  {
+
+		XNetUtil.APPPrintln("url: "+urlStr);
+
 		String state = "";
 		URL url;
 		try {

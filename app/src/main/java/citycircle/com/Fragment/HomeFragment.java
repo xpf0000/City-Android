@@ -1,5 +1,6 @@
 package citycircle.com.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,13 +9,19 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bigkoo.alertview.AlertView;
+import com.bigkoo.alertview.OnDismissListener;
+import com.bigkoo.alertview.OnItemClickListener;
 import com.readystatesoftware.viewbadger.BadgeView;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -33,6 +40,7 @@ import citycircle.com.Activity.SearchNews;
 import citycircle.com.MyAppService.LocationApplication;
 import citycircle.com.R;
 import citycircle.com.Utils.MyEventBus;
+import citycircle.com.Utils.XAlertView;
 import util.DataCache;
 import util.DensityUtil;
 import util.XActivityindicator;
@@ -101,8 +109,18 @@ public class HomeFragment extends Fragment {
         message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent=new Intent();
-                intent.setClass(getActivity(), Mymessage.class);
+
+                if(APPDataCache.User.getUid().equals(""))
+                {
+                    intent.setClass(getActivity(), Logn.class);
+                }
+                else
+                {
+                    intent.setClass(getActivity(), Mymessage.class);
+                }
+
                 getActivity().startActivity(intent);
             }
         });
@@ -146,7 +164,7 @@ public class HomeFragment extends Fragment {
 
         XActivityindicator.create(getActivity()).show();
         v.setEnabled(false);
-        XNetUtil.Handle(APPService.jifenAddQiandao(uid,uname), "签到成功,获得1怀府币", "签到失败", new XNetUtil.OnHttpResult<Boolean>() {
+        XNetUtil.Handle(APPService.jifenAddQiandao(uid,uname), null, "签到失败", new XNetUtil.OnHttpResult<Boolean>() {
             @Override
             public void onError(Throwable e) {
                 XNetUtil.APPPrintln(e);
@@ -157,9 +175,24 @@ public class HomeFragment extends Fragment {
             public void onSuccess(Boolean aBoolean) {
                 v.setEnabled(true);
                 APPDataCache.User.setOrqd(1);
+
+                if(aBoolean)
+                {
+                    qdSuccess();
+                }
+
             }
         });
     }
+
+
+    private void qdSuccess()
+    {
+        XAlertView alert = new XAlertView(getActivity());
+        alert.show();
+    }
+
+
 
     @Subscribe
     public void getEventmsg(MyEventBus myEventBus) {

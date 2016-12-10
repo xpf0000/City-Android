@@ -120,8 +120,22 @@ public class ForgetPass extends Activity implements View.OnClickListener {
                     int b = jsonObject2.getIntValue("code");
                     if (b == 0) {
                         Toast.makeText(ForgetPass.this, "验证码已发送", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(ForgetPass.this, "验证码发送失败", Toast.LENGTH_SHORT).show();
+                        gettime();
+                    }
+                    else
+                    {
+                        String str = jsonObject2.getString("msg");
+
+                        if(str != null)
+                        {
+                            str = str.equals("") ? "验证码发送失败" : str;
+                        }
+                        else
+                        {
+                            str = "证码发送失败";
+                        }
+
+                        Toast.makeText(ForgetPass.this, str, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case 2:
@@ -185,7 +199,6 @@ public class ForgetPass extends Activity implements View.OnClickListener {
                     numbers = number.getText().toString().trim();
                     smurl = GlobalVariables.urlstr + "User.smsSend&mobile=" + number.getText().toString().trim() + "&type=1";
                     getStr(0);
-                    gettime();
                 }
                 break;
         }

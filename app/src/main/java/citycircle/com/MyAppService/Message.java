@@ -22,14 +22,20 @@ public class Message extends MessageReceiver {
         super.onMessage(context, cPushMessage);
         System.out.println("cPushMessage:"+cPushMessage.getTitle());
         int a = PreferencesUtils.getInt(context, "land");
-        if (a != 0) { EventBus.getDefault().post(
-                new MyEventBus("show"));}
+        if (a != 0) {
+            EventBus.getDefault().post(
+                new MyEventBus("show"));
+            APPDataCache.msgshow = true;
+        }
 
         if(cPushMessage.getTitle().equals("账号在其它设备已登陆"))
         {
             if(!APPDataCache.User.getUid().equals(""))
             {
                 XNotificationCenter.getInstance().postNotice("AccountLogout",null);
+                EventBus.getDefault().post(
+                        new MyEventBus("hidden"));
+                APPDataCache.msgshow = false;
             }
 
         }

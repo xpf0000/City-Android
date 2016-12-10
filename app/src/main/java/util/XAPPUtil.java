@@ -4,6 +4,7 @@ import android.animation.Keyframe;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import com.robin.lazy.cache.CacheLoaderManager;
@@ -15,6 +16,22 @@ import citycircle.com.MyAppService.LocationApplication;
 import citycircle.com.R;
 
 public class XAPPUtil {
+
+    public static boolean inRangeOfView(View view, MotionEvent ev){
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+
+        int x = location[0];
+        int y = location[1];
+
+        XNetUtil.APPPrintln("location x: "+x+" y: "+y);
+        XNetUtil.APPPrintln("width: "+view.getWidth()+" height: "+view.getHeight());
+
+        if(ev.getX() < x || ev.getX() > (x + view.getWidth()) || ev.getY() < y || ev.getY() > (y + view.getHeight())){
+            return false;
+        }
+        return true;
+    }
 
     public static Date serverTime()
     {

@@ -298,6 +298,7 @@
                 android:tag="3"
                 >
                 <ImageView
+                    android:id="@+id/messageicon"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@mipmap/my_icon3"
@@ -416,7 +417,9 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="11dp"
-                android:tag="6">
+                android:tag="6"
+                android:visibility="gone"
+                >
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -443,6 +446,7 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/app_separator_offx"
                 android:paddingRight="@dimen/app_separator_offx"
+                android:visibility="gone"
                 >
 
 

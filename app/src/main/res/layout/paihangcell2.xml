@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/paihangcell2_pm"
-        android:layout_width="32dp"
+        android:layout_width="44dp"
         android:layout_height="wrap_content"
         android:text="1"
         android:textSize="16sp"

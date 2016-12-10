@@ -36,6 +36,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:src="@mipmap/home_head"
+        android:clickable="true"
+        android:tag="1"
         />
 
         <TextView
@@ -96,6 +98,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:src="@mipmap/home_head"
+                android:clickable="true"
+                android:tag="0"
                 />
 
             <TextView
@@ -174,6 +178,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:src="@mipmap/home_head"
+            android:clickable="true"
+            android:tag="2"
             />
 
         <TextView

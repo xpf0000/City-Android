@@ -212,6 +212,7 @@
             >
 
             <ImageView
+                android:id="@+id/zlicon"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:src="@mipmap/jinbi"
@@ -224,6 +225,7 @@
                 >
 
                 <TextView
+                    android:id="@+id/zltxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="20怀府币"
@@ -438,7 +440,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="怀府币商城"
+            android:text="兑换商城"
             android:gravity="center"
             android:textColor="#ffffff"
             android:textSize="15sp"

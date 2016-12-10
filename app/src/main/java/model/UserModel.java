@@ -14,11 +14,9 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.Serializable;
 import java.util.List;
 
-import citycircle.com.Activity.Mymessage;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.MyEventBus;
-import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
 import util.HttpResult;
 import util.ModelUtil;
@@ -46,6 +44,8 @@ public class UserModel implements Serializable {
      * wqd : 0
      * orqd : 0
      */
+
+
 
     private String uid;
     private String nickname;
@@ -80,6 +80,44 @@ public class UserModel implements Serializable {
     private String birthday;
     private String address;
     private String token;
+
+    private String orwsinfo;
+    /**
+     * id : 5
+     * aihao : null
+     * qianming : null
+     */
+
+    private String id;
+    private String aihao;
+    private String qianming;
+
+    public String getAihao() {
+        aihao = aihao == null ? "" : aihao;
+        return aihao;
+    }
+
+    public void setAihao(String aihao) {
+        this.aihao = aihao;
+    }
+
+    public String getQianming() {
+        qianming = qianming == null ? "" : qianming;
+        return qianming;
+    }
+
+    public void setQianming(String qianming) {
+        this.qianming = qianming;
+    }
+
+    public String getOrwsinfo() {
+        orwsinfo = orwsinfo == null ? "0" : orwsinfo;
+        return orwsinfo;
+    }
+
+    public void setOrwsinfo(String orwsinfo) {
+        this.orwsinfo = orwsinfo;
+    }
 
     public String getToken() {
         token = token == null ? "" : token;
@@ -163,6 +201,7 @@ public class UserModel implements Serializable {
     }
 
     public String getNickname() {
+        nickname = nickname == null? "" : nickname;
         return nickname;
     }
 
@@ -171,6 +210,7 @@ public class UserModel implements Serializable {
     }
 
     public String getHeadimage() {
+        headimage = headimage == null? "" : headimage;
         return headimage;
     }
 
@@ -211,6 +251,7 @@ public class UserModel implements Serializable {
     }
 
     public String getSex() {
+        sex = sex == null? "" : sex;
         return sex;
     }
 
@@ -260,6 +301,7 @@ public class UserModel implements Serializable {
     }
 
     public String getTruename() {
+        truename = truename == null? "" : truename;
         return truename;
     }
 
@@ -284,6 +326,7 @@ public class UserModel implements Serializable {
     }
 
     public String getBirthday() {
+        birthday = birthday == null? "" : birthday;
         return birthday;
     }
 
@@ -292,6 +335,7 @@ public class UserModel implements Serializable {
     }
 
     public String getAddress() {
+        address = address == null? "" : address;
         return address;
     }
 
@@ -333,6 +377,8 @@ public class UserModel implements Serializable {
                 XNetUtil.APPPrintln("addAlias fail!!!!!! "+s+" | "+s1);
             }
         });
+
+        getMsgCount();
 
     }
 
@@ -401,6 +447,40 @@ public class UserModel implements Serializable {
         });
     }
 
+    public void getUser()
+    {
+        String uname = getUsername();
+
+        if(uname.equals(""))
+        {
+            return;
+        }
+
+        XNetUtil.Handle(APPService.userGetUser(uname), new XNetUtil.OnHttpResult<List<UserModel>>() {
+            @Override
+            public void onError(Throwable e) {
+
+                XNetUtil.APPPrintln(e);
+            }
+
+            @Override
+            public void onSuccess(List<UserModel> models) {
+
+                if(models.size() > 0)
+                {
+                    setHeadimage(models.get(0).getHeadimage());
+                    setSex(models.get(0).getSex());
+                    setBirthday(models.get(0).getBirthday());
+                    setAihao(models.get(0).getAihao());
+                    setQianming(models.get(0).getQianming());
+
+                    save();
+                }
+
+            }
+        });
+    }
+
 
 
     public void getMsgCount() {
@@ -442,6 +522,11 @@ public class UserModel implements Serializable {
                         {
                             EventBus.getDefault().post(
                                     new MyEventBus("show"));
+                            APPDataCache.msgshow = true;
+                        }
+                        else
+                        {
+                            APPDataCache.msgshow = false;
                         }
                     }
                     catch (Exception e)
@@ -453,6 +538,14 @@ public class UserModel implements Serializable {
 
             }
         });
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
 }

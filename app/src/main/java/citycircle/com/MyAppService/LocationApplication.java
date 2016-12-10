@@ -28,8 +28,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
+import com.robin.lazy.cache.CacheLoaderConfiguration;
 import com.robin.lazy.cache.CacheLoaderManager;
 import com.robin.lazy.cache.disk.naming.HashCodeFileNameGenerator;
+import com.robin.lazy.cache.memory.MemoryCache;
+import com.robin.lazy.cache.util.MemoryCacheUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -170,9 +173,9 @@ public class LocationApplication extends Application {
 
 
         context = getApplicationContext();
-
-        CacheLoaderManager.getInstance().init(this, new HashCodeFileNameGenerator(), 1024 * 1024 * 64, 200, 50);
-
+        MemoryCache memoryCache= MemoryCacheUtils.createLruMemoryCache(50*1024*1024);
+        CacheLoaderConfiguration config = new CacheLoaderConfiguration(this, new HashCodeFileNameGenerator(), 1024 * 1024 * 64, 20000, memoryCache,60*24*30*365*20);
+        CacheLoaderManager.getInstance().init(config);
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         SW = displayMetrics.widthPixels;

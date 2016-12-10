@@ -53,6 +53,7 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
 import citycircle.com.Utils.PreferencesUtils;
+import util.XNetUtil;
 
 /**
  * Created by admins on 2015/11/23.
@@ -452,6 +453,9 @@ public class Newphoto extends Fragment {
     }
 
     public void setAddarray(String str) {
+
+        XNetUtil.APPPrintln("str: "+str);
+
         JSONObject jsonObject = JSON.parseObject(str);
         JSONObject jsonObject1 = jsonObject.getJSONObject("data");
         if (jsonObject1.getIntValue("code") == 0) {
