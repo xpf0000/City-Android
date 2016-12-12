@@ -285,6 +285,7 @@ public class UserModel implements Serializable {
     }
 
     public String getHouseid() {
+        houseid = houseid == null? "" : houseid;
         return houseid;
     }
 
@@ -477,6 +478,10 @@ public class UserModel implements Serializable {
                     setNickname(models.get(0).getNickname());
                     setAddress(models.get(0).getAddress());
                     setTruename(models.get(0).getTruename());
+
+                    setFanghaoid(models.get(0).getFanghaoid());
+                    setHouseid(models.get(0).getHouseid());
+
                     save();
                 }
 

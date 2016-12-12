@@ -7,6 +7,7 @@ import model.ChongzhiModel;
 import model.GoodsModel;
 import model.GroupModel;
 import model.HFBModel;
+import model.HouseModel;
 import model.NewsModel;
 import model.QuanModel;
 import model.RenzhengModel;
@@ -154,9 +155,32 @@ public interface ServicesAPI {
             @Query("perNumber") int perNumber
     );
 
-    @GET("?service=User.getUser")  //用户领取的商家优惠列表
+    @GET("?service=User.getUser")  //获取用户信息
     Observable<HttpResult<List<UserModel>>> userGetUser(
             @Query("username") String username
+    );
+
+    @POST("?service=User.updateHouse")  //设置默认房屋
+    Observable<HttpResult<Object>> userUpdateHouse(
+            @Query("uid") String uid,
+            @Query("username") String username,
+            @Query("houseid") String houseid,
+            @Query("fanghaoid") String fanghaoid
+    );
+
+    @POST("?service=User.delHouse")  //删除房屋
+    Observable<HttpResult<Object>> userDelHouse(
+            @Query("uid") String uid,
+            @Query("username") String username,
+            @Query("id") String id
+    );
+
+    @GET("?service=user.getHouseList")  //用户房屋列表
+    Observable<HttpResult<List<HouseModel>>> userGetHouseList(
+            @Query("uid") String uid,
+            @Query("username") String username,
+            @Query("page") int page,
+            @Query("perNumber") int perNumber
     );
 
 

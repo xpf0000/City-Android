@@ -25,6 +25,8 @@ import citycircle.com.Property.PropertyHome;
 import citycircle.com.R;
 import citycircle.com.Utils.PreferencesUtils;
 
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+
 /**
  * Created by admins on 2015/11/14.
  */
@@ -93,12 +95,8 @@ public class FoundFragment extends Fragment implements View.OnClickListener, OnI
                 break;
             case R.id.Property:
                 if (land == 1) {
-                    String houseid;
-                    try {
-                        houseid = PreferencesUtils.getString(getActivity(), "houseid");
-                    } catch (Exception e) {
-                        houseid = "0";
-                    }
+
+                    String houseid = APPDataCache.User.getHouseid();
                     String truename = PreferencesUtils.getString(getActivity(), "truename");
                    String tel =PreferencesUtils.getString(getActivity(),"mobile");
                     if (truename == null) {
@@ -111,7 +109,7 @@ public class FoundFragment extends Fragment implements View.OnClickListener, OnI
                         mAlertView.show();
                     }
                     else {
-                        if (houseid == null || houseid.equals("0")) {
+                        if (houseid.equals("")) {
                             intent.putExtra("types", 1);
                             intent.setClass(getActivity(), AddHome.class);
                             getActivity().startActivity(intent);

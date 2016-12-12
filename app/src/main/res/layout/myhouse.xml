@@ -36,22 +36,18 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:background="#ffffff"
+        >
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/Refresh"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+        <com.handmark.pulltorefresh.library.PullToRefreshListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/list"
+            android:background="#ffffff"
+            >
 
-            <ListView
-                android:id="@+id/houselist"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:dividerHeight="@dimen/ui_10_dip"
-                android:visibility="visible"></ListView>
-        </android.support.v4.widget.SwipeRefreshLayout>
-
-
+        </com.handmark.pulltorefresh.library.PullToRefreshListView>
 
         <com.melnykov.fab.FloatingActionButton
             android:id="@+id/fab"

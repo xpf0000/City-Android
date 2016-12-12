@@ -2,6 +2,7 @@ package citycircle.com.Property;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,30 +15,46 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ScrollDirectionListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import citycircle.com.Adapter.GroupSearchAdapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.PreferencesUtils;
+import model.GroupModel;
+import model.HouseModel;
+import util.DensityUtil;
 import util.XActivityindicator;
+import util.XNetUtil;
+import util.XNotificationCenter;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 /**
  * Created by 飞侠 on 2016/2/18.
  */
 public class MyHouse extends Activity {
-    SwipeRefreshLayout Refresh;
-    ListView houselist;
+
     ImageView back;
-    String url, urlstr, updatrurl, updatestr, uid, username;
-    ArrayList<HashMap<String, String>> array = new ArrayList<HashMap<String, String>>();
-    HashMap<String, String> hashMap;
+    String uid, username;
     HouseAdapter adapter;
     FloatingActionButton fab;
+
+    PullToRefreshListView list;
+    private List<HouseModel> dataArr = new ArrayList<>();
+    private int page = 1;
+    private boolean end = false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,24 +62,37 @@ public class MyHouse extends Activity {
         setContentView(R.layout.myhouse);
         uid = PreferencesUtils.getString(MyHouse.this, "userid");
         username = PreferencesUtils.getString(MyHouse.this, "username");
-        url = GlobalVariables.urlstr + "user.getHouseList&uid=" + uid + "&username=" + username;
         intview();
-        setHouselist();
-        gethouselist(0);
+        getData();
+
+        XNotificationCenter.getInstance().addObserver("ADDHouseSuccess", new XNotificationCenter.OnNoticeListener() {
+            @Override
+            public void OnNotice(Object obj) {
+                page = 1;
+                end = false;
+                getData();
+            }
+        });
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        XNotificationCenter.getInstance().removeObserver("ADDHouseSuccess");
     }
 
     private void intview() {
         back = (ImageView) findViewById(R.id.back);
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        Refresh = (SwipeRefreshLayout) findViewById(R.id.Refresh);
-        houselist = (ListView) findViewById(R.id.houselist);
+        list = (PullToRefreshListView) findViewById(R.id.list);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        fab.attachToListView(houselist, new ScrollDirectionListener() {
+        fab.attachToListView(list.getRefreshableView(), new ScrollDirectionListener() {
             @Override
             public void onScrollDown() {
 
@@ -83,226 +113,204 @@ public class MyHouse extends Activity {
                 MyHouse.this.startActivity(intent);
             }
         });
-        Refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+        adapter = new HouseAdapter(MyHouse.this);
+
+        list.setAdapter(adapter);
+
+        list.setMode(PullToRefreshBase.Mode.BOTH);
+
+        list.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
-            public void onRefresh() {
-                url = GlobalVariables.urlstr + "user.getHouseList&uid=" + uid + "&username=" + username;
-                gethouselist(1);
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+                XNetUtil.APPPrintln("onPullDownToRefresh ~~~~~~~~~");
+
+                //new FinishRefresh().execute();
+                page = 1;
+                end = false;
+                getData();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+                XNetUtil.APPPrintln("onPullUpToRefresh ~~~~~~~~~");
+                getData();
+
             }
         });
+
+        adapter.onHouseAdapterClick = new HouseAdapter.OnHouseAdapterClick() {
+            @Override
+            public void onBtnClick(int type, int position) {
+
+                if(type == 0) //设定默认房屋
+                {
+                    setDefault(position);
+                }
+                else
+                {
+                    doDel(position);
+                }
+
+            }
+        };
+
+
     }
 
-    private boolean running = false;
+    private void setDefault(int postion)
+    {
+        if(postion < dataArr.size())
+        {
+            final HouseModel model = dataArr.get(postion);
 
-    private void gethouselist(final int type) {
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                HttpRequest httpRequest = new HttpRequest();
-                urlstr = httpRequest.doGet(url);
-                if (type == 0 || type == 1) {
-                    if (urlstr.equals("网络超时")) {
-                        handler.sendEmptyMessage(2);
-                    } else {
-                        if (type == 1) {
-                            handler.sendEmptyMessage(4);
-                        } else {
-                            handler.sendEmptyMessage(1);
-                        }
-                    }
-                } else if (type == 2 || type == 3||type==4) {
+            XNetUtil.Handle(APPService.userUpdateHouse(uid, username, model.getHouseid(), model.getFanghaoid()), null, "设定默认房屋失败", new XNetUtil.OnHttpResult<Boolean>() {
+                @Override
+                public void onError(Throwable e) {
 
-                    if(running)
+                }
+
+                @Override
+                public void onSuccess(Boolean aBoolean) {
+
+                    if(aBoolean)
                     {
-                        return;
+                        APPDataCache.User.setHouseid(model.getHouseid());
+                        APPDataCache.User.setFanghaoid(model.getFanghaoid());
+                        APPDataCache.User.save();
+
+                        adapter.notifyDataSetChanged();
                     }
+                }
+            });
 
-                    running = true;
+        }
+    }
 
-                    updatestr = httpRequest.doGet(updatrurl);
-                    if (updatestr.equals("网络超时")) {
-                        handler.sendEmptyMessage(2);
-                    } else {
-                        if (type == 3) {
+    private void doDel(int postion)
+    {
+        if(postion < dataArr.size())
+        {
+            final HouseModel model = dataArr.get(postion);
 
-                            if(GlobalVariables.position < array.size())
-                            {
-                                array.remove(GlobalVariables.position);
-                                String housid = PreferencesUtils.getString(MyHouse.this, "houseid");
-                                PreferencesUtils.putString(MyHouse.this, "houseids", housid);
-                                handler.sendEmptyMessage(6);
-                            }
+            XNetUtil.Handle(APPService.userDelHouse(uid, username, model.getId()), "删除成功", "删除失败", new XNetUtil.OnHttpResult<Boolean>() {
+                @Override
+                public void onError(Throwable e) {
 
+                }
 
-                        } else if(type==4){
-                            handler.sendEmptyMessage(8);
+                @Override
+                public void onSuccess(Boolean aBoolean) {
+
+                    if(aBoolean)
+                    {
+                        if(APPDataCache.User.getHouseid().equals(model.getHouseid()) && APPDataCache.User.getFanghaoid().equals(model.getFanghaoid()))
+                        {
+                            APPDataCache.User.setHouseid("");
+                            APPDataCache.User.setFanghaoid("");
+                            APPDataCache.User.save();
                         }
-                        else {
-                            PreferencesUtils.putString(MyHouse.this, "houseid", array.get(GlobalVariables.position).get("houseid"));
-                            PreferencesUtils.putString(MyHouse.this, "fanghaoid", array.get(GlobalVariables.position).get("fanghaoid"));
-                            PreferencesUtils.putString(MyHouse.this, "houseids", array.get(GlobalVariables.position).get("houseid"));
-                            PreferencesUtils.putString(MyHouse.this, "xiaoqu", array.get(GlobalVariables.position).get("xiaoqu"));
-                            String hosename = array.get(GlobalVariables.position).get("xiaoqu") + array.get(GlobalVariables.position).get("louhao") + array.get(GlobalVariables.position).get("danyuan") + array.get(GlobalVariables.position).get("fanghao");
-                            PreferencesUtils.putString(MyHouse.this, "housename", hosename);
-                            handler.sendEmptyMessage(6);
-                        }
+
+                        page = 1;
+                        end = false;
+                        getData();
 
                     }
                 }
-            }
-        }.start();
+            });
+
+        }
     }
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 1:
-                    Refresh.setRefreshing(false);
+
+    private void getData() {
+
+
+        XNetUtil.APPPrintln("do getData !!!!!!!!!!");
+
+        if(end)
+        {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+
                     try {
-                        setArray(urlstr);
-                    } catch (Exception e) {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    adapter.notifyDataSetChanged();
-                    break;
-                case 2:
-                    Refresh.setRefreshing(false);
-                    Toast.makeText(MyHouse.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
-                    XActivityindicator.hide();
-                    running = false;
-                    break;
-                case 3:
-                    Refresh.setRefreshing(false);
-                    Toast.makeText(MyHouse.this, R.string.nomore, Toast.LENGTH_SHORT).show();
-                    break;
-                case 4:
-                    Refresh.setRefreshing(false);
-                    array.clear();
-                    try {
-                        setArray(urlstr);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    adapter.notifyDataSetChanged();
-                    break;
-                case 5:
-                    updatrurl = GlobalVariables.urlstr + "User.updateHouse&uid=" + uid + "&username=" + username + "&houseid=" + array.get(GlobalVariables.position).get("houseid") + "&fanghaoid=" + array.get(GlobalVariables.position).get("fanghaoid");
-                    gethouselist(2);
-                    break;
-                case 6:
-                    JSONObject jsonObject = JSON.parseObject(updatestr);
-                    JSONObject jsonObject1 = jsonObject.getJSONObject("data");
-                    int a = jsonObject1.getIntValue("code");
-                    if (a != 0) {
-                        Toast.makeText(MyHouse.this, jsonObject1.getString("msg"), Toast.LENGTH_SHORT).show();
-                    }
-                    adapter.notifyDataSetChanged();
-                    XActivityindicator.hide();
-                    running = false;
-                    break;
-                case 7:
-                    XActivityindicator.create(MyHouse.this).show();
-                    updatrurl = GlobalVariables.urlstr + "User.delHouse&uid=" + uid + "&username=" + username + "&id=" + array.get(GlobalVariables.position).get("id");
-                    gethouselist(3);
-                    break;
-                case 8:
-                    jsonObject = JSON.parseObject(updatestr);
-                    JSONObject jsonObject2 = jsonObject.getJSONObject("data");
-                    a = jsonObject2.getIntValue("code");
-                    if (a != 0) {
-                        Toast.makeText(MyHouse.this, jsonObject2.getString("msg"), Toast.LENGTH_SHORT).show();
-                    } else {
 
-                        if(GlobalVariables.position < array.size())
-                        {
-                            array.remove(GlobalVariables.position);
-                            adapter.notifyDataSetChanged();
-                        }
+                    return null;
+                }
 
-                        if (array.size() > 0) {
-                            if (GlobalVariables.position == 0) {
-                                updatrurl = GlobalVariables.urlstr + "User.updateHouse&uid=" + uid + "&username=" + username + "&houseid=" + array.get(GlobalVariables.position).get("houseid") + "&fanghaoid=" + array.get(GlobalVariables.position).get("fanghaoid");
-                                gethouselist(2);
-                            } else {
-                                updatrurl = GlobalVariables.urlstr + "User.updateHouse&uid=" + uid + "&username=" + username + "&houseid=" + array.get(GlobalVariables.position - 1).get("houseid") + "&fanghaoid=" + array.get(GlobalVariables.position - 1).get("fanghaoid");
-                                GlobalVariables.position = GlobalVariables.position - 1;
-                                gethouselist(2);
-                            }
-                        } else {
-                            PreferencesUtils.putString(MyHouse.this, "houseids", "0");
-                            PreferencesUtils.putString(MyHouse.this, "houseid", "0");
-                        }
+                @Override
+                protected void onPostExecute(Void aVoid) {
 
-                    }
+                    list.onRefreshComplete();
+                    Toast.makeText(MyHouse.this, "没有更多了",
+                            Toast.LENGTH_SHORT).show();
 
-                    XActivityindicator.hide();
-                    running = false;
+                    super.onPostExecute(aVoid);
+                }
+            }.execute();
 
-
-                    break;
-                case 9:
-                    XActivityindicator.create(MyHouse.this).show();
-                    updatrurl = GlobalVariables.urlstr + "User.delHouse&uid=" + uid + "&username=" + username + "&id=" + array.get(GlobalVariables.position).get("id");
-                    gethouselist(4);
-                    break;
-            }
-        }
-    };
-
-    private void setArray(String str) throws Exception {
-        JSONObject jsonObject = JSON.parseObject(str);
-        JSONObject jsonObject1 = jsonObject.getJSONObject("data");
-        int a = jsonObject1.getIntValue("code");
-        if (a == 0) {
-            JSONArray jsonArray = jsonObject1.getJSONArray("info");
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JSONObject jsonObject2 = jsonArray.getJSONObject(i);
-                hashMap = new HashMap<>();
-                hashMap.put("id", jsonObject2.getString("id") == null ? "" : jsonObject2.getString("id"));
-                hashMap.put("houseid", jsonObject2.getString("houseid") == null ? "" : jsonObject2.getString("houseid"));
-                hashMap.put("xiaoqu", jsonObject2.getString("xiaoqu") == null ? "" : jsonObject2.getString("xiaoqu"));
-                hashMap.put("louhao", jsonObject2.getString("louhao") == null ? "" : jsonObject2.getString("louhao"));
-                hashMap.put("fanghao", jsonObject2.getString("fanghao") == null ? "" : jsonObject2.getString("fanghao"));
-                hashMap.put("fanghaoid", jsonObject2.getString("fanghaoid") == null ? "" : jsonObject2.getString("fanghaoid"));
-                hashMap.put("danyuan", jsonObject2.getString("danyuan") == null ? "" : jsonObject2.getString("danyuan"));
-                array.add(hashMap);
-            }
-        } else {
-            handler.sendEmptyMessage(3);
+            return;
         }
 
-    }
+        XNetUtil.Handle(APPService.userGetHouseList(uid,username, page, 20), new XNetUtil.OnHttpResult<List<HouseModel>>() {
+            @Override
+            public void onError(Throwable e) {
 
-    private void setHouselist() {
-        adapter = new HouseAdapter(array, MyHouse.this, handler);
-        houselist.setAdapter(adapter);
+                XNetUtil.APPPrintln(e);
+            }
+
+            @Override
+            public void onSuccess(List<HouseModel> models) {
+
+                if(page == 1)
+                {
+                    dataArr.clear();
+                }
+
+                if(models.size() > 0)
+                {
+                    dataArr.addAll(models);
+
+                    if(APPDataCache.User.getHouseid().equals(""))
+                    {
+                        setDefault(0);
+                    }
+
+                }
+                else
+                {
+                    APPDataCache.User.setHouseid("");
+                    APPDataCache.User.setFanghaoid("");
+                    APPDataCache.User.save();
+                }
+
+                if(models.size() == 20)
+                {
+                    end = false;
+                    page += 1;
+                }
+                else
+                {
+                    end = true;
+                }
+                adapter.dataArr = dataArr;
+                adapter.notifyDataSetChanged();
+                list.onRefreshComplete();
+            }
+        });
+
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        Refresh.post(new Runnable() {
-            @Override
-            public void run() {
-                Refresh.setRefreshing(true);
-            }
-        });
-        onRefresh();
-    }
-
-    public void onRefresh() {
-        Refresh.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                // 更新数据
-                url = GlobalVariables.urlstr + "user.getHouseList&uid=" + uid + "&username=" + username;
-                gethouselist(1);
-            }
-        }, 2000);
+    protected void onResume() {
+        super.onResume();
 
     }
 }

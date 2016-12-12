@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bigkoo.alertview.AlertView;
+import com.bigkoo.alertview.OnDismissListener;
 import com.bigkoo.alertview.OnItemClickListener;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.PreferencesUtils;
+import util.XNotificationCenter;
 
 /**
  * Created by admins on 2016/1/30.
@@ -129,6 +131,8 @@ public class SerachHome extends Fragment implements View.OnClickListener, OnItem
                     } catch (Exception e) {
 
                     }
+                    running = false;
+
                     break;
                 case 3:
                     try {
@@ -136,6 +140,7 @@ public class SerachHome extends Fragment implements View.OnClickListener, OnItem
                     } catch (Exception e) {
 
                     }
+                    running = false;
                     break;
                 case 4:
                     JSONObject jsonObject = JSON.parseObject(urlstr);
@@ -149,6 +154,7 @@ public class SerachHome extends Fragment implements View.OnClickListener, OnItem
                             getStr(1);
                         } else {
                             Toast.makeText(getActivity(), "添加成功", Toast.LENGTH_SHORT).show();
+                            XNotificationCenter.getInstance().postNotice("ADDHouseSuccess",null);
                         }
                         if (types == 1) {
                             Intent intent = new Intent();
@@ -159,15 +165,32 @@ public class SerachHome extends Fragment implements View.OnClickListener, OnItem
 
                     } else {
                         Toast.makeText(getActivity(), jsonObject1.getString("msg"), Toast.LENGTH_SHORT).show();
+                        running = false;
                     }
                     break;
             }
+
+
+        }
+    };
+
+
+    OnDismissListener dismissListener = new OnDismissListener() {
+        @Override
+        public void onDismiss(Object o) {
+            running = false;
         }
     };
 
     private void Alertshow(String str[]) {
-        new AlertView(null, null, null, null,
-                str, getActivity(), AlertView.Style.Alert, this).show();
+        AlertView alert = new AlertView(null, null, null, null,
+                str, getActivity(), AlertView.Style.Alert, this);
+
+        alert.show();
+
+        alert.setOnDismissListener(dismissListener);
+
+
     }
 
     @Override
@@ -216,8 +239,18 @@ public class SerachHome extends Fragment implements View.OnClickListener, OnItem
         }
     }
 
+    private boolean running = false;
+
     @Override
     public void onClick(View v) {
+
+        if(running)
+        {
+            return;
+        }
+
+        running = true;
+
         switch (v.getId()) {
             case R.id.calm:
                 array.clear();
