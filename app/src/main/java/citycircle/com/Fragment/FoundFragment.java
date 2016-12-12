@@ -116,8 +116,7 @@ public class FoundFragment extends Fragment implements View.OnClickListener, OnI
                             intent.setClass(getActivity(), AddHome.class);
                             getActivity().startActivity(intent);
                         } else {
-                            intent.setClass(getActivity(), PropertyHome.class);
-                            getActivity().startActivity(intent);
+
                         }
                     }
                 } else {

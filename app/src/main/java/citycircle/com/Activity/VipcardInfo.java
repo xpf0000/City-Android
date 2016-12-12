@@ -35,6 +35,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
 import citycircle.com.Utils.PreferencesUtils;
+import citycircle.com.card.CardGetedInfo;
 import okhttp3.Call;
 
 /**
@@ -210,13 +211,20 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
                     id=jsonObject2.getString("id");
                     username=jsonObject2.getString("uid");
                     orlq=1;
-                    url = GlobalVariables.urlstr + "Hyk.getArticleYLQ&id=" + id + "&uid=" + username;
-                    getjson();
+//                    url = GlobalVariables.urlstr + "Hyk.getArticleYLQ&id=" + id + "&uid=" + username;
+//                    getjson();
                     Toast.makeText(VipcardInfo.this, "领取成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent();
                     intent.setAction("com.servicedemo4");
                     intent.putExtra("getmeeage", "12");
                     VipcardInfo.this.sendBroadcast(intent);
+
+                    intent.putExtra("id", id);
+                    intent.putExtra("orlq", 1);
+                    intent.setClass(VipcardInfo.this, CardGetedInfo.class);
+                    VipcardInfo.this.startActivity(intent);
+                    finish();
+
                 } else {
                     Toast.makeText(VipcardInfo.this, jsonObject1.getString("msg"), Toast.LENGTH_SHORT).show();
                 }

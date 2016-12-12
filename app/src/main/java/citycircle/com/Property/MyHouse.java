@@ -125,10 +125,16 @@ public class MyHouse extends Activity {
                         handler.sendEmptyMessage(2);
                     } else {
                         if (type == 3) {
-                            array.remove(GlobalVariables.position);
-                            String housid = PreferencesUtils.getString(MyHouse.this, "houseid");
-                            PreferencesUtils.putString(MyHouse.this, "houseids", housid);
-                            handler.sendEmptyMessage(6);
+
+                            if(GlobalVariables.position < array.size())
+                            {
+                                array.remove(GlobalVariables.position);
+                                String housid = PreferencesUtils.getString(MyHouse.this, "houseid");
+                                PreferencesUtils.putString(MyHouse.this, "houseids", housid);
+                                handler.sendEmptyMessage(6);
+                            }
+
+
                         } else if(type==4){
                             handler.sendEmptyMessage(8);
                         }
@@ -209,8 +215,13 @@ public class MyHouse extends Activity {
                     if (a != 0) {
                         Toast.makeText(MyHouse.this, jsonObject2.getString("msg"), Toast.LENGTH_SHORT).show();
                     } else {
-                        array.remove(GlobalVariables.position);
-                        adapter.notifyDataSetChanged();
+
+                        if(GlobalVariables.position < array.size())
+                        {
+                            array.remove(GlobalVariables.position);
+                            adapter.notifyDataSetChanged();
+                        }
+
                         if (array.size() > 0) {
                             if (GlobalVariables.position == 0) {
                                 updatrurl = GlobalVariables.urlstr + "User.updateHouse&uid=" + uid + "&username=" + username + "&houseid=" + array.get(GlobalVariables.position).get("houseid") + "&fanghaoid=" + array.get(GlobalVariables.position).get("fanghaoid");
@@ -224,9 +235,13 @@ public class MyHouse extends Activity {
                             PreferencesUtils.putString(MyHouse.this, "houseids", "0");
                             PreferencesUtils.putString(MyHouse.this, "houseid", "0");
                         }
+
                     }
+
                     XActivityindicator.hide();
                     running = false;
+
+
                     break;
                 case 9:
                     XActivityindicator.create(MyHouse.this).show();
@@ -284,7 +299,6 @@ public class MyHouse extends Activity {
             @Override
             public void run() {
                 // 更新数据
-                array.clear();
                 url = GlobalVariables.urlstr + "user.getHouseList&uid=" + uid + "&username=" + username;
                 gethouselist(1);
             }

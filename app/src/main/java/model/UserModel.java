@@ -473,7 +473,10 @@ public class UserModel implements Serializable {
                     setBirthday(models.get(0).getBirthday());
                     setAihao(models.get(0).getAihao());
                     setQianming(models.get(0).getQianming());
-
+                    setMobile(models.get(0).getMobile());
+                    setNickname(models.get(0).getNickname());
+                    setAddress(models.get(0).getAddress());
+                    setTruename(models.get(0).getTruename());
                     save();
                 }
 
