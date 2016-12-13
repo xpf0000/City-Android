@@ -30,6 +30,8 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.PreferencesUtils;
 
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+
 /**
  * Created by admins on 2016/4/12.
  */
@@ -48,7 +50,9 @@ public class ProHot  extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.hotphoto, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        houseid= PreferencesUtils.getString(getActivity(), "houseid");
+
+        houseid= APPDataCache.User.getHouseid();
+
         url= GlobalVariables.urlstr+"Quan.getListHot&page="+page+"&xiaoquid="+houseid;
         SpacesItemDecoration decoration=new SpacesItemDecoration(16);
         mRecyclerView.addItemDecoration(decoration);

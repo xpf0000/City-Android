@@ -28,7 +28,12 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.PreferencesUtils;
+import model.HouseModel;
+import util.XNetUtil;
 import util.XNotificationCenter;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 /**
  * Created by admins on 2016/1/30.
@@ -151,14 +156,31 @@ public class SelectHome extends Fragment implements OnItemClickListener, View.On
                     JSONObject jsonObject1 = jsonObject.getJSONObject("data");
                     if (jsonObject1.getIntValue("code") == 0) {
                         if (types == 1) {
-                            PreferencesUtils.putString(getActivity(), "houseid", villageid);
-                            PreferencesUtils.putString(getActivity(), "houseids", villageid);
-                            PreferencesUtils.putString(getActivity(), "fanghaoid", roomid);
+
+                            APPDataCache.User.setHouseid(villageid);
+                            APPDataCache.User.setFanghaoid(roomid);
+
                             addurl = GlobalVariables.urlstr + "User.updateHouse&uid=" + uid + "&username=" + username + "&houseid=" + villageid + "&fanghaoid=" + roomid;
                             getStr(1);
+
+
                         } else {
-                            Toast.makeText(getActivity(), "添加成功", Toast.LENGTH_SHORT).show();
-                            XNotificationCenter.getInstance().postNotice("ADDHouseSuccess",null);
+
+                            if(APPDataCache.User.getHouseid().equals("") || APPDataCache.User.getFanghaoid().equals(""))
+                            {
+                                APPDataCache.User.setHouseid(villageid);
+                                APPDataCache.User.setFanghaoid(roomid);
+
+                                addurl = GlobalVariables.urlstr + "User.updateHouse&uid=" + uid + "&username=" + username + "&houseid=" + villageid + "&fanghaoid=" + roomid;
+                                getStr(1);
+                            }
+                            else
+                            {
+                                Toast.makeText(getActivity(), "添加成功", Toast.LENGTH_SHORT).show();
+                                XNotificationCenter.getInstance().postNotice("ADDHouseSuccess",null);
+                            }
+
+
                         }
                         if (types==1){
                             Intent intent=new Intent();
@@ -168,13 +190,24 @@ public class SelectHome extends Fragment implements OnItemClickListener, View.On
                         getActivity().finish();
 
                     } else {
-                        Toast.makeText(getActivity(), jsonObject1.getString("msg"), Toast.LENGTH_SHORT).show();
+
+                        if(jsonObject1 != null)
+                        {
+                            String str = jsonObject1.getString("msg");
+
+                            if(str != null)
+                            {
+                                Toast.makeText(getActivity(), jsonObject1.getString("msg"), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
                         running = false;
                     }
                     break;
             }
         }
     };
+
 
     private void Alertshow(String str[]) {
         AlertView alert = new AlertView(null, null, null, null,

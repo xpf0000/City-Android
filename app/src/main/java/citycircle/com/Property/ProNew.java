@@ -56,6 +56,8 @@ import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
 import citycircle.com.Utils.PreferencesUtils;
 
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+
 /**
  * Created by admins on 2015/11/23.
  */
@@ -99,7 +101,9 @@ public class ProNew extends Fragment {
                 R.layout.newmessage, null);
         adddview = LayoutInflater.from(getActivity()).inflate(
                 R.layout.addviewpage, null);
-        xiaoquid=PreferencesUtils.getString(getActivity(),"houseid");
+
+        xiaoquid=APPDataCache.User.getHouseid();
+
         addurl = GlobalVariables.urlstr + "News.getGuanggao&typeid=84";
         int a = PreferencesUtils.getInt(getActivity(), "land");
         uid=PreferencesUtils.getString(getActivity(),"userid");

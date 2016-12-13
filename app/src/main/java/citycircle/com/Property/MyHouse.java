@@ -160,7 +160,7 @@ public class MyHouse extends Activity {
 
     }
 
-    private void setDefault(int postion)
+    private void setDefault(final int postion)
     {
         if(postion < dataArr.size())
         {
@@ -179,6 +179,9 @@ public class MyHouse extends Activity {
                     {
                         APPDataCache.User.setHouseid(model.getHouseid());
                         APPDataCache.User.setFanghaoid(model.getFanghaoid());
+                        APPDataCache.User.setXiaoqu(model.getXiaoqu());
+                        APPDataCache.User.setHousename(model.getXiaoqu()+model.getLouhao()+model.getDanyuan()+model.getFanghao());
+
                         APPDataCache.User.save();
 
                         adapter.notifyDataSetChanged();

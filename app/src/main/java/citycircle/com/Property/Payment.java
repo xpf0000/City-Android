@@ -24,6 +24,8 @@ import citycircle.com.Utils.ImageUtils;
 import citycircle.com.Utils.PreferencesUtils;
 import util.BitmapMo;
 
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+
 /**
  * Created by 飞侠 on 2016/2/23.
  */
@@ -60,8 +62,8 @@ public class Payment extends Activity implements View.OnClickListener {
         paymentlist = (ListView) findViewById(R.id.paymentlist);
         back.setOnClickListener(this);
         paymentlist.addHeaderView(view);
-        xiaoquu.setText("小区：" +PreferencesUtils.getString(Payment.this,"xiaoqu"));
-        adress.setText("地址：" + PreferencesUtils.getString(Payment.this,"housename"));
+        xiaoquu.setText("小区：" +APPDataCache.User.getXiaoqu());
+        adress.setText("地址：" + APPDataCache.User.getHousename());
         ImageUtils = new ImageUtils();
         ImageLoader = ImageLoader.getInstance();
         ImageLoader.init(ImageLoaderConfiguration.createDefault(this));

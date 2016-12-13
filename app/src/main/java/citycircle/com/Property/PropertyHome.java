@@ -40,6 +40,8 @@ import citycircle.com.Utils.PreferencesUtils;
 import cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager;
 import util.XNetUtil;
 
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+
 /**
  * Created by admins on 2016/1/30.
  */
@@ -78,8 +80,8 @@ public class PropertyHome extends Activity implements View.OnClickListener {
 //        mDrawer.setMaxAnimationDuration(R.anim.woniu_list_item);
         setContentView(R.layout.pro_home);
 
-        uid = PreferencesUtils.getString(PropertyHome.this, "userid");
-        username = PreferencesUtils.getString(PropertyHome.this, "username");
+        uid = APPDataCache.User.getUid();
+        username = APPDataCache.User.getUsername();
         houseurl = GlobalVariables.urlstr + "user.getHouseList&uid=" + uid + "&username=" + username;
         url = GlobalVariables.urlstr + "Wuye.getUserNewsCount&uid=" + uid + "&username=" + username;
         adduel = GlobalVariables.urlstr + "News.getGuanggao&typeid=93";
@@ -95,26 +97,12 @@ public class PropertyHome extends Activity implements View.OnClickListener {
         wuyu = (TextView) findViewById(R.id.wuyu);
         prophonenumber = (TextView) findViewById(R.id.prophonenumber);
         prophonenumber.setOnClickListener(this);
-//        usermessages = (TextView) findViewById(R.id.usermessages);
-//        badge = new BadgeView(this, usermessages);
-//        usermessages.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                badge.setBadgeMargin(0, (usermessages.getHeight() / 5));
-//            }
-//        });
-
-//        badge.setBadgePosition(BadgeView.POSITION_CENTER);
-        wuyu.setText(PreferencesUtils.getString(PropertyHome.this, "xiaoqu"));
-//        usermessages.setOnClickListener(this);
+        wuyu.setText(APPDataCache.User.getXiaoqu());
         inflater = LayoutInflater.from(this);
         hviewpage = (AutoScrollViewPager) findViewById(R.id.view_pager);
         hviewpage.setOffscreenPageLimit(3);
         hviewpage.startAutoScroll();
         hviewpage.setInterval(3000);
-//        houselist = (ListView) findViewById(R.id.houselist);
-//        head = (ImageView) findViewById(R.id.head);
-//        number=(TextView)findViewById(R.id.number);
         back = (ImageView) findViewById(R.id.loginback);
         back.setOnClickListener(this);
         messages = (TextView) findViewById(R.id.messages);
@@ -132,25 +120,7 @@ public class PropertyHome extends Activity implements View.OnClickListener {
         ImageLoader.init(ImageLoaderConfiguration.createDefault(this));
         animateFirstListener = new ImageUtils.AnimateFirstDisplayListener();
         options = ImageUtils.setCirclelmageOptions();
-//        String headurl = PreferencesUtils.getString(this, "headimage");
-//        try {
-//            String numbers=PreferencesUtils.getString(PropertyHome.this,"mobile");
-//            number.setText(numbers.replace(numbers.substring(7,11),"****"));
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            number.setText("未绑定电话号码");
-//        }
 
-//        ImageLoader.displayImage(headurl, head, options,
-//                animateFirstListener);
-//        houselist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                mDrawer.closeMenu();
-//                PreferencesUtils.putString(PropertyHome.this, "houseids", array.get(position).get("houseid"));
-//                adapter.notifyDataSetChanged();
-//            }
-//        });
         hviewpage.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -188,18 +158,15 @@ public class PropertyHome extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        String houseid;
-        try {
-            houseid = PreferencesUtils.getString(PropertyHome.this, "houseid");
-        } catch (Exception e) {
-            houseid = "0";
-        }
+
+        String houseid = APPDataCache.User.getHouseid();
+
         switch (v.getId()) {
             case R.id.loginback:
                 finish();
                 break;
             case R.id.messages:
-                if (houseid.equals("0")) {
+                if (houseid.equals("")) {
                     intent.setClass(PropertyHome.this, AddHome.class);
                     PropertyHome.this.startActivity(intent);
                 } else {
@@ -208,7 +175,7 @@ public class PropertyHome extends Activity implements View.OnClickListener {
                 }
                 break;
             case R.id.phonenumber:
-                if (houseid.equals("0")) {
+                if (houseid.equals("")) {
                     intent.setClass(PropertyHome.this, AddHome.class);
                     PropertyHome.this.startActivity(intent);
                 } else {
@@ -218,7 +185,7 @@ public class PropertyHome extends Activity implements View.OnClickListener {
 //                PropertyHome.this.startActivity(intent);
                 break;
             case R.id.meeting:
-                if (houseid.equals("0")) {
+                if (houseid.equals("")) {
                     intent.setClass(PropertyHome.this, AddHome.class);
                     PropertyHome.this.startActivity(intent);
                 } else {
@@ -227,7 +194,7 @@ public class PropertyHome extends Activity implements View.OnClickListener {
                 }
                 break;
             case R.id.DOC:
-                if (houseid.equals("0")) {
+                if (houseid.equals("")) {
                     intent.setClass(PropertyHome.this, AddHome.class);
                     PropertyHome.this.startActivity(intent);
                 } else {
@@ -243,7 +210,7 @@ public class PropertyHome extends Activity implements View.OnClickListener {
 ////                PropertyHome.this.startActivity(intent);
 //                break;
             case R.id.prophonenumber:
-                if (houseid.equals("0")) {
+                if (houseid.equals("")) {
                     intent.setClass(PropertyHome.this, AddHome.class);
                     PropertyHome.this.startActivity(intent);
                 } else {
@@ -253,7 +220,7 @@ public class PropertyHome extends Activity implements View.OnClickListener {
 //                PropertyHome.this.startActivity(intent);
                 break;
             case R.id.prcitcle:
-                if (houseid.equals("0")) {
+                if (houseid.equals("")) {
                     intent.setClass(PropertyHome.this, AddHome.class);
                     PropertyHome.this.startActivity(intent);
                 } else {
@@ -293,15 +260,26 @@ public class PropertyHome extends Activity implements View.OnClickListener {
             @Override
             public void run() {
                 super.run();
-                HttpRequest httpRequest = new HttpRequest();
-                fanghaoid = PreferencesUtils.getString(PropertyHome.this, "fanghaoid");
-                String url = GlobalVariables.urlstr + "wuye.getshenhe&fanghaoid=" + fanghaoid + "&uid=" + uid;
-                hosestatstr = httpRequest.doGet(url);
-                if (hosestatstr.equals("网络超时")) {
-//                    handler.sendEmptyMessage(3);
-                } else {
-                    handler.sendEmptyMessage(4);
+
+                fanghaoid = APPDataCache.User.getFanghaoid();
+
+                if(fanghaoid.equals(""))
+                {
+                    handler.sendEmptyMessage(3);
                 }
+                else
+                {
+                    HttpRequest httpRequest = new HttpRequest();
+                    String url = GlobalVariables.urlstr + "wuye.getshenhe&fanghaoid=" + fanghaoid + "&uid=" + uid;
+                    hosestatstr = httpRequest.doGet(url);
+                    if (hosestatstr.equals("网络超时")) {
+//                    handler.sendEmptyMessage(3);
+                    } else {
+                        handler.sendEmptyMessage(4);
+                    }
+                }
+
+
             }
         }.start();
     }
@@ -322,13 +300,12 @@ public class PropertyHome extends Activity implements View.OnClickListener {
                             message = jsonObject2.getIntValue("count");
                         }
                     }
-//                    setHouselist();
-//                    if (message != 0) {
-//                        badge.setText(message + "");
-//                        badge.show();
-//                    } else {
-//                        badge.hide();
-//                    }
+                    else
+                    {
+                        APPDataCache.User.setHouseid("");
+                        APPDataCache.User.setFanghaoid("");
+                    }
+//
                     setAddarray(addurlstr);
                     setheadadd();
                     initIndicator();
@@ -337,13 +314,18 @@ public class PropertyHome extends Activity implements View.OnClickListener {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    final String houseid = PreferencesUtils.getString(PropertyHome.this, "houseid");
-                    final String fanghaoid = PreferencesUtils.getString(PropertyHome.this, "fanghaoid");
+                    final String houseid = APPDataCache.User.getHouseid();
+                    final String fanghaoid = APPDataCache.User.getFanghaoid();
+
                     for (int i = 0; i < array.size(); i++) {
                         if (array.get(i).get("houseid").equals(houseid) && array.get(i).get("fanghaoid").equals(fanghaoid)) {
-                            PreferencesUtils.putString(PropertyHome.this, "xiaoqu", array.get(i).get("xiaoqu"));
                             String hosename = array.get(i).get("xiaoqu") + array.get(i).get("louhao") + array.get(i).get("danyuan") + array.get(i).get("fanghao");
-                            PreferencesUtils.putString(PropertyHome.this, "housename", hosename);
+
+                            APPDataCache.User.setXiaoqu(array.get(i).get("xiaoqu"));
+                            APPDataCache.User.setHousename(hosename);
+
+                            wuyu.setText(APPDataCache.User.getXiaoqu());
+
                         }
                     }
                     break;
@@ -439,7 +421,14 @@ public class PropertyHome extends Activity implements View.OnClickListener {
         array.clear();
         addarray.clear();
         getHuose();
-        wuyu.setText(PreferencesUtils.getString(PropertyHome.this, "xiaoqu"));
+        wuyu.setText(APPDataCache.User.getXiaoqu());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        wuyu.setText(APPDataCache.User.getXiaoqu());
     }
 
     //    @Override

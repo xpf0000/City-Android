@@ -31,6 +31,8 @@ import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.PreferencesUtils;
 import util.XNotificationCenter;
 
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+
 /**
  * Created by admins on 2016/1/30.
  */
@@ -147,9 +149,10 @@ public class SerachHome extends Fragment implements View.OnClickListener, OnItem
                     JSONObject jsonObject1 = jsonObject.getJSONObject("data");
                     if (jsonObject1.getIntValue("code") == 0) {
                         if (types == 1) {
-                            PreferencesUtils.putString(getActivity(), "houseid", villageid);
-                            PreferencesUtils.putString(getActivity(), "houseids", villageid);
-                            PreferencesUtils.putString(getActivity(), "fanghaoid", doord);
+
+                            APPDataCache.User.setHouseid(villageid);
+                            APPDataCache.User.setFanghaoid(doord);
+
                             addurl = GlobalVariables.urlstr + "User.updateHouse&uid=" + uid + "&username=" + username + "&houseid=" + villagesid + "&fanghaoid=" + doord;
                             getStr(1);
                         } else {

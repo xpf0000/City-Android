@@ -92,6 +92,30 @@ public class UserModel implements Serializable {
     private String aihao;
     private String qianming;
 
+    private String xiaoqu;
+    private String housename;
+
+    public String getHousename() {
+        housename = housename == null ? "" : housename;
+        return housename;
+    }
+
+    public void setHousename(String housename) {
+        this.housename = housename;
+    }
+
+    public String getXiaoqu() {
+        if(getHouseid().equals(""))
+        {
+            xiaoqu = "尚未绑定房屋";
+        }
+        return xiaoqu;
+    }
+
+    public void setXiaoqu(String xiaoqu) {
+        this.xiaoqu = xiaoqu;
+    }
+
     public String getAihao() {
         aihao = aihao == null ? "" : aihao;
         return aihao;
@@ -180,6 +204,10 @@ public class UserModel implements Serializable {
         birthday = u.birthday;
         address = u.address;
         token = u.token;
+
+        aihao = u.aihao;
+        qianming = u.qianming;
+
 
         save();
     }
@@ -286,6 +314,7 @@ public class UserModel implements Serializable {
 
     public String getHouseid() {
         houseid = houseid == null? "" : houseid;
+        houseid = houseid.equals("0") ? "" : houseid;
         return houseid;
     }
 
@@ -294,6 +323,8 @@ public class UserModel implements Serializable {
     }
 
     public String getFanghaoid() {
+        fanghaoid = fanghaoid == null? "" : fanghaoid;
+        fanghaoid = fanghaoid.equals("0") ? "" : fanghaoid;
         return fanghaoid;
     }
 
