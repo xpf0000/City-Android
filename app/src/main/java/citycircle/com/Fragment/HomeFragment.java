@@ -75,13 +75,14 @@ public class HomeFragment extends Fragment {
         view = inflater.inflate(R.layout.home_layout, container, false);
 
         EventBus.getDefault().register(this);
-
         UmengUpdateAgent.update(getActivity());
-//        PushAgent mPushAgent = PushAgent.getInstance(getActivity());
-//        mPushAgent.enable();
         setView();
 
-        APPDataCache.User.getMsgCount();
+        if (APPDataCache.msgshow) {
+            badge.setVisibility(View.VISIBLE);
+        } else {
+            badge.setVisibility(View.INVISIBLE);
+        }
 
         return view;
     }
@@ -196,9 +197,13 @@ public class HomeFragment extends Fragment {
 
     @Subscribe
     public void getEventmsg(MyEventBus myEventBus) {
-        if (myEventBus.getMsg().equals("show")) {
+
+        if (myEventBus.getMsg().equals("show"))
+        {
             badge.setVisibility(View.VISIBLE);
-        } else {
+        }
+        else if(myEventBus.getMsg().equals("hidden"))
+        {
             badge.setVisibility(View.INVISIBLE);
         }
     }

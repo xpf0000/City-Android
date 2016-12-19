@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta content="telephone=no" name="format-detection" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+
+<title></title>
+<link rel="stylesheet" type="text/css" href="css/index.css"/>
+<link rel="stylesheet" type="text/css" href="css/aui.2.0.css"/>
+
+<script data-main="js/loginBind" src="lib/require-min.js" ></script>
+
+</head>
+<body ms-controller="loginBind" style="background: #f3f5f7;padding: 12px 12px 0px 12px;color: #666666;font-size: 15px;" >
+	
+	
+	<div style="margin-top: 10px;margin-bottom: 20px;">
+		关联已有怀府网帐号
+	</div>
+	
+	
+	<div>
+		<input type="text" style="background: #fff;border: 1px solid #dedede;moz-border-radius: 6px; 
+    -webkit-border-radius: 6px; 
+    border-radius:6px;padding-left: 5px;padding-right: 5px;height: 50px;" placeholder="请输入用户名/手机号" ms-duplex="@account"/>
+	</div>
+	
+	<div style="margin-top: 12px;">
+		<input type="password" style="background: #fff;border: 1px solid #dedede;moz-border-radius: 6px; 
+    -webkit-border-radius: 6px; 
+    border-radius:6px;padding-left: 5px;padding-right: 5px;height: 50px;" placeholder="请输入密码" ms-duplex="@pass"/>
+	</div>
+
+	<div style="margin-top: 30px;margin-bottom: 10px;font-size: 13px;">
+		关联后，您的<span ms-text="@typestr"></span>帐号和怀府网帐号都可以登录
+	</div>
+
+
+		<div onclick="doLogin()" style="background: #13bffd;margin-left: auto;margin-right: auto;text-align: center;width: 100%;padding-bottom: 10px;padding-top: 10px;-moz-border-radius: 6px; 
+    -webkit-border-radius: 6px; 
+    border-radius:6px;color: #ffffff;font-size: 18px;font-weight: 900">
+		<b>登录</b>
+	</div>
+	
+	
+	<div onclick="toFindPass()" style="float: right;margin-top: 30px;text-decoration: underline;">
+		找回密码
+	</div>
+	
+	
+</body>
+</html>

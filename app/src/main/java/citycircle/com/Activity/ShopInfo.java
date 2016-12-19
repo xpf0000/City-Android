@@ -55,6 +55,7 @@ public class ShopInfo extends Activity implements View.OnClickListener {
     WebView content;
     LinearLayout youhuiquan;
     LinearLayout renzheng;
+    ImageView vipicon;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +83,7 @@ public class ShopInfo extends Activity implements View.OnClickListener {
         adress = (TextView) findViewById(R.id.adress);
         youhuiquan = (LinearLayout) findViewById(R.id.youhuiquan);
         renzheng = (LinearLayout) findViewById(R.id.renzheng);
+        vipicon = (ImageView) findViewById(R.id.vipicon);
 
         renzheng.setOnClickListener(this);
         youhuiquan.setOnClickListener(this);
@@ -118,7 +120,21 @@ public class ShopInfo extends Activity implements View.OnClickListener {
                     list.addAll(shopinfoMo.getData().getInfo());
                     for (int i = 0; i < list.size(); i++) {
 
-                        if(list.get(i).getOrvip().equals("0"))
+                        String level = list.get(i).getViplevel();
+
+                        if (level.equals("1"))
+                        {
+                            vipicon.setImageResource(R.mipmap.renzheng_icon);
+                        }
+                        else if (level.equals("2"))
+                        {
+                            vipicon.setImageResource(R.mipmap.vip_icon);
+                        }
+                        else if (level.equals("3"))
+                        {
+                            vipicon.setImageResource(R.mipmap.svip_icon);
+                        }
+                        else
                         {
                             renzheng.setVisibility(View.GONE);
                         }

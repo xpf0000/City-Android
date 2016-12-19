@@ -111,7 +111,7 @@ public class RecommFragment extends Fragment {
                 if (Integer.parseInt(arrayList.get(position-listView.getHeaderViewsCount()).get("category_id"))==98){
                     intent.putExtra("id", arrayList.get(position -listView.getHeaderViewsCount()).get("id"));
                     intent.putExtra("type", 1);
-                    intent.setClass(getActivity(), DiscountInfo.class);
+                    intent.setClass(getActivity(), ShopsActityInfoVC.class);
                     getActivity().startActivity(intent);
                 }else {
                     intent.putExtra("id", arrayList.get(position -listView.getHeaderViewsCount()).get("id"));

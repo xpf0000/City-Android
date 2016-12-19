@@ -31,6 +31,7 @@ import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.PreferencesUtils;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.friends.Wechat;
 import util.XNotificationCenter;
@@ -214,7 +215,6 @@ public class SetActivity extends Activity {
             public void onClick(View v) {
                 Platform QQ = ShareSDK.getPlatform(QZone.NAME);
                 QQ.SSOSetting(true);
-
                 if(QQ.isAuthValid() ){
                     QQ.removeAccount();
                     ShareSDK.removeCookieOnAuthorize(true);
@@ -225,6 +225,13 @@ public class SetActivity extends Activity {
                 WX.SSOSetting(true);
                 if(WX.isAuthValid() ){
                     WX.removeAccount();
+                    ShareSDK.removeCookieOnAuthorize(true);
+                }
+
+                Platform SINA = ShareSDK.getPlatform(SinaWeibo.NAME);
+                SINA.SSOSetting(true);
+                if(SINA.isAuthValid() ){
+                    SINA.removeAccount();
                     ShareSDK.removeCookieOnAuthorize(true);
                 }
 

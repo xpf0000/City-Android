@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta content="telephone=no" name="format-detection" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+
+<title></title>
+<link rel="stylesheet" type="text/css" href="css/index.css"/>
+
+<script data-main="js/unitAccount" src="lib/require-min.js" ></script>
+
+</head>
+<body style="background: #f3f5f7;padding: 24px 12px 0px 12px;font-size: 16px;" ms-controller="unitLogin">
+
+
+<div style="justify-content: center;
+	align-items:center;
+	display:-webkit-flex;" >
+		
+		<img style="width: 100px;height: 100px;-moz-border-radius: 80px; 
+    -webkit-border-radius: 80px; 
+    border-radius:80px;"  ms-attr="{src: @header}" />
+		
+</div>
+
+<div style="margin-top: 10px;">
+	
+	<span style="color: #888888;font-size: 14px;">亲爱的<span ms-text="@type"></span>用户：</span> <span style="color: #333333;font-size: 17px;" ms-text="@nick"></span> 
+	
+	
+</div>
+
+<div style="margin-top: 6px;">
+	<span style="color: #333333;font-size: 15px;margin-top: 8px;">为了给您更好的服务，请关联一个怀府网帐号</span>
+</div>
+
+<div style="margin-top: 30px;margin-bottom: 18px;font-size: 14px;color: #888888;">
+	
+	<span>还没有怀府网帐号？</span>
+	
+</div>
+
+<div onclick="toRegist()" style="background: #13bffd;margin-left: auto;margin-right: auto;text-align: center;width: 100%;padding-bottom: 10px;padding-top: 10px;-moz-border-radius: 6px; 
+    -webkit-border-radius: 6px; 
+    border-radius:6px;color: #ffffff;font-size: 18px;font-weight: 900">
+		快速注册
+	</div>
+	
+	<div style="justify-content: left;
+	align-items:center;
+	display:-webkit-flex;margin-top: 38px;margin-bottom: 10px;color: #888888;font-size: 14px;" >
+	
+	<img src="image/APPLogoBlue.png" style="width: 80px;height: auto;margin-right: 5px;" /> <span>已有怀府网帐号？</span>
+	
+</div>
+
+<div onclick="toUnit()" style="background: #fff;margin-left: auto;margin-right: auto;text-align: center;width: 100%;padding-bottom: 9px;padding-top: 9px;-moz-border-radius: 6px; 
+    -webkit-border-radius: 6px; 
+    border-radius:6px;color: #999999;font-size: 18px;border: #cccccc 1px solid;">
+		立即关联
+	</div>
+
+
+	
+	
+</body>
+</html>

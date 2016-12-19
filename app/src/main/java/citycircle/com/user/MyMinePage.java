@@ -297,6 +297,8 @@ public class MyMinePage extends BaseActivity {
     private void getUser()
     {
 
+        XNetUtil.APPPrintln("uname: "+uname);
+
         XNetUtil.Handle(APPService.userGetUser(uname), new XNetUtil.OnHttpResult<List<UserModel>>() {
             @Override
             public void onError(Throwable e) {

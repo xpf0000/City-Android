@@ -1,6 +1,7 @@
 package citycircle.com.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.DateUtils;
 import citycircle.com.Utils.ImageUtils;
 import citycircle.com.Utils.Timechange;
+import citycircle.com.user.MyMinePage;
 
 /**
  * Created by admins on 2015/12/15.
@@ -57,7 +59,7 @@ public class ComentAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         getItemView getItemView = new getItemView();
         convertView = LayoutInflater.from(context).inflate(R.layout.comment_items, null);
         getItemView.name=(TextView)convertView.findViewById(R.id.name);
@@ -81,6 +83,7 @@ public class ComentAdapter extends BaseAdapter {
         }else {
             getItemView.hui.setVisibility(View.VISIBLE);
         }
+
         return convertView;
     }
     private class getItemView {

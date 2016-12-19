@@ -130,7 +130,7 @@ public class AttaFragment extends Fragment {
                 Intent intent = new Intent();
                 intent.putExtra("id", arrayList.get(position - mylist.getHeaderViewsCount()).get("id"));
                 intent.putExtra("type", 1);
-                intent.setClass(getActivity(), DiscountInfo.class);
+                intent.setClass(getActivity(), ShopsActityInfoVC.class);
                 getActivity().startActivity(intent);
             }
         });

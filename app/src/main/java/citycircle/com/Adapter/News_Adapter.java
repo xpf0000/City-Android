@@ -39,8 +39,10 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
 import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.Utils.Timechange;
+import citycircle.com.user.MyMinePage;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
+import util.XNetUtil;
 
 /**
  * Created by admins on 2015/11/23.
@@ -227,6 +229,23 @@ public class News_Adapter extends BaseAdapter {
                 }
             }
         });
+
+        getItemView.uesrhead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent();
+
+                XNetUtil.APPPrintln(abscure_list.get(position));
+
+                intent.putExtra("uid",abscure_list.get(position).get("uid"));
+                intent.putExtra("uname",abscure_list.get(position).get("username"));
+                intent.setClass(context, MyMinePage.class);
+                context.startActivity(intent);
+
+            }
+        });
+
         getItemView.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

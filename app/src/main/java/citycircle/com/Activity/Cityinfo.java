@@ -48,6 +48,7 @@ import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
 import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.Utils.Timechange;
+import citycircle.com.user.MyMinePage;
 
 /**
  * Created by admins on 2015/11/25.
@@ -194,6 +195,23 @@ public class Cityinfo extends Activity implements View.OnClickListener {
                 }
             }
         });
+
+
+        uesrhead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent();
+
+                intent.putExtra("uid",array.get(0).get("uid"));
+                intent.putExtra("uname",array.get(0).get("username"));
+                intent.setClass(Cityinfo.this, MyMinePage.class);
+                startActivity(intent);
+
+            }
+        });
+
+
     }
 
     public void getnews(final int type) {
@@ -357,6 +375,7 @@ public class Cityinfo extends Activity implements View.OnClickListener {
             hashMap = new HashMap<>();
             hashMap.put("view", jsonObject3.getString("view") == null ? "" : jsonObject3.getString("view"));
             hashMap.put("headimage", jsonObject3.getString("headimage") == null ? "" : jsonObject3.getString("headimage"));
+            hashMap.put("username", jsonObject3.getString("username") == null ? "" : jsonObject3.getString("username"));
             hashMap.put("sex", jsonObject3.getString("sex") == null ? "" : jsonObject3.getString("sex"));
             hashMap.put("orzan", jsonObject3.getString("orzan") == null ? "" : jsonObject3.getString("orzan"));
             hashMap.put("content", jsonObject3.getString("content") == null ? "" : jsonObject3.getString("content"));

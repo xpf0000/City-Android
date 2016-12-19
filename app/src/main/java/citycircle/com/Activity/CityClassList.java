@@ -296,6 +296,7 @@ public class CityClassList extends Activity {
                 hashMap.put("sex", jsonObject2.getString("sex") == null ? "" : jsonObject2.getString("sex"));
                 hashMap.put("orzan", jsonObject2.getString("orzan") == null ? "" : jsonObject2.getString("orzan"));
                 hashMap.put("headimage", jsonObject2.getString("headimage") == null ? "" : jsonObject2.getString("headimage"));
+                hashMap.put("username", jsonObject2.getString("username") == null ? "" : jsonObject2.getString("username"));
                 hashMap.put("id", jsonObject2.getString("id") == null ? "" : jsonObject2.getString("id"));
                 hashMap.put("comment", jsonObject2.getString("comment") == null ? "" : jsonObject2.getString("comment"));
                 hashMap.put("zan", jsonObject2.getString("zan") == null ? "" : jsonObject2.getString("zan"));

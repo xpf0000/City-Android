@@ -155,11 +155,16 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
                                 + "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0\" />"
                                 + "<meta name=\"apple-mobile-web-app-capable\" content=\"yes\" />"
                                 + "<style>\r\n\t "
+                                + "body {background-color: #f3f5f7}\r\n"
                                 + "table {border-right:1px dashed #D2D2D2;border-bottom:1px dashed #D2D2D2} \r\n\t "
                                 + "table td{border-left:1px dashed #D2D2D2;border-top:1px dashed #D2D2D2} \r\n\t"
                                 + "img {width:100%}\r\n" + "</style>\r\n\t"
                                 + "</head>\r\n" + "<body style=\"width:[width]\">\r\n"
                                 + list.get(i).getInfo() + "\r\n</body>" + "</html>";
+
+                        infos = infos.replace("#FFFFFF","#f3f5f7");
+
+
                         content.loadDataWithBaseURL(null,infos , "text/html", "utf-8", null);
 
                         String color = list.get(i).getColor().replace("#","");
@@ -199,7 +204,7 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
                             shengyu.setText(str);
                         } else if (cardtype.getText().equals("充值卡")) {
                             String str = "" + list.get(i).getValues();
-                            shengyu.setText(str);
+                            shengyu.setText("￥"+str);
                         } else {
                             yu.setVisibility(View.GONE);
                             String str = "" + list.get(i).getValues();

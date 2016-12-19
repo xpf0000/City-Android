@@ -13,6 +13,10 @@ import java.util.List;
 import citycircle.com.R;
 import citycircle.com.hfb.JifenDetail;
 import model.YouhuiquanModel;
+import util.XNetUtil;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 /**
  * Created by X on 2016/11/7.
@@ -59,7 +63,7 @@ public class YouhuiquanAdapter extends BaseAdapter {
      * 返回item的视图
      */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ListItemView listItemView;
 
         // 初始化item view
@@ -103,6 +107,22 @@ public class YouhuiquanAdapter extends BaseAdapter {
         if(type == 0)
         {
             str = dataArr.get(position).getOrlq() == 1? "已领取":"立即\r\n领取";
+
+            if(dataArr.get(position).getOrlq() == 1)
+            {
+                listItemView.state.setOnClickListener(null);
+            }
+            else
+            {
+                listItemView.state.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        doLingqu(position);
+                    }
+                });
+            }
+
+
         }
         else
         {
@@ -117,6 +137,32 @@ public class YouhuiquanAdapter extends BaseAdapter {
 
         // 返回convertView对象
         return convertView;
+    }
+
+    private void doLingqu(final int postion)
+    {
+        YouhuiquanModel model = dataArr.get(postion);
+
+        String uid = APPDataCache.User.getUid();
+        String uname = APPDataCache.User.getUsername();
+
+        XNetUtil.Handle(APPService.jifenAddYHQ(uid, uname, model.getId()), "领取成功", "领取失败", new XNetUtil.OnHttpResult<Boolean>() {
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onSuccess(Boolean aBoolean) {
+
+                if(aBoolean)
+                {
+                    dataArr.get(postion).setOrlq(1);
+                    notifyDataSetChanged();
+                }
+
+            }
+        });
     }
 
 

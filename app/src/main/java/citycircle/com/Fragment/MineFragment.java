@@ -274,38 +274,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //getActivity().unregisterReceiver(broadcastReceiver);
         EventBus.getDefault().unregister(this);//反注册EventBus
-    }
-
-    public void getJsom() {
-        String username = PreferencesUtils.getString(getActivity(), "username");
-        String uid = PreferencesUtils.getString(getActivity(), "userid");
-        String url = GlobalVariables.urlstr + "user.getMessagesCount&uid=" + uid + "&username=" + username;
-        OkHttpUtils.get().url(url).build().execute(new StringCallback() {
-            @Override
-            public void onError(Call call, Exception e) {
-                Toast.makeText(getActivity(), R.string.intent_error, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onResponse(String response) {
-                JSONObject jsonObject = JSON.parseObject(response);
-                JSONObject jsonObject1 = jsonObject.getJSONObject("data");
-                if (jsonObject1.getIntValue("code") == 0) {
-                    JSONObject jsonObject2 = jsonObject1.getJSONObject("info");
-                    if (jsonObject2.getIntValue("count1")==0&&jsonObject2.getIntValue("count2")==0&&jsonObject2.getIntValue("count3")==0){
-
-                    }else {
-                        EventBus.getDefault().post(
-                                new MyEventBus("show"));
-                    }
-
-                } else {
-
-                }
-            }
-        });
     }
 
     @Override
@@ -367,7 +336,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onSuccess(Boolean aBoolean) {
-                v.setEnabled(!aBoolean);
+                v.setEnabled(true);
                 if(aBoolean)
                 {
                     qdSuccess();
@@ -426,9 +395,17 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     public void getEventmsg(MyEventBus myEventBus) {
         if (myEventBus.getMsg().equals("show")) {
             messageicon.setImageResource(R.mipmap.my_icon3_1);
-        } else {
+        }
+        else if(myEventBus.getMsg().equals("hidden"))
+        {
             messageicon.setImageResource(R.mipmap.my_icon3);
         }
+        else if(myEventBus.getMsg().equals("LoginSuccess"))
+        {
+            show();
+            getHFB();
+        }
+
     }
 
 

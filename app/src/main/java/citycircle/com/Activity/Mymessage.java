@@ -27,6 +27,8 @@ import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
 import util.XNetUtil;
 
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+
 /**
  * Created by admins on 2016/6/3.
  */
@@ -111,8 +113,15 @@ public class Mymessage extends Activity implements View.OnClickListener {
 
                         if(c1+c2+c3 > 0)
                         {
+                            APPDataCache.msgshow = true;
                             EventBus.getDefault().post(
                                     new MyEventBus("show"));
+                        }
+                        else
+                        {
+                            APPDataCache.msgshow = true;
+                            EventBus.getDefault().post(
+                                    new MyEventBus("hidden"));
                         }
                     }
                     catch (Exception e)

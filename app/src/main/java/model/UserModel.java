@@ -208,6 +208,7 @@ public class UserModel implements Serializable {
         aihao = u.aihao;
         qianming = u.qianming;
 
+        orwsinfo = u.orwsinfo;
 
         save();
     }
@@ -565,6 +566,8 @@ public class UserModel implements Serializable {
                         }
                         else
                         {
+                            EventBus.getDefault().post(
+                                    new MyEventBus("hidden"));
                             APPDataCache.msgshow = false;
                         }
                     }

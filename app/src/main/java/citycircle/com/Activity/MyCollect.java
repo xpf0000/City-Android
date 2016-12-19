@@ -173,8 +173,6 @@ public class MyCollect extends Activity implements View.OnClickListener {
                 case 3:
                     lehuirefresh.setRefreshing(false);
                     Toast.makeText(MyCollect.this, "暂无更多收藏", Toast.LENGTH_SHORT).show();
-                    Snackbar.make(lehuirefresh, "暂无更多收藏", Snackbar.LENGTH_SHORT)
-                            .setAction("Action", null).show();
                     break;
                 case 4:
                     JSONObject jsonObject = JSON.parseObject(deurlstr);

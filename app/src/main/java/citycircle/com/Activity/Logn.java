@@ -28,9 +28,13 @@ import com.bigkoo.alertview.OnDismissListener;
 import com.bigkoo.alertview.OnItemClickListener;
 import com.mob.tools.utils.UIHandler;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,20 +42,27 @@ import citycircle.com.MyViews.MyDialog;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
+import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.MyhttpRequest;
 import citycircle.com.Utils.PreferencesUtils;
+import citycircle.com.user.AuthBandPhoneVC;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.PlatformDb;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.friends.Wechat;
 import model.UserModel;
 import util.DataCache;
+import util.HttpResult;
+import util.XActivityindicator;
+import util.XHtmlVC;
 import util.XNetUtil;
 import util.XNotificationCenter;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 //import static cn.smssdk.SMSSDK.getVerificationCode;
 
@@ -84,6 +95,9 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
         super.onCreate(savedInstanceState);
         ShareSDK.initSDK(this);
         setContentView(R.layout.logn);
+
+        EventBus.getDefault().register(this);
+
         pushService = PushServiceFactory.getCloudPushService();
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         dialog = MyDialog.createLoadingDialog(Logn.this, "正在登陆...");
@@ -105,6 +119,7 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
     protected void onDestroy() {
         super.onDestroy();
         XNotificationCenter.getInstance().removeObserver("BindPhoneSuccess");
+        EventBus.getDefault().unregister(this);
     }
 
     private void intview() {
@@ -212,9 +227,9 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
                             UserModel user = JSON.parseObject(jsonObject2.toJSONString(), UserModel.class);
 
                             APPDataCache.User.copy(user);
-
                             APPDataCache.User.registNotice();
-
+                            APPDataCache.User.getUser();
+                            APPDataCache.User.getMsgCount();
                         }
 
                         XNotificationCenter.getInstance().postNotice("UserChanged",null);
@@ -333,9 +348,13 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
                 UserModel user = JSON.parseObject(jsonObject6.toJSONString(), UserModel.class);
 
                 APPDataCache.User.copy(user);
-
                 APPDataCache.User.registNotice();
+                APPDataCache.User.getUser();
+                APPDataCache.User.getMsgCount();
             }
+
+            XNotificationCenter.getInstance().postNotice("UserChanged",null);
+
             PreferencesUtils.putInt(Logn.this, "land", 1);
             Intent intent = new Intent();
             intent.setAction("com.servicedemo4");
@@ -379,20 +398,26 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
                 finish();
                 break;
             case R.id.sina_login_icon:
+                XActivityindicator.create(Logn.this).show();
                 a = 1;
+                type = "1";
                 Platform sina = ShareSDK.getPlatform(SinaWeibo.NAME);
                 sina.setPlatformActionListener(this);
                 sina.showUser(null);//执行登录，登录后在回调里面获取用户资料
 //                authorize(sina);
                 break;
             case R.id.qq_login_icon:
+                XActivityindicator.create(Logn.this).show();
                 a = 2;
+                type = "3";
                 Platform qzone = ShareSDK.getPlatform(QZone.NAME);
 //                authorize(qzone);
                 qzone.setPlatformActionListener(this);
                 qzone.showUser(null);//执行登录，登录后在回调里面获取用户资料
                 break;
             case R.id.my_login_wx3x:
+                XActivityindicator.create(Logn.this).show();
+                type = "2";
                 Platform wx = ShareSDK.getPlatform(Wechat.NAME);
 //                authorize(qzone);
                 wx.setPlatformActionListener(this);
@@ -419,6 +444,10 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
         plat.SSOSetting(true);
         plat.showUser(null);
     }
+
+//新浪 1  微信  2  QQ 3
+    private String type = "";
+    public static PlatformDb otheruser;
 
     @Override
     public boolean handleMessage(Message msg) {
@@ -461,23 +490,14 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
     @Override
     public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
         if (i == Platform.ACTION_USER_INFOR) {
-            userid = platform.getDb().getUserId();
-            nickname = platform.getDb().getUserName();
-            if (platform.getDb().getUserGender().equals("m")) {
-                sex = "0";
-            } else {
-                sex = "1";
-            }
-            headimage = platform.getDb().getUserIcon();
-            Message msg = new Message();
-            msg.what = MSG_AUTH_COMPLETE;
-            msg.obj = new Object[]{platform.getName(), hashMap};
-            UIHandler.sendEmptyMessage(MSG_AUTH_COMPLETE, this);
+            otheruser = platform.getDb();
+            userOpenLogin();
         }
     }
 
     @Override
     public void onError(Platform platform, int i, Throwable throwable) {
+        XActivityindicator.hide();
         if (i == Platform.ACTION_USER_INFOR) {
 //            handler.sendEmptyMessage(MSG_AUTH_ERROR);
             UIHandler.sendEmptyMessage(MSG_AUTH_ERROR, this);
@@ -487,17 +507,126 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
 
     @Override
     public void onCancel(Platform platform, int i) {
+        XActivityindicator.hide();
         if (i == Platform.ACTION_USER_INFOR) {
 //            handler.sendEmptyMessage(MSG_AUTH_CANCEL);
             UIHandler.sendEmptyMessage(MSG_AUTH_CANCEL, this);
         }
     }
 
+    private void userOpenLogin()
+    {
+        XNetUtil.HandleReturnAll(APPService.userOpenLogin(otheruser.getUserId(), type), new XNetUtil.OnHttpResult<HttpResult<List<UserModel>>>() {
+            @Override
+            public void onError(Throwable e) {
+                XActivityindicator.hide();
+            }
+
+            @Override
+            public void onSuccess(HttpResult<List<UserModel>> listHttpResult) {
+                XActivityindicator.hide();
+                if(listHttpResult.getData().getCode() == 1)
+                {
+                    String header = otheruser.getUserIcon();
+                    String nick = otheruser.getUserName();
+                    String openid = otheruser.getUserId();
+                    String ptype = "";
+                    switch (type)
+                    {
+                        case "1":
+                            ptype = "新浪微博";
+                            break;
+                        case "2":
+                            ptype = "微信";
+                            break;
+                        case "3":
+                            ptype = "QQ";
+                            break;
+                        default:
+                            break;
+                    }
+
+                    Intent intent = new Intent();
+                    intent.setClass(Logn.this, XHtmlVC.class);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("url","file:///android_asset/unitLogin.html?header="+header+"&type="+ptype+"&nick="+nick+"&openid="+openid);
+                    bundle.putString("title","联合登录");
+                    intent.putExtras(bundle);
+                    Logn.this.startActivity(intent);
+
+                }
+                else
+                {
+                    UserModel user = listHttpResult.getData().getInfo().get(0);
+
+                    APPDataCache.User.copy(user);
+
+                    int sex = 0;
+                    int houseid = 0;
+
+                    try
+                    {
+                        sex = Integer.parseInt(user.getSex());
+
+                    }
+                    catch (Exception e)
+                    {
+                        sex = 0;
+                    }
+
+                    try
+                    {
+                        houseid = Integer.parseInt(user.getHouseid());
+
+                    }
+                    catch (Exception e)
+                    {
+                        houseid = 0;
+                    }
+
+                    PreferencesUtils.putString(Logn.this, "userid", user.getUid());
+                    PreferencesUtils.putString(Logn.this, "username", user.getUsername());
+                    setAccount(user.getUid());
+                    PreferencesUtils.putString(Logn.this, "nickname", user.getNickname());
+                    PreferencesUtils.putString(Logn.this, "headimage", user.getHeadimage());
+                    PreferencesUtils.putString(Logn.this, "mobile", user.getMobile());
+                    PreferencesUtils.putInt(Logn.this, "sex", sex);
+                    PreferencesUtils.putInt(Logn.this, "houseid", houseid);
+                    PreferencesUtils.putString(Logn.this, "houseids", user.getHouseid());
+                    PreferencesUtils.putString(Logn.this, "fanghaoid", user.getFanghaoid());
+                    PreferencesUtils.putString(Logn.this, "truename", user.getTruename());
+                    PreferencesUtils.putString(Logn.this, "birthday", user.getBirthday());
+                    PreferencesUtils.putString(Logn.this, "address", user.getAddress());
+
+                    APPDataCache.User.registNotice();
+                    APPDataCache.User.getUser();
+                    APPDataCache.User.getMsgCount();
+
+                    PreferencesUtils.putInt(Logn.this, "land", 1);
+                    Intent intent = new Intent();
+                    intent.setAction("com.servicedemo4");
+                    intent.putExtra("getmeeage", "0");
+                    Logn.this.sendBroadcast(intent);
+                    Toast.makeText(Logn.this, "登陆成功", Toast.LENGTH_SHORT).show();
+                    XNotificationCenter.getInstance().postNotice("UserChanged",null);
+                    finish();
+                }
+
+            }
+        });
+
+
+    }
+
+
+
+
+
     @Override
     public void onItemClick(Object o, int position) {
         if (o == mAlertViewExt && position != AlertView.CANCELPOSITION) {
             String name = etName.getText().toString();
-
             String regEx="[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
             Pattern p = Pattern.compile(regEx);
             Matcher m = p.matcher(name);
@@ -549,4 +678,14 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
             }
         });
     }
+
+
+    @Subscribe
+    public void getEventmsg(MyEventBus myEventBus) {
+        if (myEventBus.getMsg().equals("LoginSuccess")) {
+            finish();
+        }
+    }
+
+
 }

@@ -33,6 +33,11 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.PreferencesUtils;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.qzone.QZone;
+import cn.sharesdk.wechat.friends.Wechat;
 import okhttp3.Call;
 import util.XActivityindicator;
 import util.XNotificationCenter;
@@ -103,6 +108,29 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
         PreferencesUtils.putString(this, "userid", null);
         APPDataCache.User.unRegistNotice();
         APPDataCache.User.reSet();
+
+        Platform QQ = ShareSDK.getPlatform(QZone.NAME);
+        QQ.SSOSetting(true);
+        if(QQ.isAuthValid() ){
+            QQ.removeAccount();
+            ShareSDK.removeCookieOnAuthorize(true);
+
+        }
+
+        Platform WX = ShareSDK.getPlatform(Wechat.NAME);
+        WX.SSOSetting(true);
+        if(WX.isAuthValid() ){
+            WX.removeAccount();
+            ShareSDK.removeCookieOnAuthorize(true);
+        }
+
+        Platform SINA = ShareSDK.getPlatform(SinaWeibo.NAME);
+        SINA.SSOSetting(true);
+        if(SINA.isAuthValid() ){
+            SINA.removeAccount();
+            ShareSDK.removeCookieOnAuthorize(true);
+        }
+
     }
 
     @Override
@@ -293,14 +321,13 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
 
     @Subscribe
     public void getEventmsg(MyEventBus myEventBus) {
+
         if (myEventBus.getMsg().equals("show")) {
             badge.setVisibility(View.VISIBLE);
-        } else {
+        } else if(myEventBus.getMsg().equals("hidden")) {
             badge.setVisibility(View.GONE);
         }
 
-
-//        Toast.makeText(getActivity(),myEventBus.getMsg(),Toast.LENGTH_SHORT).show();
     }
 
     public void getJsom() {

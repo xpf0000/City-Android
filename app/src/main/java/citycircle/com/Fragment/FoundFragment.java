@@ -32,7 +32,7 @@ import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
  */
 public class FoundFragment extends Fragment implements View.OnClickListener, OnItemClickListener, OnDismissListener {
     View view;
-    LinearLayout tYellowPages, sale, sales, Property,card;
+    LinearLayout tYellowPages, sales, Property,card;
     private AlertView mAlertView;
     int type=0;
     @Nullable
@@ -46,8 +46,6 @@ public class FoundFragment extends Fragment implements View.OnClickListener, OnI
     public void intview() {
         tYellowPages = (LinearLayout) view.findViewById(R.id.YellowPages);
         tYellowPages.setOnClickListener(this);
-        sale = (LinearLayout) view.findViewById(R.id.sale);
-        sale.setOnClickListener(this);
         sales = (LinearLayout) view.findViewById(R.id.sales);
         sales.setOnClickListener(this);
         Property = (LinearLayout) view.findViewById(R.id.Property);
@@ -71,10 +69,7 @@ public class FoundFragment extends Fragment implements View.OnClickListener, OnI
                 intent.setClass(getActivity(), TelYelloePage.class);
                 getActivity().startActivity(intent);
                 break;
-            case R.id.sale:
-                intent.setClass(getActivity(), SaleActivity.class);
-                getActivity().startActivity(intent);
-                break;
+
             case R.id.sales:
 //                try {
 //                    Intent i = new Intent();

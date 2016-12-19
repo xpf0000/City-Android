@@ -11,16 +11,23 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.sdk.android.push.CommonCallback;
+import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.bigkoo.alertview.AlertView;
 import com.bigkoo.alertview.OnItemClickListener;
 import com.bigkoo.svprogresshud.SVProgressHUD;
 import com.bigkoo.svprogresshud.listener.OnDismissListener;
 import com.google.gson.internal.LinkedTreeMap;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.extras.PullToRefreshWebView2;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,12 +35,17 @@ import java.util.List;
 
 import citycircle.com.Activity.NewsInfoActivity;
 import citycircle.com.Activity.PhotoLook;
+import citycircle.com.Activity.UpPasswords;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
+import citycircle.com.Utils.MyEventBus;
+import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.hfb.GoodsCenter;
 import citycircle.com.hfb.HfbCenter;
+import citycircle.com.user.AuthBandPhoneVC;
 import model.GoodsModel;
 import model.NewsModel;
+import model.UserModel;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 import static citycircle.com.MyAppService.LocationApplication.APPService;
@@ -52,8 +64,10 @@ public class XHtmlVC extends BaseActivity {
     protected void setupUi() {
         setContentView(R.layout.xhtmlvc);
 
-        web = (PullToRefreshWebView2)findViewById(R.id.web);
+        EventBus.getDefault().register(this);
 
+        web = (PullToRefreshWebView2)findViewById(R.id.web);
+        web.setMode(PullToRefreshBase.Mode.DISABLED);
         WebView webView = web.getRefreshableView();
 
         // 设置支持JavaScript等
@@ -198,6 +212,172 @@ public class XHtmlVC extends BaseActivity {
             XActivityindicator.create(mContext).showErrorWithStatus(info);
         }
 
+        if(type.equals("4") && msg.equals("积分兑换失败"))
+        {
+            String info=obj.getString("info");
+            XActivityindicator.create(mContext).showErrorWithStatus(info);
+        }
+
+        if(type.equals("5") && msg.equals("跳转注册页面"))
+        {
+            String bindtype=obj.getString("bindtype");
+            String ptype = "";
+
+            switch (bindtype) {
+            case "新浪微博":
+                ptype = "1";
+                break;
+            case "微信":
+                ptype = "2";
+                break;
+            case "QQ":
+                ptype = "3";
+                break;
+            default:
+                break;
+            }
+
+            Bundle bundle = new Bundle();
+            bundle.putString("type",ptype);
+            pushVC(AuthBandPhoneVC.class,bundle);
+
+        }
+
+        if(type.equals("5") && msg.equals("跳转绑定现有帐号页面"))
+        {
+            String openid=obj.getString("openid");
+            String bindtype=obj.getString("bindtype");
+            String ptype = "";
+
+            switch (bindtype) {
+                case "新浪微博":
+                    ptype = "1";
+                    break;
+                case "微信":
+                    ptype = "2";
+                    break;
+                case "QQ":
+                    ptype = "3";
+                    break;
+                default:
+                    break;
+            }
+
+            Bundle bundle = new Bundle();
+            bundle.putString("url","file:///android_asset/loginBind.html?openid="+openid+"&type="+ptype);
+            bundle.putString("title","登录绑定");
+            pushVC(XHtmlVC.class,bundle);
+
+        }
+
+        if(type.equals("6") && msg.equals("跳转找回密码页面"))
+        {
+            pushVC(UpPasswords.class);
+        }
+
+        if(type.equals("6") && msg.equals("绑定登录"))
+        {
+            String account=obj.getString("account");
+            String pass=obj.getString("pass");
+            String openid=obj.getString("openid");
+            String bindtype=obj.getString("bindtype");
+
+            bindLogin(account,pass,openid,bindtype);
+
+        }
+
+    }
+
+    private void bindLogin(String account,String pass,String openid,String bindtype)
+    {
+        XActivityindicator.create(mContext).show();
+
+        XNetUtil.Handle(APPService.userOpenBD(openid,bindtype,account,pass), new XNetUtil.OnHttpResult<List<UserModel>>() {
+            @Override
+            public void onError(Throwable e) {
+                XActivityindicator.hide();
+            }
+
+            @Override
+            public void onSuccess(List<UserModel> models) {
+                XActivityindicator.hide();
+
+                if(models.size() > 0)
+                {
+                    UserModel user = models.get(0);
+                    APPDataCache.User.copy(user);
+
+                    int sex = 0;
+                    int houseid = 0;
+
+                    try
+                    {
+                        sex = Integer.parseInt(user.getSex());
+
+                    }
+                    catch (Exception e)
+                    {
+                        sex = 0;
+                    }
+
+                    try
+                    {
+                        houseid = Integer.parseInt(user.getHouseid());
+
+                    }
+                    catch (Exception e)
+                    {
+                        houseid = 0;
+                    }
+
+                    PreferencesUtils.putString(XHtmlVC.this, "userid", user.getUid());
+                    PreferencesUtils.putString(XHtmlVC.this, "username", user.getUsername());
+                    setAccount(user.getUid());
+                    PreferencesUtils.putString(XHtmlVC.this, "nickname", user.getNickname());
+                    PreferencesUtils.putString(XHtmlVC.this, "headimage", user.getHeadimage());
+                    PreferencesUtils.putString(XHtmlVC.this, "mobile", user.getMobile());
+                    PreferencesUtils.putInt(XHtmlVC.this, "sex", sex);
+                    PreferencesUtils.putInt(XHtmlVC.this, "houseid", houseid);
+                    PreferencesUtils.putString(XHtmlVC.this, "houseids", user.getHouseid());
+                    PreferencesUtils.putString(XHtmlVC.this, "fanghaoid", user.getFanghaoid());
+                    PreferencesUtils.putString(XHtmlVC.this, "truename", user.getTruename());
+                    PreferencesUtils.putString(XHtmlVC.this, "birthday", user.getBirthday());
+                    PreferencesUtils.putString(XHtmlVC.this, "address", user.getAddress());
+
+                    APPDataCache.User.registNotice();
+                    APPDataCache.User.getUser();
+                    APPDataCache.User.getMsgCount();
+
+                    PreferencesUtils.putInt(XHtmlVC.this, "land", 1);
+                    Intent intent = new Intent();
+                    intent.setAction("com.servicedemo4");
+                    intent.putExtra("getmeeage", "0");
+                    XHtmlVC.this.sendBroadcast(intent);
+                    Toast.makeText(XHtmlVC.this, "登陆成功", Toast.LENGTH_SHORT).show();
+
+                    EventBus.getDefault().post(
+                            new MyEventBus("LoginSuccess"));
+
+                    finish();
+                }
+
+
+            }
+        });
+    }
+
+    private void setAccount(String username) {
+        PushServiceFactory.getCloudPushService().bindAccount(username, new CommonCallback() {
+            @Override
+            public void onSuccess(String s) {
+                System.out.println("setAccount:onSuccess");
+            }
+
+            @Override
+            public void onFailed(String s, String s1) {
+                System.out.println("setAccount:onFailed");
+            }
+        });
     }
 
     private void getHFBGuize()
@@ -240,6 +420,19 @@ public class XHtmlVC extends BaseActivity {
     @Override
     protected void setupData() {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void getEventmsg(MyEventBus myEventBus) {
+        if (myEventBus.getMsg().equals("LoginSuccess")) {
+            finish();
+        }
     }
 
 }

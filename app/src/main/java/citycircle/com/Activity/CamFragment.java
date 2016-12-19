@@ -133,7 +133,7 @@ public class CamFragment extends Fragment {
                 Intent intent = new Intent();
                 intent.putExtra("id", arrayList.get(position - listView.getHeaderViewsCount()).get("id"));
                 intent.putExtra("type", 1);
-                intent.setClass(getActivity(), DiscountInfo.class);
+                intent.setClass(getActivity(), ShopsActityInfoVC.class);
                 getActivity().startActivity(intent);
             }
         });

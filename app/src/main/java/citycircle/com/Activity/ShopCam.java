@@ -65,7 +65,7 @@ public class ShopCam extends Activity {
                 Intent intent = new Intent();
                 intent.putExtra("id", arrayList.get(position).get("id"));
                 intent.putExtra("type", 1);
-                intent.setClass(ShopCam.this, DiscountInfo.class);
+                intent.setClass(ShopCam.this, ShopsActityInfoVC.class);
                 ShopCam.this.startActivity(intent);
             }
         });

@@ -93,6 +93,15 @@ public class ShopinfoMo {
             private String info;
             private String id;
             private String orvip;
+            private String  viplevel = "";
+
+            public String getViplevel() {
+                return viplevel;
+            }
+
+            public void setViplevel(String viplevel) {
+                this.viplevel = viplevel;
+            }
 
             public String getOrvip() {
                 return orvip;

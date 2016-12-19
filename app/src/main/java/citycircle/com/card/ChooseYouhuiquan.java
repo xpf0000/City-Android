@@ -45,7 +45,7 @@ public class ChooseYouhuiquan extends BaseActivity {
     @Override
     protected void setupUi() {
         setContentView(R.layout.myyouhuiquan);
-        setPageTitle("优惠券");
+        setPageTitle("我的优惠券");
 
         uid = getIntent().getStringExtra("id");
         model = (ChongzhiModel) getIntent().getSerializableExtra("ChongzhiModel");

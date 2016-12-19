@@ -2,6 +2,7 @@ package util;
 
 import java.util.List;
 
+import model.ActityModel;
 import model.BannerModel;
 import model.ChongzhiModel;
 import model.GoodsModel;
@@ -182,6 +183,51 @@ public interface ServicesAPI {
             @Query("page") int page,
             @Query("perNumber") int perNumber
     );
+
+    @GET("?service=Discount.getArticle")  //商家活动详情
+    Observable<HttpResult<List<ActityModel>>> discountGetArticle(
+            @Query("id") String id
+    );
+
+ @GET("?service=Jifen.addYHQ")  //领取优惠券
+ Observable<HttpResult<Object>> jifenAddYHQ(
+         @Query("uid") String uid,
+         @Query("username") String username,
+         @Query("yhqid") String yhqid
+ );
+
+ @GET("?service=User.openLogin")  //领取优惠券
+ Observable<HttpResult<List<UserModel>>> userOpenLogin(
+         @Query("openid") String openid,
+         @Query("type") String type
+ );
+
+
+ @POST("?service=User.smsSend")  //发送验证码
+ Observable<HttpResult<Object>> userSmsSend(
+         @Query("mobile") String mobile,
+         @Query("type") String type
+ );
+
+ @POST("?service=User.openRegister")  //第三方登录注册
+ Observable<HttpResult<List<UserModel>>> userOpenRegister(
+         @Query("openid") String openid,
+         @Query("type") String type,
+         @Query("nickname") String nickname,
+         @Query("sex") String sex,
+         @Query("headimage") String headimage,
+         @Query("mobile") String mobile,
+         @Query("password") String password,
+         @Query("code") String code
+ );
+
+ @POST("?service=User.openBD")  //第三方登录绑定现有帐号
+ Observable<HttpResult<List<UserModel>>> userOpenBD(
+         @Query("openid") String openid,
+         @Query("type") String type,
+         @Query("mobile") String mobile,
+         @Query("password") String password
+ );
 
 
 

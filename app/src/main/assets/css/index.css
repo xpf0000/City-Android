@@ -134,7 +134,7 @@ body {
 }
 
 .duihuaninfo .content{
-	background: #ffffff;margin-top: 1px;
+	background: #ffffff;margin-top: 1px;padding-left: 10px;padding-right: 10px;padding-bottom: 105px;padding-top: 8px;
 }
 
 .duihuaninfo .btn{

@@ -27,6 +27,7 @@ public class DataCache {
             User = model;
             User.getUinfo();
             User.getUser();
+            User.getMsgCount();
         }
         else
         {
