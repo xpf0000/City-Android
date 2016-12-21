@@ -117,6 +117,7 @@ public class TelYelloePage extends Activity {
                 TelYelloePage.this.startActivity(intent);
             }
         });
+
     }
 
     public void geturlstr() {

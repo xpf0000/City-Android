@@ -2,6 +2,7 @@ package util;
 
 import java.util.List;
 
+import model.APPVersionModel;
 import model.ActityModel;
 import model.BannerModel;
 import model.ChongzhiModel;
@@ -228,6 +229,9 @@ public interface ServicesAPI {
          @Query("mobile") String mobile,
          @Query("password") String password
  );
+
+ @GET("?service=Common.getAppVersion")  //获取APP最新版本信息
+ Observable<HttpResult<List<APPVersionModel>>> commonGetAppVersion();
 
 
 

@@ -1,5 +1,9 @@
 package citycircle.com.Activity;
 
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +24,7 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -38,11 +43,14 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.friends.Wechat;
+import model.APPVersionModel;
 import okhttp3.Call;
 import util.XActivityindicator;
+import util.XNetUtil;
 import util.XNotificationCenter;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 public class MainActivity extends FragmentActivity implements CompoundButton.OnCheckedChangeListener {
     private RadioButton home, rb_lehui, rb_subscribe, rb_mall, rb_vipcard;
@@ -83,6 +91,8 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
                 showAccountLogout();
             }
         });
+
+        checkVersion();
 
     }
 
@@ -360,6 +370,86 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
             }
         });
     }
+
+    private void checkVersion()
+    {
+        XNetUtil.Handle(APPService.commonGetAppVersion(), new XNetUtil.OnHttpResult<List<APPVersionModel>>() {
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onSuccess(List<APPVersionModel> models) {
+
+                if(models.size() > 0)
+                {
+                    APPVersionModel model = models.get(0);
+
+                    checkVersion(model);
+
+                }
+
+            }
+        });
+    }
+
+    private void checkVersion(final APPVersionModel model)
+    {
+        XActivityindicator.hide();
+        try
+        {
+            double v = Double.parseDouble(model.getNum());
+
+            if(getVersion() < v)
+            {
+                AlertView Alert = new AlertView("版本更新", model.getContent().replace("<br />",""), null, null,
+                        new String[]{"取消","立即升级"},
+                        this, AlertView.Style.Alert, new com.bigkoo.alertview.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(Object o, int position) {
+                        if (position == 1) {
+
+                            Uri uri = Uri.parse(model.getUrl());
+                            Intent it = new Intent(Intent.ACTION_VIEW, uri);
+                            startActivity(it);
+
+                        }
+                    }
+                });
+
+                XActivityindicator.setAlert(Alert);
+
+                Alert.show();
+            }
+
+        }
+        catch (Exception e)
+        {
+
+        }
+
+    }
+
+
+    private double getVersion()
+    {
+        try {
+            // 获取packagemanager的实例
+            PackageManager packageManager = getPackageManager();
+            // getPackageName()是你当前类的包名，0代表是获取版本信息
+            PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),0);
+            String version = packInfo.versionName;
+
+            return Double.parseDouble(version);
+        }
+        catch (Exception e)
+        {
+            return 0.0;
+        }
+
+    }
+
 
     @Override
     protected void onDestroy() {
