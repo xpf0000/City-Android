@@ -25,9 +25,10 @@ import citycircle.com.Utils.DateUtils;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/11/21.
@@ -52,7 +53,7 @@ public class DiscountInfo extends Activity implements View.OnClickListener {
         setContentView(R.layout.discount);
         id = getIntent().getStringExtra("id");
         type=getIntent().getIntExtra("type",0);
-        username = PreferencesUtils.getString(DiscountInfo.this, "username");
+        username = APPDataCache.User.getUsername();
         dateUtils = new DateUtils();
         url = GlobalVariables.urlstr + "Discount.getArticle&id=" + id;
         addurl = GlobalVariables.urlstr + "Discount.collectAdd&did=" + id + "&username=" + username;
@@ -237,7 +238,7 @@ public class DiscountInfo extends Activity implements View.OnClickListener {
                 oks.show(this);
                 break;
             case R.id.collects:
-                int a=PreferencesUtils.getInt(DiscountInfo.this,"land");
+                int a=APPDataCache.land;
                 if (a==0){
                     Intent intent=new Intent();
                     intent.setClass(DiscountInfo.this,Logn.class);

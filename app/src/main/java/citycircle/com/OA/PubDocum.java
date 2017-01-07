@@ -30,7 +30,8 @@ import citycircle.com.OA.service.DownloadService;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/1/26.
@@ -49,8 +50,11 @@ public class PubDocum extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.document_lay, container, false);
-        username= PreferencesUtils.getString(getActivity(), "oausername");
-        uid = PreferencesUtils.getString(getActivity(), "oauid");
+
+        uid = APPDataCache.OAUser.getOauid();
+        username = APPDataCache.OAUser.getOausername();
+
+
         url= GlobalVariables.oaurlstr+"Files.getList&username="+username+"&uid="+uid+"&page="+page;
         intview();
         setDoculist();

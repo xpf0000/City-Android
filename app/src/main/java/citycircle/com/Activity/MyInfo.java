@@ -49,7 +49,6 @@ import citycircle.com.Utils.GetPhotos;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.Utils.UpUserHead;
 import citycircle.com.Utils.mDateUtil;
 import util.FileUtils;
@@ -96,11 +95,11 @@ public class MyInfo extends Activity implements View.OnClickListener {
         animateFirstListener = new ImageUtils.AnimateFirstDisplayListener();
         getPhotos = new GetPhotos();
         types=getIntent().getIntExtra("type",0);
-        username = PreferencesUtils.getString(MyInfo.this, "username");
+        username = APPDataCache.User.getUsername();
         File sd = Environment.getExternalStorageDirectory();
         String path = sd.getPath() + "/citycircle/Cache";
         upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + nickname + "&sex=" + sex;
-        mobile = PreferencesUtils.getString(MyInfo.this, "mobile");
+        mobile = APPDataCache.User.getMobile();
         File file = new File(path);
         if (!file.exists())
             file.mkdir();
@@ -179,7 +178,7 @@ public class MyInfo extends Activity implements View.OnClickListener {
                 super.run();
                 if (type == 0) {
                     upUserHead = new UpUserHead();
-                    String username = PreferencesUtils.getString(MyInfo.this, "username");
+                    String username = APPDataCache.User.getUsername();
                     urlstr = upUserHead.uploadFile(url, tempFile, username);
                     if (urlstr.equals("失败")) {
                         handler.sendEmptyMessage(2);

@@ -32,7 +32,8 @@ import citycircle.com.R;
 import citycircle.com.Utils.DateUtils;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/1/8.
@@ -61,8 +62,10 @@ public class DocumentContent extends Activity {
         dialog = MyDialog.createLoadingDialog(this, "附件获取中..");
         dialog.show();
         id = getIntent().getStringExtra("id");
-        username = PreferencesUtils.getString(DocumentContent.this, "oausername");
-        uid = PreferencesUtils.getString(DocumentContent.this, "oauid");
+
+        uid = APPDataCache.OAUser.getOauid();
+        username = APPDataCache.OAUser.getOausername();
+
         url = GlobalVariables.oaurlstr + "Document.getArticle&id=" + id + "&uid=" + uid + "&username=" + username;
         title = (TextView) this.findViewById(R.id.meeagetitle);
         time = (TextView) this.findViewById(R.id.meeagetime);

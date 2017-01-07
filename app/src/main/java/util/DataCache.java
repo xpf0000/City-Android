@@ -1,8 +1,7 @@
 package util;
 import com.robin.lazy.cache.CacheLoaderManager;
 
-import citycircle.com.MyAppService.LocationApplication;
-import citycircle.com.Utils.PreferencesUtils;
+import model.OAModel;
 import model.UserModel;
 
 import static citycircle.com.MyAppService.LocationApplication.context;
@@ -14,12 +13,20 @@ import static citycircle.com.MyAppService.LocationApplication.context;
 public class DataCache {
 
     public UserModel User = new UserModel();
+    public OAModel OAUser = new OAModel();
 
+    public int land = 0;
     public boolean msgshow = false;
 
     public DataCache() {
 
         UserModel model= CacheLoaderManager.getInstance().loadSerializable("UserModel");
+        OAModel oaModel = CacheLoaderManager.getInstance().loadSerializable("OAUserModel");
+
+        if(oaModel != null)
+        {
+            OAUser = oaModel;
+        }
 
         if(model != null)
         {
@@ -28,29 +35,15 @@ public class DataCache {
             User.getUinfo();
             User.getUser();
             User.getMsgCount();
+            if(!User.getUid().equals(""))
+            {
+                land = 1;
+            }
+
         }
         else
         {
             ModelUtil.reSet(User);
-
-            String username = PreferencesUtils.getString(context, "username");
-            String uid = PreferencesUtils.getString(context, "userid");
-            String hid = PreferencesUtils.getString(context, "houseid");
-            String fid = PreferencesUtils.getString(context, "fanghaoid");
-
-            if(username != null && uid != null)
-            {
-                User.setUid(uid);
-                User.setUsername(username);
-                User.setHouseid(hid);
-                User.setFanghaoid(fid);
-
-                User.getUinfo();
-                User.getUser();
-            }
-
-
-
         }
 
         XNetUtil.APPPrintln("User: "+User.toString());

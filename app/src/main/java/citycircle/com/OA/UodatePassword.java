@@ -17,7 +17,8 @@ import citycircle.com.MyViews.MyDialog;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/1/8.
@@ -65,7 +66,8 @@ public class UodatePassword extends Activity {
                     dialog.show();
                     String mypowd = updatepowd_powd.getText().toString();
                     String mynewpowd = updatepowd_newpowd.getText().toString();
-                    String username = PreferencesUtils.getString(UodatePassword.this, "oausername");
+                    String username = APPDataCache.OAUser.getOausername();
+
                     url = GlobalVariables.oaurlstr + "User.updatePass&username=" + username + "&password=" + mypowd + "&newpassword=" + mynewpowd;
                     getstr();
 

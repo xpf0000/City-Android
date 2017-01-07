@@ -18,18 +18,17 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import citycircle.com.Adapter.News_Adapter;
 import citycircle.com.Adapter.ReportAdapter;
 import citycircle.com.MyViews.MyPopwindows;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/11/16.
@@ -52,8 +51,8 @@ public class MyReport extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.mycity, container, false);
-        uid = PreferencesUtils.getString(getActivity(), "userid");
-        username = PreferencesUtils.getString(getActivity(), "username");
+        uid = APPDataCache.User.getUid();
+        username = APPDataCache.User.getUsername();
         url = GlobalVariables.urlstr + "Quan.getUserList&uid=" + uid + "&page=" + page;
         intview();
         setlist();

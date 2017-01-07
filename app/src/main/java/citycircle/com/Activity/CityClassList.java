@@ -38,7 +38,8 @@ import citycircle.com.Adapter.News_Adapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/11/26.
@@ -65,7 +66,7 @@ public class CityClassList extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.newphoto);
         id=getIntent().getStringExtra("id");
-        uid=PreferencesUtils.getString(CityClassList.this, "userid");
+        uid=APPDataCache.User.getUid();
         url = GlobalVariables.urlstr + "Quan.getList&category_id="+id+"&page=" + page+"&uid="+uid;
         intview();
         setlist();
@@ -83,7 +84,7 @@ public class CityClassList extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent();
-                int a= PreferencesUtils.getInt(CityClassList.this, "land");
+                int a= APPDataCache.land;
                 if (a==0){
                     intent.setClass(CityClassList.this,Logn.class);
                     CityClassList.this.startActivity(intent);
@@ -202,7 +203,7 @@ public class CityClassList extends Activity {
                     break;
                 case 4:
                     String did=array.get(GlobalVariables.position).get("id");
-                    String username= PreferencesUtils.getString(CityClassList.this, "username");
+                    String username= APPDataCache.User.getUsername();
                     zanurl = GlobalVariables.urlstr + "Quan.addZan&did=" + did + "&username=" + username+"&tuid="+array.get(GlobalVariables.position).get("uid")+"&dpic="+ GlobalVariables.imgurls;
                     getnews(2);
                     break;
@@ -213,7 +214,7 @@ public class CityClassList extends Activity {
                     if (a == 0) {
                         Toast.makeText(CityClassList.this, "赞", Toast.LENGTH_SHORT).show();
 //                        addarray.clear();
-                        uid=PreferencesUtils.getString(CityClassList.this,"userid");
+                        uid=APPDataCache.User.getUid();
                         int pagenumber = page * 10;
                         url = GlobalVariables.urlstr + "Quan.getList&category_id="+id+"&page=1&uid="+uid+"&perNumber="+pagenumber;
                         getnews(1);
@@ -251,7 +252,7 @@ public class CityClassList extends Activity {
                     if (b == 0) {
                         Toast.makeText(CityClassList.this, "评论成功", Toast.LENGTH_SHORT).show();
                         popupWindow.dismiss();
-                        uid=PreferencesUtils.getString(CityClassList.this,"userid");
+                        uid=APPDataCache.User.getUid();
                         int pagenumber = page * 10;
                         url = GlobalVariables.urlstr + "Quan.getList&category_id="+id+"&page=1&uid="+uid+"&perNumber="+pagenumber;
                         getnews(1);
@@ -351,7 +352,7 @@ public class CityClassList extends Activity {
                 if (myviptxt.getText().toString().trim().length() == 0) {
                     Toast.makeText(CityClassList.this, "内容不能为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    String username = PreferencesUtils.getString(CityClassList.this, "username");
+                    String username = APPDataCache.User.getUsername();
                     try {
                         if (type==0){
                             addcom = GlobalVariables.urlstr + "Quan.addComment&did=" + array.get(GlobalVariables.position).get("id") + "&username=" + username + "&content=" + URLEncoder.encode(myviptxt.getText().toString(), "UTF-8")+"&tuid="+comarray.get(GlobalVariables.positions).get("uid")+"&dpic="+parray.get(0).get("path")+"&type=1";

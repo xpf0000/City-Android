@@ -20,7 +20,10 @@ import citycircle.com.MyViews.MyDialog;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.MyhttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+import model.OAModel;
+import model.UserModel;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/1/5.
@@ -126,27 +129,20 @@ public class LandActivity extends Activity {
                         JSONArray jsonArray=jsonObject1.getJSONArray("info");
                         for (int i=0;i<jsonArray.size();i++){
                             JSONObject jsonObject2=jsonArray.getJSONObject(i);
-                            PreferencesUtils.putString(LandActivity.this,"oauid",jsonObject2.getString("uid"));
-                            PreferencesUtils.putString(LandActivity.this,"oatruename",jsonObject2.getString("truename"));
-                            PreferencesUtils.putInt(LandActivity.this, "oasex", jsonObject2.getIntValue("sex"));
-                            PreferencesUtils.putString(LandActivity.this, "oausername", jsonObject2.getString("username"));
-                            PreferencesUtils.putString(LandActivity.this,"dwid",jsonObject2.getString("dwid"));
-                            PreferencesUtils.putString(LandActivity.this,"bmid",jsonObject2.getString("bmid"));
-                            PreferencesUtils.putString(LandActivity.this,"dw",jsonObject2.getString("dw"));
-                            PreferencesUtils.putString(LandActivity.this,"bm",jsonObject2.getString("bm"));
-                            PreferencesUtils.putString(LandActivity.this,"oatel",jsonObject2.getString("tel"));
-                            PreferencesUtils.putString(LandActivity.this,"oamobile",jsonObject2.getString("mobile"));
-                            PreferencesUtils.putString(LandActivity.this,"address",jsonObject2.getString("address"));
-                            PreferencesUtils.putString(LandActivity.this,"qq",jsonObject2.getString("qq"));
-                            PreferencesUtils.putString(LandActivity.this,"email",jsonObject2.getString("email"));
-                            PreferencesUtils.putString(LandActivity.this,"jgid",jsonObject2.getString("jgid"));
+
+                            OAModel user = JSON.parseObject(jsonObject2.toJSONString(), OAModel.class);
+
+                            APPDataCache.OAUser = user;
+                            APPDataCache.OAUser.save();
+
+
                             final String[] tags;
                             tags = new String[] { jsonObject2.getString("jgid"), jsonObject2.getString("dwid"),
                                     jsonObject2.getString("bmid"),jsonObject2.getString("uid") };
 //                            settages(tags);
                             GlobalVariables.tags=tags;
                         }
-                        PreferencesUtils.putInt(LandActivity.this, "oaland", 1);
+
                         Toast.makeText(LandActivity.this,"登陆成功",Toast.LENGTH_SHORT).show();
 
 

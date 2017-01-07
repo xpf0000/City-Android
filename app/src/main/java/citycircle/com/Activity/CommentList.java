@@ -40,7 +40,8 @@ import citycircle.com.R;
 import citycircle.com.Utils.DateUtils;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/12/6.
@@ -108,14 +109,14 @@ public class CommentList extends Activity {
         comlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int land = PreferencesUtils.getInt(CommentList.this, "land");
+                int land = APPDataCache.land;
                 if (land != 1) {
                     Intent intent = new Intent();
                     intent.setClass(CommentList.this, Logn.class);
                     CommentList.this.startActivity(intent);
                 } else {
                     positions = position-1;
-                    if (array.get(positions).get("uid").equals(PreferencesUtils.getString(CommentList.this, "userid"))) {
+                    if (array.get(positions).get("uid").equals(APPDataCache.User.getUid())) {
                         myPopwindows.showpop(CommentList.this, "确定删除");
                     }
                 }
@@ -124,7 +125,7 @@ public class CommentList extends Activity {
         myPopwindows.setMyPopwindowswListener(new MyPopwindows.MyPopwindowsListener() {
             @Override
             public void onRefresh() {
-                delurl = GlobalVariables.urlstr + "Comment.delComment&id=" + array.get(positions).get("id") + "&username=" + PreferencesUtils.getString(CommentList.this, "username");
+                delurl = GlobalVariables.urlstr + "Comment.delComment&id=" + array.get(positions).get("id") + "&username=" + APPDataCache.User.getUsername();
                 getstr(2);
             }
         });
@@ -150,7 +151,7 @@ public class CommentList extends Activity {
         collected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int a = PreferencesUtils.getInt(CommentList.this, "land");
+                int a = APPDataCache.land;
                 if (a == 0) {
                     Intent intent = new Intent();
                     intent.setClass(CommentList.this, Logn.class);
@@ -351,7 +352,7 @@ public class CommentList extends Activity {
                 if (myviptxt.getText().toString().length() == 0) {
                     Toast.makeText(CommentList.this, "内容不能为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    String username = PreferencesUtils.getString(CommentList.this, "username");
+                    String username = APPDataCache.User.getUsername();
                     try {
                         comurl = GlobalVariables.urlstr + "Comment.insert&did=" + id + "&username=" + username + "&content=" + URLEncoder.encode(myviptxt.getText().toString().trim(), "UTF-8");
                     } catch (UnsupportedEncodingException e) {

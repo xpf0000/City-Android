@@ -33,7 +33,7 @@
                 <TextView
                     android:id="@+id/views"
                     android:layout_width="wrap_content"
-                    android:text="浏览量:111"
+                    android:text="浏览量:"
                     android:layout_weight="1"
                     android:textColor="@color/white"
                     android:padding="10dp"
@@ -81,7 +81,7 @@
 
                     <TextView
                         android:id="@+id/name"
-                        android:text="fjgasdklfjkadsjfksdajkf\r\nfdjkasfjkdasjfkajsdkfj"
+                        android:text=""
                         android:layout_width="fill_parent"
                         android:textColor="@color/APPBlue"
                         android:layout_height="wrap_content" />
@@ -102,7 +102,7 @@
                         />
                     <TextView
                         android:id="@+id/time"
-                        android:text="fjgasdklfjkadsjfkfjkdasjfkajkfj"
+                        android:text=""
                         android:layout_width="fill_parent"
                         android:textColor="#333333"
                         android:layout_height="wrap_content" />
@@ -123,7 +123,7 @@
                         />
                     <TextView
                         android:id="@+id/tel"
-                        android:text="fjgasdklfjkadsjfkfjkdasjfkajkfj"
+                        android:text=""
                         android:layout_width="fill_parent"
                         android:textColor="#333333"
                         android:layout_height="wrap_content" />
@@ -146,7 +146,7 @@
 
                     <TextView
                         android:id="@+id/address"
-                        android:text="fjgasdklfjkadsjfkfjkdasjfkajkfj"
+                        android:text=""
                         android:layout_width="fill_parent"
                         android:textColor="#333333"
                         android:layout_height="wrap_content" />

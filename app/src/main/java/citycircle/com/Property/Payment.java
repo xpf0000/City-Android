@@ -21,7 +21,6 @@ import java.util.HashMap;
 import citycircle.com.Property.PropertyAdapter.PayAdapter;
 import citycircle.com.R;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 import util.BitmapMo;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -69,7 +68,7 @@ public class Payment extends Activity implements View.OnClickListener {
         ImageLoader.init(ImageLoaderConfiguration.createDefault(this));
         animateFirstListener = new ImageUtils.AnimateFirstDisplayListener();
         options = ImageUtils.setCirclelmageOptions();
-        String headurl = PreferencesUtils.getString(this, "headimage");
+        String headurl = APPDataCache.User.getHeadimage();
         ImageLoader.displayImage(headurl, head, options,
                 animateFirstListener);
         setArrayList();

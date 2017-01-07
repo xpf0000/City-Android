@@ -24,7 +24,8 @@ import citycircle.com.OA.OAAdapter.CheckAdapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/1/7.
@@ -45,10 +46,6 @@ public class AddMessage extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addmessage);
         dialog = MyDialog.createLoadingDialog(AddMessage.this, "正在请求");
-//        tag=PreferencesUtils.getString(AddMessage.this, "jgid");
-//        tag=tag+","+PreferencesUtils.getString(AddMessage.this, "dwid");
-//        tag=tag+","+PreferencesUtils.getString(AddMessage.this, "bmid");
-//        tag=tag+","+PreferencesUtils.getString(AddMessage.this, "oauid");
         url= GlobalVariables.oaurlstr+"News.sendGroupcast&uid="+uid+"&username="+username+"&apptype=0&tag="+tag+"&title="+title+"&content="+content;
        intview();
     }
@@ -129,8 +126,8 @@ public class AddMessage extends Activity implements View.OnClickListener{
                     Toast.makeText(AddMessage.this, "请输入正确的内容！", Toast.LENGTH_SHORT)
                             .show();
                 } else {
-                    uid = PreferencesUtils.getString(AddMessage.this, "oauid");
-                    username = PreferencesUtils.getString(AddMessage.this, "oausername");
+                    uid = APPDataCache.OAUser.getOauid();
+                    username = APPDataCache.OAUser.getOausername();
                     title=messagetit.getText().toString().trim();
                     content=messagcon.getText().toString().trim();
                     if (tag.length()==0){

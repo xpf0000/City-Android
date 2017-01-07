@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AbsListView;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.robin.lazy.cache.CacheLoaderManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,8 +28,10 @@ import citycircle.com.Adapter.Collect_Adapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.Adapter.Collect_Adapter.ViewHolder;
+import util.XAPPUtil;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/11/29.
@@ -51,8 +53,8 @@ public class MyCollect extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mycollects);
-        uid = PreferencesUtils.getString(MyCollect.this, "userid");
-        username = PreferencesUtils.getString(MyCollect.this, "username");
+        uid = APPDataCache.User.getUid();
+        username = APPDataCache.User.getUsername();
         url = GlobalVariables.urlstr + "News.getCollectList&uid=" + uid + "&page=" + page;
         deurl = GlobalVariables.urlstr + "News.collectDel&id=" + did + "&username=" + username;
         intview();
@@ -290,7 +292,13 @@ public class MyCollect extends Activity implements View.OnClickListener {
     }
 
     private void setcollect() {
-        String str = PreferencesUtils.getString(MyCollect.this, "collelist");
+
+        String str = CacheLoaderManager.getInstance().loadString("collelist");
+
+        if(str == null){return;}
+
+        str = str.replace("UTF-8","");
+
         JSONObject jsonObject = JSON.parseObject(str);
         JSONArray jsonArray = jsonObject.getJSONArray("list");
         for (int i = 0; i < jsonArray.size(); i++) {
@@ -303,6 +311,8 @@ public class MyCollect extends Activity implements View.OnClickListener {
                 }
             }
         }
-        PreferencesUtils.putString(MyCollect.this, "collelist", jsonObject.toJSONString());
+
+        XAPPUtil.SaveAPPCache("collelist",jsonObject.toJSONString());
+
     }
 }

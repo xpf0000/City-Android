@@ -22,7 +22,8 @@ import citycircle.com.MyViews.CallPhonePop;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by 飞侠 on 2016/3/18.
@@ -40,9 +41,11 @@ public class Pronumber extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pronumber);
-        uid = PreferencesUtils.getString(Pronumber.this, "userid");
-        username = PreferencesUtils.getString(Pronumber.this, "username");
-        houseid = PreferencesUtils.getString(Pronumber.this, "houseids");
+
+        username = APPDataCache.User.getUsername();
+        uid = APPDataCache.User.getUid();
+        houseid = APPDataCache.User.getHouseid();
+
         url = GlobalVariables.urlstr + "Wuye.getTelList&uid=" + uid + "&username=" + username+"&houseid="+houseid;
         intview();
         getmessagelist();

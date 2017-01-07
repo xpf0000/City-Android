@@ -20,13 +20,17 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import citycircle.com.R;
 import citycircle.com.Utils.Emailtest;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.MyhttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+import model.UserModel;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/11/27.
@@ -50,8 +54,6 @@ public class Register extends Activity implements View.OnClickListener {
         emtest = new Emailtest();
         codes = getIntent().getStringExtra("code");
         username = getIntent().getStringExtra("number");
-//        SMSSDK.initSDK(this, "c895006654f8", "412eba357f218ab8cdaf9f58d85937dd");
-//        SMSSDK.registerEventHandler(eh);
         intview();
         url = GlobalVariables.urlstr + "User.register";
         smurl = GlobalVariables.urlstr + "User.smsSend";
@@ -67,29 +69,6 @@ public class Register extends Activity implements View.OnClickListener {
         name = (EditText) findViewById(R.id.name);
         xieyi = (CheckBox) findViewById(R.id.xieyi);
     }
-
-//    EventHandler eh = new EventHandler() {
-//
-//        @Override
-//        public void afterEvent(int event, int result, Object data) {
-//
-//            if (result == SMSSDK.RESULT_COMPLETE) {
-//                //回调完成
-//                if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-//                    handler.sendEmptyMessage(3);
-//                    //提交验证码成功
-//                } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
-//                    handler.sendEmptyMessage(1);
-//                    //获取验证码成功
-//                } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
-//                    //返回支持发送验证码的国家列表
-//                }
-//            } else {
-//                ((Throwable) data).printStackTrace();
-//                handler.sendEmptyMessage(5);
-//            }
-//        }
-//    };
 
     public void getStr(final int type) {
         new Thread() {
@@ -149,14 +128,16 @@ public class Register extends Activity implements View.OnClickListener {
                         JSONArray jsonobj = jsonob.getJSONArray("info");
                         for (int i = 0; i < jsonobj.size(); i++) {
                             JSONObject jsonObject = jsonobj.getJSONObject(i);
-                            PreferencesUtils.putString(Register.this, "openid", jsonObject.getString("openid"));
-                            PreferencesUtils.putString(Register.this, "userid", jsonObject.getString("uid"));
-                            PreferencesUtils.putString(Register.this, "username", jsonObject.getString("username"));
-                            PreferencesUtils.putString(Register.this, "nickname", jsonObject.getString("nickname"));
-                            PreferencesUtils.putString(Register.this, "headimage", jsonObject.getString("headimage"));
-                            PreferencesUtils.putString(Register.this, "mobile", jsonObject.getString("mobile"));
-                            PreferencesUtils.putInt(Register.this, "sex", jsonObject.getIntValue("sex"));
-                            PreferencesUtils.putInt(Register.this, "land", 1);
+
+                            UserModel user = JSON.parseObject(jsonObject.toJSONString(), UserModel.class);
+
+                            APPDataCache.User = user;
+                            APPDataCache.User.save();
+                            APPDataCache.User.registNotice();
+                            APPDataCache.User.getUser();
+                            APPDataCache.User.getMsgCount();
+                            APPDataCache.land = 1;
+
                         }
                         Intent intent = new Intent();
                         intent.setAction("com.servicedemo4");
@@ -211,6 +192,24 @@ public class Register extends Activity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.submit:
+
+                String nick = name.getText().toString();
+
+                if(nick.length() < 2 || nick.length() > 12)
+                {
+                    Toast.makeText(this, "昵称长度为2-12位!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String regEx="[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+                Pattern p = Pattern.compile(regEx);
+                Matcher m = p.matcher(nick);
+                if( m.find()){
+                    Toast.makeText(this, "昵称不允许输入特殊符号！", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+
                 if (name.getText().toString().trim().length() == 0) {
                     Toast.makeText(Register.this, "请输入昵称！", Toast.LENGTH_SHORT).show();
                 } else if (password.getText().toString().trim().length() == 0) {
@@ -227,8 +226,7 @@ public class Register extends Activity implements View.OnClickListener {
                     }
                     getStr(0);
                 }
-                //短信验证
-//                    submitVerificationCode("86", numbesr, codes);
+
                 break;
         }
     }

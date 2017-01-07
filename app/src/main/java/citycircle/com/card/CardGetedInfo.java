@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -19,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -31,13 +27,11 @@ import java.util.List;
 
 import citycircle.com.Activity.Logn;
 import citycircle.com.Activity.ShopInfo;
-import citycircle.com.Activity.VipCardConInfo;
 import citycircle.com.JsonMordel.VipInfo;
 import citycircle.com.MyViews.CallPhonePop;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
 import util.XHtmlVC;
 import util.XNotificationCenter;
@@ -78,9 +72,9 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cardgetedinfo);
-        a = PreferencesUtils.getInt(this, "land");
+        a = APPDataCache.land;
         id = getIntent().getStringExtra("id");
-        username = PreferencesUtils.getString(this, "userid");
+        username = APPDataCache.User.getUsername();
         url = GlobalVariables.urlstr + "Hyk.getArticleYLQ&id=" + id + "&uid=" + username;
         intview();
         slay.setVisibility(View.GONE);
@@ -262,7 +256,7 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
                 break;
             case R.id.btn_lq:
 //                Toast.makeText(this,"领取",Toast.LENGTH_SHORT).show();
-                int a = PreferencesUtils.getInt(CardGetedInfo.this, "land");
+                int a = APPDataCache.land;
                 if (a == 0) {
                     Intent intent1 = new Intent();
                     intent1.setClass(CardGetedInfo.this, Logn.class);

@@ -1,49 +1,33 @@
 package util;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.sdk.android.push.CommonCallback;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
-import com.bigkoo.alertview.AlertView;
-import com.bigkoo.alertview.OnItemClickListener;
 import com.bigkoo.svprogresshud.SVProgressHUD;
 import com.bigkoo.svprogresshud.listener.OnDismissListener;
-import com.google.gson.internal.LinkedTreeMap;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.extras.PullToRefreshWebView2;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import citycircle.com.Activity.NewsInfoActivity;
-import citycircle.com.Activity.PhotoLook;
 import citycircle.com.Activity.UpPasswords;
 import citycircle.com.R;
-import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.MyEventBus;
-import citycircle.com.Utils.PreferencesUtils;
-import citycircle.com.hfb.GoodsCenter;
 import citycircle.com.hfb.HfbCenter;
 import citycircle.com.user.AuthBandPhoneVC;
-import model.GoodsModel;
 import model.NewsModel;
 import model.UserModel;
 
@@ -295,17 +279,19 @@ public class XHtmlVC extends BaseActivity {
         XNetUtil.Handle(APPService.userOpenBD(openid,bindtype,account,pass), new XNetUtil.OnHttpResult<List<UserModel>>() {
             @Override
             public void onError(Throwable e) {
-                XActivityindicator.hide();
+
             }
 
             @Override
             public void onSuccess(List<UserModel> models) {
-                XActivityindicator.hide();
 
                 if(models.size() > 0)
                 {
+                    XActivityindicator.hide();
                     UserModel user = models.get(0);
-                    APPDataCache.User.copy(user);
+                    APPDataCache.User = user;
+                    APPDataCache.User.save();
+                    APPDataCache.land = 1;
 
                     int sex = 0;
                     int houseid = 0;
@@ -330,25 +316,12 @@ public class XHtmlVC extends BaseActivity {
                         houseid = 0;
                     }
 
-                    PreferencesUtils.putString(XHtmlVC.this, "userid", user.getUid());
-                    PreferencesUtils.putString(XHtmlVC.this, "username", user.getUsername());
                     setAccount(user.getUid());
-                    PreferencesUtils.putString(XHtmlVC.this, "nickname", user.getNickname());
-                    PreferencesUtils.putString(XHtmlVC.this, "headimage", user.getHeadimage());
-                    PreferencesUtils.putString(XHtmlVC.this, "mobile", user.getMobile());
-                    PreferencesUtils.putInt(XHtmlVC.this, "sex", sex);
-                    PreferencesUtils.putInt(XHtmlVC.this, "houseid", houseid);
-                    PreferencesUtils.putString(XHtmlVC.this, "houseids", user.getHouseid());
-                    PreferencesUtils.putString(XHtmlVC.this, "fanghaoid", user.getFanghaoid());
-                    PreferencesUtils.putString(XHtmlVC.this, "truename", user.getTruename());
-                    PreferencesUtils.putString(XHtmlVC.this, "birthday", user.getBirthday());
-                    PreferencesUtils.putString(XHtmlVC.this, "address", user.getAddress());
 
                     APPDataCache.User.registNotice();
                     APPDataCache.User.getUser();
                     APPDataCache.User.getMsgCount();
 
-                    PreferencesUtils.putInt(XHtmlVC.this, "land", 1);
                     Intent intent = new Intent();
                     intent.setAction("com.servicedemo4");
                     intent.putExtra("getmeeage", "0");

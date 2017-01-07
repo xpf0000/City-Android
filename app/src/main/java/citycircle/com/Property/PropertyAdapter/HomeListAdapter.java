@@ -14,7 +14,8 @@ import java.util.HashMap;
 
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/2/23.
@@ -47,7 +48,8 @@ public class HomeListAdapter extends BaseAdapter {
         convertView = LayoutInflater.from(context).inflate(R.layout.homelist, null);
         getItemView.linearLayout=(LinearLayout)convertView.findViewById(R.id.linearLayout);
         getItemView.title=(TextView)convertView.findViewById(R.id.title);
-        final String houseid= PreferencesUtils.getString(context, "houseids");
+
+        final String houseid= APPDataCache.User.getHouseid();
         if (array.get(position).get("houseid").equals(houseid)){
             getItemView.linearLayout.setBackgroundResource(R.color.wh);
             getItemView.title.setTextColor(context.getResources().getColor(R.color.blackcolor));

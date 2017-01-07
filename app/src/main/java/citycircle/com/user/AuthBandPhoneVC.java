@@ -6,7 +6,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.sdk.android.push.CommonCallback;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 
@@ -19,11 +18,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import citycircle.com.Activity.Logn;
-import citycircle.com.Activity.UpPasswords;
 import citycircle.com.R;
 import citycircle.com.Utils.Emailtest;
 import citycircle.com.Utils.MyEventBus;
-import citycircle.com.Utils.PreferencesUtils;
 import model.UserModel;
 import util.BaseActivity;
 import util.XActivityindicator;
@@ -160,9 +157,9 @@ public class AuthBandPhoneVC extends BaseActivity {
             return;
         }
 
-        if(nickname.length() < 3 || nickname.length() > 12)
+        if(nickname.length() < 2 || nickname.length() > 12)
         {
-            Toast.makeText(this, "昵称长度为3-12位!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "昵称长度为2-12位!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -177,59 +174,26 @@ public class AuthBandPhoneVC extends BaseActivity {
         XNetUtil.Handle(APPService.userOpenRegister(openid,type,nickname,sex,headimage,tel,pass1,code), new XNetUtil.OnHttpResult<List<UserModel>>() {
             @Override
             public void onError(Throwable e) {
-                XActivityindicator.hide();
+
             }
 
             @Override
             public void onSuccess(List<UserModel> userModels) {
-                XActivityindicator.hide();
+
                 if(userModels.size() > 0)
                 {
+                    XActivityindicator.hide();
                     UserModel user = userModels.get(0);
-                    APPDataCache.User.copy(user);
 
-                    int sex = 0;
-                    int houseid = 0;
-
-                    try
-                    {
-                        sex = Integer.parseInt(user.getSex());
-
-                    }
-                    catch (Exception e)
-                    {
-                        sex = 0;
-                    }
-
-                    try
-                    {
-                        houseid = Integer.parseInt(user.getHouseid());
-
-                    }
-                    catch (Exception e)
-                    {
-                        houseid = 0;
-                    }
-
-                    PreferencesUtils.putString(AuthBandPhoneVC.this, "userid", user.getUid());
-                    PreferencesUtils.putString(AuthBandPhoneVC.this, "username", user.getUsername());
                     setAccount(user.getUid());
-                    PreferencesUtils.putString(AuthBandPhoneVC.this, "nickname", user.getNickname());
-                    PreferencesUtils.putString(AuthBandPhoneVC.this, "headimage", user.getHeadimage());
-                    PreferencesUtils.putString(AuthBandPhoneVC.this, "mobile", user.getMobile());
-                    PreferencesUtils.putInt(AuthBandPhoneVC.this, "sex", sex);
-                    PreferencesUtils.putInt(AuthBandPhoneVC.this, "houseid", houseid);
-                    PreferencesUtils.putString(AuthBandPhoneVC.this, "houseids", user.getHouseid());
-                    PreferencesUtils.putString(AuthBandPhoneVC.this, "fanghaoid", user.getFanghaoid());
-                    PreferencesUtils.putString(AuthBandPhoneVC.this, "truename", user.getTruename());
-                    PreferencesUtils.putString(AuthBandPhoneVC.this, "birthday", user.getBirthday());
-                    PreferencesUtils.putString(AuthBandPhoneVC.this, "address", user.getAddress());
 
+                    APPDataCache.User = user;
+                    APPDataCache.User.save();
+                    APPDataCache.land = 1;
                     APPDataCache.User.registNotice();
                     APPDataCache.User.getUser();
                     APPDataCache.User.getMsgCount();
 
-                    PreferencesUtils.putInt(AuthBandPhoneVC.this, "land", 1);
                     Intent intent = new Intent();
                     intent.setAction("com.servicedemo4");
                     intent.putExtra("getmeeage", "0");
@@ -240,6 +204,7 @@ public class AuthBandPhoneVC extends BaseActivity {
                             new MyEventBus("LoginSuccess"));
 
                     finish();
+
                 }
 
             }

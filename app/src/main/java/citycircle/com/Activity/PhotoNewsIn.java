@@ -45,9 +45,10 @@ import citycircle.com.Utils.AsyncImageLoader;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/11/21.
@@ -105,7 +106,7 @@ public class PhotoNewsIn extends Activity implements View.OnClickListener {
         collected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int a = PreferencesUtils.getInt(PhotoNewsIn.this, "land");
+                int a = APPDataCache.land;
                 if (a == 0) {
                     Intent intent = new Intent();
                     intent.setClass(PhotoNewsIn.this, Logn.class);
@@ -375,7 +376,7 @@ public class PhotoNewsIn extends Activity implements View.OnClickListener {
                 if (myviptxt.getText().toString().length() == 0) {
                     Toast.makeText(PhotoNewsIn.this, "内容不能为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    String username = PreferencesUtils.getString(PhotoNewsIn.this, "username");
+                    String username = APPDataCache.User.getUsername();
                     try {
                         comurl = GlobalVariables.urlstr + "Comment.insert&did=" + id + "&username=" + username + "&content=" + URLEncoder.encode(myviptxt.getText().toString().trim(), "UTF-8");
                     } catch (UnsupportedEncodingException e) {

@@ -23,6 +23,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.robin.lazy.cache.CacheLoaderManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -36,8 +37,11 @@ import citycircle.com.MyAppService.CityServices;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.Loadmore;
-import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
+import util.XAPPUtil;
+import util.XNetUtil;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/5/31.
@@ -70,7 +74,7 @@ public class AttaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.attlayout, null);
-        a = PreferencesUtils.getInt(getActivity(), "land");
+        a = APPDataCache.land;
         Intent intent = new Intent(getActivity(), CityServices.class);
         getActivity().startService(intent);
         IntentFilter filter = new IntentFilter(CityServices.action);
@@ -80,7 +84,7 @@ public class AttaFragment extends Fragment {
         if (a == 0) {
             nostr.setVisibility(View.VISIBLE);
         } else {
-            username = PreferencesUtils.getString(getActivity(), "username");
+            username = APPDataCache.User.getUsername();
             url = GlobalVariables.urlstr + "News.getListGZ&username=" + username + "&page=" + page + "&perNumber=20";
             setCamadapter();
             getJson(0);
@@ -123,7 +127,11 @@ public class AttaFragment extends Fragment {
                     hashMaps = new HashMap<String, Object>();
                     hashMaps.put("idlist", newsid);
                     String string = JSON.toJSONString(hashMaps);
-                    PreferencesUtils.putString(getActivity(), "idstr", string);
+
+
+                    XNetUtil.APPPrintln("idstr: "+string);
+
+                    XAPPUtil.SaveAPPCache("idstr",string);
                     camadapter.notifyDataSetChanged();
                     addview();
                 }
@@ -266,7 +274,7 @@ public class AttaFragment extends Fragment {
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            a = PreferencesUtils.getInt(getActivity(), "land");
+            a = APPDataCache.land;
             if (a == 0) {
                 mylist.setVisibility(View.GONE);
                 nostr.setVisibility(View.VISIBLE);
@@ -275,7 +283,7 @@ public class AttaFragment extends Fragment {
                 nostr.setVisibility(View.GONE);
                 arrayList.clear();
                 ;
-                username = PreferencesUtils.getString(getActivity(), "username");
+                username = APPDataCache.User.getUsername();
                 url = GlobalVariables.urlstr + "News.getListGZ&username=" + username + "&page=" + page + "&perNumber=20";
                 setCamadapter();
                 getJson(1);
@@ -287,16 +295,27 @@ public class AttaFragment extends Fragment {
 
     private void getnewsid() {
         newsid = new ArrayList<>();
-        String idstr = PreferencesUtils.getString(getActivity(), "idstr");
+        String idstr = CacheLoaderManager.getInstance().loadString("idstr");
         if (idstr != null) {
-            JSONObject jsonObject = JSON.parseObject(idstr);
-            JSONArray jsonArray = jsonObject.getJSONArray("idlist");
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                hashMap = new HashMap<>();
-                hashMap.put("id", jsonObject1.getString("id"));
-                newsid.add(hashMap);
+            try
+            {
+                idstr = idstr.replace("UTF-8","");
+                JSONObject jsonObject = JSON.parseObject(idstr);
+                JSONArray jsonArray = jsonObject.getJSONArray("idlist");
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                    hashMap = new HashMap<>();
+                    hashMap.put("id", jsonObject1.getString("id"));
+                    newsid.add(hashMap);
+                }
             }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                XNetUtil.APPPrintln(idstr);
+            }
+
+
         }
     }
 

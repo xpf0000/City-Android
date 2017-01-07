@@ -41,6 +41,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.readystatesoftware.viewbadger.BadgeView;
+import com.robin.lazy.cache.CacheLoaderManager;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -56,9 +57,11 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
+import util.XAPPUtil;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/11/19.
@@ -251,7 +254,7 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
         collected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int a = PreferencesUtils.getInt(NewsInfoActivity.this, "land");
+                int a = APPDataCache.land;
                 if (a == 0) {
                     Intent intent = new Intent();
                     intent.setClass(NewsInfoActivity.this, Logn.class);
@@ -419,7 +422,9 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
                         hashMap = new HashMap<>();
                         hashMap.put("list", collarray);
                         String str = JSON.toJSONString(hashMap);
-                        PreferencesUtils.putString(NewsInfoActivity.this, "collelist", str);
+
+                        XAPPUtil.SaveAPPCache("collelist",str);
+
                         Toast.makeText(NewsInfoActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(NewsInfoActivity.this, jsonObject5.getString("msg"), Toast.LENGTH_SHORT).show();
@@ -496,7 +501,7 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
                 if (myviptxt.getText().toString().length() == 0) {
                     Toast.makeText(NewsInfoActivity.this, "内容不能为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    String username = PreferencesUtils.getString(NewsInfoActivity.this, "username");
+                    String username = APPDataCache.User.getUsername();
                     try {
                         url = GlobalVariables.urlstr + "Comment.insert&did=" + id + "&username=" + username + "&content=" + URLEncoder.encode(myviptxt.getText().toString().trim(), "UTF-8");
                     } catch (UnsupportedEncodingException e) {
@@ -595,13 +600,13 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
                 NewsInfoActivity.this.startActivity(intent);
                 break;
             case R.id.collects:
-                int a = PreferencesUtils.getInt(NewsInfoActivity.this, "land");
+                int a = APPDataCache.land;
                 if (a == 0) {
                     Intent intents = new Intent();
                     intents.setClass(NewsInfoActivity.this, Logn.class);
                     NewsInfoActivity.this.startActivity(intents);
                 } else {
-                    username = PreferencesUtils.getString(NewsInfoActivity.this, "username");
+                    username = APPDataCache.User.getUsername();
                     adoutnews = GlobalVariables.urlstr + "News.collectAdd&did=" + id + "&username=" + username;
                     getWEbciew(2);
                 }
@@ -637,10 +642,12 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
         }
     }
     private void getcollext() {
-        String str = PreferencesUtils.getString(NewsInfoActivity.this, "collelist");
+
+        String str = CacheLoaderManager.getInstance().loadString("collelist");
         if (str == null) {
 
         } else {
+            str = str.replace("UTF-8","");
             JSONObject jsonObject = JSON.parseObject(str);
             JSONArray jsonArray = jsonObject.getJSONArray("list");
             for (int i = 0; i < jsonArray.size(); i++) {

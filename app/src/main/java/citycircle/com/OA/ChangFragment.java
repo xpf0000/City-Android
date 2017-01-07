@@ -13,13 +13,13 @@ import android.widget.ListView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.robin.lazy.cache.CacheLoaderManager;
 
 import java.util.ArrayList;
 
 import citycircle.com.OA.OAAdapter.ChangAdapter;
 import citycircle.com.OA.OAAdapter.CityNameMod;
 import citycircle.com.R;
-import citycircle.com.Utils.PreferencesUtils;
 
 /**
  * Created by admins on 2016/1/6.
@@ -35,7 +35,8 @@ public class ChangFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.changactivity, container, false);
-        collectstr = PreferencesUtils.getString(getActivity(), "collectphone");
+
+        collectstr = CacheLoaderManager.getInstance().loadString("collectphone");
         country_lvcountry = (ListView) view.findViewById(R.id.country_lvcountry);
         getString(collectstr);
         adapter=new ChangAdapter(getActivity(),arrayList);
@@ -62,6 +63,10 @@ public class ChangFragment extends Fragment {
         if (str==null){
 
         }else {
+
+
+            str = str.replace("UTF-8","");
+
             JSONObject jsonObject = JSON.parseObject(str);
             JSONArray jsonArray = jsonObject.getJSONArray("colllist");
             for (int i = 0; i < jsonArray.size(); i++) {
@@ -84,7 +89,7 @@ public class ChangFragment extends Fragment {
     public void onResume() {
         super.onResume();
         arrayList.clear();
-        collectstr = PreferencesUtils.getString(getActivity(), "collectphone");
+        collectstr = CacheLoaderManager.getInstance().loadString("collectphone");
         getString(collectstr);
         adapter.notifyDataSetChanged();
     }

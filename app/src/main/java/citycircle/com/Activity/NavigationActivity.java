@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.robin.lazy.cache.CacheLoaderManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ import java.util.List;
 import citycircle.com.Adapter.NaPageadapter;
 import citycircle.com.R;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
+import util.XAPPUtil;
 import util.XNetUtil;
 
 /**
@@ -55,7 +56,14 @@ public class NavigationActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigation);
-        frist = PreferencesUtils.getInt(NavigationActivity.this, "frist");
+
+        Integer f = CacheLoaderManager.getInstance().loadSerializable("frist");
+        if(f == null)
+        {
+            f = new Integer(-1);
+        }
+
+        frist = f.intValue();
         inflater = LayoutInflater.from(this);
         hviewpage = (ViewPager) findViewById(R.id.hviewpage);
         listViews = new ArrayList<View>();
@@ -83,8 +91,10 @@ public class NavigationActivity extends Activity {
 //                                    NavigationActivity.this.startActivity(intent);
 //
 //                                } else {
-                                PreferencesUtils.putInt(NavigationActivity.this, "frist", 0);
-                                PreferencesUtils.putInt(NavigationActivity.this, "ornew", 0);
+
+                                XAPPUtil.SaveAPPCache("frist",new Integer(0));
+                                XAPPUtil.SaveAPPCache("ornew",new Integer(0));
+
                                 Intent intent = new Intent(NavigationActivity.this, MainActivity.class);
                                 startActivity(intent);
 //                                }
@@ -136,8 +146,9 @@ public class NavigationActivity extends Activity {
 
                         XNetUtil.APPPrintln("@@@@@@@@@@@@@@@ 000");
 
-                        PreferencesUtils.putInt(NavigationActivity.this, "frist", 0);
-                        PreferencesUtils.putInt(NavigationActivity.this, "ornew", 0);
+                        XAPPUtil.SaveAPPCache("frist",new Integer(0));
+                        XAPPUtil.SaveAPPCache("ornew",new Integer(0));
+
                         Intent intent = new Intent(NavigationActivity.this, MainActivity.class);
                         startActivity(intent);
                     }
@@ -158,13 +169,20 @@ public class NavigationActivity extends Activity {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
-        String json = PreferencesUtils.getString(NavigationActivity.this, "picimg");
+
+        String json = CacheLoaderManager.getInstance().loadString("picimg");
         if (json.equals("网络超时")) {
-            PreferencesUtils.putInt(NavigationActivity.this, "newImage", 0);
+
+            XAPPUtil.SaveAPPCache("newImage",new Integer(0));
+
             Intent intent = new Intent(NavigationActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
-        } else {
+        } else if(json != null) {
+
+
+
+            json = json.replace("UTF-8","");
 
             JSONObject jsonObject = JSONObject.parseObject(json);
             JSONObject jsonObject1=jsonObject.getJSONObject("data");
@@ -177,17 +195,8 @@ public class NavigationActivity extends Activity {
                     addarray.add(hashMap);
                 }
                 setViewpage();
-//                for (int i = 0; i < array.size(); i++) {
-//                    ImageView iv = new ImageView(this);
-//                    iv.setLayoutParams(layoutParams);
-//                    ImageLoader.displayImage(array.get(i).get("PicUrl"), iv, options,
-//                            animateFirstListener);
-//                    listViews.add(iv);
-//                }
-//                MyPageAdapter adapter = new MyPageAdapter();
-//                hviewpage.setAdapter(adapter);
             } else {
-                PreferencesUtils.putInt(NavigationActivity.this, "newImage", 0);
+                XAPPUtil.SaveAPPCache("newImage",new Integer(0));
                 Intent intent = new Intent(NavigationActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -209,8 +218,9 @@ public class NavigationActivity extends Activity {
                     public void onClick(View view) {
                         XNetUtil.APPPrintln("@@@@@@@@@@@@@@@ 111");
 
-                        PreferencesUtils.putInt(NavigationActivity.this, "frist", 0);
-                        PreferencesUtils.putInt(NavigationActivity.this, "ornew", 0);
+                        XAPPUtil.SaveAPPCache("frist",new Integer(0));
+                        XAPPUtil.SaveAPPCache("ornew",new Integer(0));
+
                         Intent intent = new Intent(NavigationActivity.this, MainActivity.class);
                         startActivity(intent);
                     }

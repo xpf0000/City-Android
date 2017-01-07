@@ -27,9 +27,10 @@ import citycircle.com.MyViews.MyClassPopwd;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.Loadmore;
-import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.card.CardGetedInfo;
 import okhttp3.Call;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/6/3.
@@ -56,7 +57,7 @@ public class MyVipcard extends Activity implements View.OnClickListener, Adapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myvipcard);
         allclassurl = GlobalVariables.urlstr + "hyk.getCategory ";
-        username = PreferencesUtils.getString(MyVipcard.this, "username");
+        username = APPDataCache.User.getUsername();
         url = GlobalVariables.urlstr + "hyk.getuserlist&category_id=" + category_id + "&typeid=" + typeid + "&page=" + page + "&username=" + username;
         intview();
         setadapter();

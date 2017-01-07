@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import citycircle.com.Activity.CityClass;
 import citycircle.com.Activity.Logn;
 import citycircle.com.Adapter.MyFragmentPagerAdapter;
 import citycircle.com.R;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/4/12.
@@ -97,7 +97,7 @@ public class ProCircle extends FragmentActivity implements View.OnClickListener 
                 finish();
                 break;
             case R.id.newsphoto:
-                int a= PreferencesUtils.getInt(ProCircle.this, "land");
+                int a= APPDataCache.land;
                 if (a==0){
                     intent.setClass(ProCircle.this,Logn.class);
                     ProCircle.this.startActivity(intent);

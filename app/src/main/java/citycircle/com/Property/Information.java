@@ -23,7 +23,8 @@ import citycircle.com.Property.PropertyAdapter.InfoMadapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/1/29.
@@ -40,11 +41,11 @@ public class Information extends Activity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.information);
-//        username = PreferencesUtils.getString(Information.this, "username");
-//        uid = PreferencesUtils.getString(Information.this, "userid");
-        houseid = PreferencesUtils.getString(Information.this, "houseids");
-        username= PreferencesUtils.getString(Information.this, "username");;
-        uid=PreferencesUtils.getString(Information.this, "userid");;
+
+        username = APPDataCache.User.getUsername();
+        uid = APPDataCache.User.getUid();
+        houseid = APPDataCache.User.getHouseid();
+
         url = GlobalVariables.urlstr + "Wuye.getNewsList&uid=" + uid + "&username=" + username + "&houseid=" + houseid;
         intview();
         setInfo_list();

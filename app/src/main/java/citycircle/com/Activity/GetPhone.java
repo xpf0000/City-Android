@@ -22,8 +22,9 @@ import citycircle.com.Utils.Emailtest;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.MyhttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
 import util.XNotificationCenter;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/12/11.
@@ -110,8 +111,11 @@ public class GetPhone extends Activity implements View.OnClickListener{
                     int c=jsonObject2.getIntValue("code");
                     if (c==0){
                         Toast.makeText(GetPhone.this, "绑定成功", Toast.LENGTH_SHORT).show();
-                        PreferencesUtils.putString(GetPhone.this, "mobile", number.getText().toString());
-                        PreferencesUtils.putInt(GetPhone.this, "land", 1);
+
+                        APPDataCache.User.setMobile(number.getText().toString());
+                        APPDataCache.User.save();
+                        APPDataCache.land = 1;
+
                         Intent intent = new Intent();
                         intent.setAction("com.servicedemo4");
                         intent.putExtra("getmeeage", "0");

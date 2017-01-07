@@ -47,7 +47,6 @@ import citycircle.com.Property.uitls.UpDatephotos;
 import citycircle.com.R;
 import citycircle.com.Utils.GetPhotos;
 import citycircle.com.Utils.GlobalVariables;
-import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.getPhoto.AlbumActivity;
 import citycircle.com.getPhoto.GalleryActivity;
 import util.Bimp;
@@ -55,6 +54,8 @@ import util.FileUtils;
 import util.ImageItem;
 import util.PublicWay;
 import util.Res;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/2/17.
@@ -213,9 +214,11 @@ public class ReplyFee extends Activity implements View.OnClickListener {
             public void run() {
                 super.run();
                 UpDatephotos upDatephotos = new UpDatephotos();
-                String username = PreferencesUtils.getString(ReplyFee.this, "username");
-                String uid = PreferencesUtils.getString(ReplyFee.this, "userid");
-                String houseid = PreferencesUtils.getString(ReplyFee.this, "houseids");
+
+                String username = APPDataCache.User.getUsername();
+                String uid = APPDataCache.User.getUid();
+                String houseid = APPDataCache.User.getHouseid();
+
                 String contents = content.getText().toString();
                 urlstr = upDatephotos.uploadFile(url, uid, username, contents, houseid, type);
                 if (urlstr.equals("网络超时")) {

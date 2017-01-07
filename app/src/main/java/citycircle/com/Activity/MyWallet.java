@@ -20,8 +20,9 @@ import citycircle.com.JsonMordel.WallJsonMo;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.Loadmore;
-import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/6/2.
@@ -40,7 +41,7 @@ public class MyWallet extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mywallet);
-        username = PreferencesUtils.getString(MyWallet.this, "username");
+        username = APPDataCache.User.getUsername();
         url = GlobalVariables.urlstr + "Hyk.getUserMoneys&username=" + username+"&page="+page;
         intview();
         setWalletlist();

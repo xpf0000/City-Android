@@ -10,6 +10,7 @@ import model.GoodsModel;
 import model.GroupModel;
 import model.HFBModel;
 import model.HouseModel;
+import model.MessageCountModel;
 import model.NewsModel;
 import model.QuanModel;
 import model.RenzhengModel;
@@ -232,6 +233,12 @@ public interface ServicesAPI {
 
  @GET("?service=Common.getAppVersion")  //获取APP最新版本信息
  Observable<HttpResult<List<APPVersionModel>>> commonGetAppVersion();
+
+ @GET("?service=User.getMessagesCount")  //获取用户消息数量
+ Observable<HttpResult<MessageCountModel>> userGetMessagesCount(
+         @Query("uid") String uid,
+         @Query("username") String username
+ );
 
 
 

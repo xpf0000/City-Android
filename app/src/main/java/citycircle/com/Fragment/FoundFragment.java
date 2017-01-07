@@ -12,18 +12,17 @@ import android.widget.LinearLayout;
 import com.bigkoo.alertview.AlertView;
 import com.bigkoo.alertview.OnDismissListener;
 import com.bigkoo.alertview.OnItemClickListener;
+import com.robin.lazy.cache.CacheLoaderManager;
 
 import citycircle.com.Activity.GetPhone;
 import citycircle.com.Activity.Logn;
 import citycircle.com.Activity.MyInfo;
-import citycircle.com.Activity.SaleActivity;
 import citycircle.com.Activity.TelYelloePage;
 import citycircle.com.OA.HomePageActivity;
 import citycircle.com.OA.LandActivity;
 import citycircle.com.Property.AddHome;
 import citycircle.com.Property.PropertyHome;
 import citycircle.com.R;
-import citycircle.com.Utils.PreferencesUtils;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
@@ -58,8 +57,15 @@ public class FoundFragment extends Fragment implements View.OnClickListener, OnI
     @Override
     public void onClick(View v) {
         Intent intent = new Intent();
-        int oaland = PreferencesUtils.getInt(getActivity(), "oaland");
-        int land = PreferencesUtils.getInt(getActivity(), "land");
+
+        Integer o = CacheLoaderManager.getInstance().loadSerializable("oaland");
+        if(o == null)
+        {
+            o = new Integer(0);
+        }
+
+        int oaland = o.intValue();
+        int land = APPDataCache.land;
         switch (v.getId()) {
             case R.id.card:
                 intent.setClass(getActivity(), VipCardFragment.class);
@@ -92,9 +98,9 @@ public class FoundFragment extends Fragment implements View.OnClickListener, OnI
                 if (land == 1) {
 
                     String houseid = APPDataCache.User.getHouseid();
-                    String truename = PreferencesUtils.getString(getActivity(), "truename");
-                   String tel =PreferencesUtils.getString(getActivity(),"mobile");
-                    if (truename == null) {
+                    String truename = APPDataCache.User.getTruename();
+                   String tel = APPDataCache.User.getMobile();
+                    if (truename.length() == 0) {
                          type=0;
                         mAlertView = new AlertView("提示", "您未添加真实姓名，是否前往个人中心添加真实姓名？", "取消", new String[]{"确定"}, null, getActivity(), AlertView.Style.Alert, this).setCancelable(true).setOnDismissListener(this);
                         mAlertView.show();

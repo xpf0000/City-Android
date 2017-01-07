@@ -28,7 +28,6 @@ import citycircle.com.MyViews.SpacesItemDecoration;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 

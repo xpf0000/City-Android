@@ -46,9 +46,10 @@ import citycircle.com.Utils.DateUtils;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.Utils.Timechange;
 import citycircle.com.user.MyMinePage;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/11/25.
@@ -92,7 +93,7 @@ public class Cityinfo extends Activity implements View.OnClickListener {
         ImageLoader.init(ImageLoaderConfiguration.createDefault(Cityinfo.this));
         animateFirstListener = new ImageUtils.AnimateFirstDisplayListener();
         options=ImageUtils.setCirclelmageOptions();
-        uid=PreferencesUtils.getString(Cityinfo.this,"userid");
+        uid=APPDataCache.User.getUid();
         url = GlobalVariables.urlstr + "Quan.getArticle&id=" + id+"&uid="+uid;
         comrnturl = GlobalVariables.urlstr + "Quan.getComment&id=" + id + "&page=" + page;
         intview();
@@ -162,13 +163,13 @@ public class Cityinfo extends Activity implements View.OnClickListener {
                 if (position==0){
 
                 }else {
-                    int a = PreferencesUtils.getInt(Cityinfo.this, "land");
+                    int a = APPDataCache.land;
                     if (a==0){
                         Intent intent = new Intent();
                         intent.setClass(Cityinfo.this, Logn.class);
                         Cityinfo.this.startActivity(intent);
                     }else {
-                        String nickname=PreferencesUtils.getString(Cityinfo.this,"nickname");
+                        String nickname=APPDataCache.User.getNickname();
                         if (comarray.get(position-1).get("nickname").equals(nickname)){
 
                         }else {
@@ -495,7 +496,7 @@ public class Cityinfo extends Activity implements View.OnClickListener {
                 if (myviptxt.getText().toString().trim().length() == 0) {
                     Toast.makeText(Cityinfo.this, "内容不能为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    String username = PreferencesUtils.getString(Cityinfo.this, "username");
+                    String username = APPDataCache.User.getUsername();
                     try {
                         if (type==0){
                             addcom = GlobalVariables.urlstr + "Quan.addComment&did=" + id + "&username=" + username + "&content=" + URLEncoder.encode(myviptxt.getText().toString(), "UTF-8")+"&tuid="+comarray.get(po-1).get("uid")+"&dpic="+parray.get(0).get("path")+"&type=1";
@@ -520,7 +521,7 @@ public class Cityinfo extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        int a = PreferencesUtils.getInt(Cityinfo.this, "land");
+        int a = APPDataCache.land;
         switch (v.getId()) {
             case R.id.back:
                 finish();
@@ -532,7 +533,7 @@ public class Cityinfo extends Activity implements View.OnClickListener {
                     Cityinfo.this.startActivity(intent);
                 } else {
                     if (orzan.equals("0")){
-                        String username = PreferencesUtils.getString(Cityinfo.this, "username");
+                        String username = APPDataCache.User.getUsername();
                         zanurl = GlobalVariables.urlstr + "Quan.addZan&did=" + id + "&username=" + username+"&tuid="+array.get(0).get("uid")+"&dpic="+parray.get(0).get("path");
                         getnews(1);
                     }else {

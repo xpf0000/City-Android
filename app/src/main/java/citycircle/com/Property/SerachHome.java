@@ -28,7 +28,6 @@ import java.util.HashMap;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
 import util.XNotificationCenter;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -53,8 +52,8 @@ public class SerachHome extends Fragment implements View.OnClickListener, OnItem
         view = inflater.inflate(R.layout.searhome, container, false);
         intview();
         types = getActivity().getIntent().getIntExtra("types", 0);
-        username = PreferencesUtils.getString(getActivity(), "username");
-        uid = PreferencesUtils.getString(getActivity(), "userid");
+        username = APPDataCache.User.getUsername();
+        uid = APPDataCache.User.getUid();
         return view;
     }
 

@@ -23,7 +23,6 @@ import citycircle.com.Adapter.MyMessageAdapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.MyEventBus;
-import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
 import util.XNetUtil;
 
@@ -83,8 +82,8 @@ public class Mymessage extends Activity implements View.OnClickListener {
     }
 
     public void getJsom() {
-        String username = PreferencesUtils.getString(Mymessage.this, "username");
-        String uid = PreferencesUtils.getString(Mymessage.this, "userid");
+        String username = APPDataCache.User.getUsername();
+        String uid = APPDataCache.User.getUid();
         url = GlobalVariables.urlstr + "user.getMessagesCount&uid=" + uid + "&username=" + username;
 
         XNetUtil.APPPrintln("url: "+url);

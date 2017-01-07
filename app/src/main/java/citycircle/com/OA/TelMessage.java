@@ -12,13 +12,14 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.robin.lazy.cache.CacheLoaderManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import citycircle.com.OA.OAAdapter.CityNameMod;
 import citycircle.com.R;
-import citycircle.com.Utils.PreferencesUtils;
+import util.XAPPUtil;
 
 /**
  * Created by admins on 2016/1/6.
@@ -44,7 +45,13 @@ public class TelMessage extends Activity implements View.OnClickListener {
         getQq = getIntent().getStringExtra("getQq");
         getTel = getIntent().getStringExtra("getTel");
         getTruename = getIntent().getStringExtra("getTruename");
-        collectstr = PreferencesUtils.getString(TelMessage.this, "collectphone");
+        collectstr = CacheLoaderManager.getInstance().loadString("collectphone");
+
+        if(collectstr != null)
+        {
+            collectstr = collectstr.replace("UTF-8","");
+        }
+
         intview();
     }
 
@@ -93,7 +100,16 @@ public class TelMessage extends Activity implements View.OnClickListener {
                 }
                 break;
             case R.id.collect:
-                collectstr = PreferencesUtils.getString(TelMessage.this, "collectphone");
+
+
+
+                collectstr = CacheLoaderManager.getInstance().loadString("collectphone");
+
+                if(collectstr != null)
+                {
+                    collectstr = collectstr.replace("UTF-8","");
+                }
+
                 if (iscollcet(collectstr)){
                     remove(collectstr);
                     collect.setImageResource(R.drawable.ic_action_important);
@@ -120,7 +136,8 @@ public class TelMessage extends Activity implements View.OnClickListener {
             hashMap = new HashMap<>();
             hashMap.put("colllist", arrayList);
             String collstr = JSON.toJSONString(hashMap);
-            PreferencesUtils.putString(TelMessage.this, "collectphone", collstr);
+
+            XAPPUtil.SaveAPPCache("collectphone",collstr);
 
         } else {
             JSONObject jsonObject = JSON.parseObject(str);
@@ -134,7 +151,9 @@ public class TelMessage extends Activity implements View.OnClickListener {
             cityNameMod.setEmail(getEmail);
             cityNameMod.setMobile(getMobile);
             jsonArray.add(cityNameMod);
-            PreferencesUtils.putString(TelMessage.this, "collectphone", jsonObject.toJSONString());
+
+            XAPPUtil.SaveAPPCache("collectphone",jsonObject.toJSONString());
+
         }
     }
 
@@ -164,7 +183,9 @@ public class TelMessage extends Activity implements View.OnClickListener {
                 jsonArray.remove(i);
             }
         }
-        PreferencesUtils.putString(TelMessage.this, "collectphone", jsonObject.toJSONString());
+
+        XAPPUtil.SaveAPPCache("collectphone",jsonObject.toJSONString());
+
         String s=jsonObject.toJSONString();
         System.out.println(s);
     }

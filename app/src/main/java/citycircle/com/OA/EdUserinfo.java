@@ -12,13 +12,15 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.robin.lazy.cache.CacheLoaderManager;
 
 import citycircle.com.MyViews.MyDialog;
 import citycircle.com.R;
 import citycircle.com.Utils.Emailtest;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/1/7.
@@ -38,8 +40,10 @@ public class EdUserinfo extends Activity implements View.OnClickListener {
         qqs = getIntent().getStringExtra("qq");
         numbers = getIntent().getStringExtra("number");
         adresss = getIntent().getStringExtra("adress");
-        username = PreferencesUtils.getString(EdUserinfo.this, "oausername");
-        userid = PreferencesUtils.getString(EdUserinfo.this, "oauid");
+
+        userid = APPDataCache.OAUser.getOauid();
+        username = APPDataCache.OAUser.getOausername();
+
         intview();
     }
 
@@ -84,10 +88,13 @@ public class EdUserinfo extends Activity implements View.OnClickListener {
                     JSONObject jsonObject1=jsonObject.getJSONObject("data");
                     if (jsonObject1.getIntValue("code")==0){
                         Toast.makeText(EdUserinfo.this, "修改成功", Toast.LENGTH_SHORT).show();
-                        PreferencesUtils.putString(EdUserinfo.this, "oamobile", dianhua.getText().toString().trim());
-                        PreferencesUtils.putString(EdUserinfo.this,"address",zhuzhi.getText().toString().trim());
-                        PreferencesUtils.putString(EdUserinfo.this, "qq", qq.getText().toString().trim());
-                        PreferencesUtils.putString(EdUserinfo.this,"email",email.getText().toString().trim());
+
+                        APPDataCache.OAUser.setOamobile(dianhua.getText().toString().trim());
+                        APPDataCache.OAUser.setAddress(zhuzhi.getText().toString().trim());
+                        APPDataCache.OAUser.setQq(qq.getText().toString().trim());
+                        APPDataCache.OAUser.setEmail(email.getText().toString().trim());
+
+
                         dialog.dismiss();
                         finish();
                     }else {
@@ -120,7 +127,7 @@ public class EdUserinfo extends Activity implements View.OnClickListener {
                     Toast.makeText(EdUserinfo.this, "住址不能为空！", Toast.LENGTH_SHORT).show();
                 } else {
                     dialog.show();
-                    tel = PreferencesUtils.getString(EdUserinfo.this, "oatel");
+                    tel = APPDataCache.OAUser.getOatel();
                     url = GlobalVariables.oaurlstr + "User.userEdit&username=" + username + "&uid=" + userid + "&tel=" + tel + "&mobile=" + dianhua.getText().toString() + "&qq=" + qq.getText().toString().trim() + "&email=" + email.getText().toString().trim() + "&address=" + zhuzhi.getText().toString().trim();
                     getUserinfo();
                 }

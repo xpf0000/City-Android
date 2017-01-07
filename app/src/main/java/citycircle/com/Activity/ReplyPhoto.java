@@ -51,7 +51,6 @@ import citycircle.com.R;
 import citycircle.com.Utils.GetPhotos;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.Utils.UpdatePhotos;
 import citycircle.com.getPhoto.AlbumActivity;
 import citycircle.com.getPhoto.GalleryActivity;
@@ -60,6 +59,8 @@ import util.FileUtils;
 import util.ImageItem;
 import util.PublicWay;
 import util.Res;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/11/28.
@@ -299,7 +300,7 @@ public class ReplyPhoto extends Activity {
                 } else {
                     UpdatePhotos updatePhotos = new UpdatePhotos();
                     String url = GlobalVariables.urlstr + "Quan.addQuan";
-                    String username = PreferencesUtils.getString(ReplyPhoto.this, "username");
+                    String username = APPDataCache.User.getUsername();
                     str = updatePhotos.uploadFile(url, classid, username, contents, City);
                     if (str.equals("失败")) {
                         handlers.sendEmptyMessage(4);

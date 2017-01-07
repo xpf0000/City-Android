@@ -33,10 +33,11 @@ import citycircle.com.MyViews.MyClassPopwd;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.Loadmore;
-import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.card.CardGetedInfo;
 import okhttp3.Call;
 import util.XNetUtil;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/7/21.
@@ -64,7 +65,9 @@ public class Alrece extends Fragment implements View.OnClickListener, AdapterVie
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.alrec, null);
-        a = PreferencesUtils.getInt(getActivity(), "land");
+
+        a = APPDataCache.land;
+
         Intent intent = new Intent(getActivity(), CityServices.class);
         getActivity().startService(intent);
         IntentFilter filter = new IntentFilter(CityServices.action);
@@ -73,7 +76,7 @@ public class Alrece extends Fragment implements View.OnClickListener, AdapterVie
         if (a == 0) {
             url = GlobalVariables.urlstr + "Hyk.getList&category_id=" + category_id + "&typeid=" + typeid + "&page=" + page;
         } else {
-            username = PreferencesUtils.getString(getActivity(), "username");
+            username = APPDataCache.User.getUsername();
             url = GlobalVariables.urlstr + "Hyk.getList&category_id=" + category_id + "&typeid=" + typeid + "&page=" + page + "&username=" + username + "&perNumber=20";
         }
 
@@ -310,13 +313,13 @@ public class Alrece extends Fragment implements View.OnClickListener, AdapterVie
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            a = PreferencesUtils.getInt(getActivity(), "land");
+            a = APPDataCache.land;
             if (a == 0) {
                 page = 1;
                 url = GlobalVariables.urlstr + "Hyk.getList&category_id=" + category_id + "&typeid=" + typeid + "&page=" + page;
             } else {
                 page = 1;
-                username = PreferencesUtils.getString(getActivity(), "username");
+                username = APPDataCache.User.getUsername();
                 url = GlobalVariables.urlstr + "Hyk.getlist&category_id=" + category_id + "&typeid=" + typeid + "&page=" + page + "&username=" + username + "&perNumber=20";
             }
             getjson(1);

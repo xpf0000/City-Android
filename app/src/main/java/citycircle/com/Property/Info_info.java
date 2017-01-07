@@ -12,7 +12,8 @@ import android.widget.Toast;
 
 import citycircle.com.R;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/1/29.
@@ -27,10 +28,10 @@ public class Info_info extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info_info);
         id = getIntent().getStringExtra("id");
-//        username = PreferencesUtils.getString(Information.this, "username");
-//        uid = PreferencesUtils.getString(Information.this, "userid");
-        username = PreferencesUtils.getString(Info_info.this,"username");;
-        uid = PreferencesUtils.getString(Info_info.this, "userid");;
+
+        username = APPDataCache.User.getUsername();
+        uid = APPDataCache.User.getUid();
+
 //        url = GlobalVariables.urlstr + "Wuye.getNewsContent&uid=" + uid + "&username=" + username + "&id=" + id;
         url="http://101.201.169.38/city/wuyeNotice.html?uid="+uid+"&username="+username+"&id="+id;
         intview();

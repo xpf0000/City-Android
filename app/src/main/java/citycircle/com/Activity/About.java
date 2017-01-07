@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import citycircle.com.R;
+import util.XNetUtil;
 
 /**
  * Created by admins on 2015/12/7.
@@ -35,5 +36,20 @@ public class About extends Activity {
                 About.this.startActivity(intent);
             }
         });
+    }
+
+    private int count = 0;
+    public void doClick(View v)
+    {
+        count += 1;
+        if(count == 5)
+        {
+            XNetUtil.debug = true;
+        }
+        else
+        {
+            XNetUtil.debug = false;
+        }
+
     }
 }

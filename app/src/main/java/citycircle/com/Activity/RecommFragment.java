@@ -19,6 +19,7 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.melnykov.fab.FloatingActionButton;
+import com.robin.lazy.cache.CacheLoaderManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -31,8 +32,9 @@ import citycircle.com.Adapter.RecomAdapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.Loadmore;
-import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
+import util.XAPPUtil;
+import util.XNetUtil;
 
 /**
  * Created by admins on 2016/5/31.
@@ -104,7 +106,11 @@ public class RecommFragment extends Fragment {
                     hashMaps=new HashMap<String, Object>();
                     hashMaps.put("idlist",newsid);
                     String string=JSON.toJSONString(hashMaps);
-                    PreferencesUtils.putString(getActivity(),"idstr",string);
+
+                    XNetUtil.APPPrintln("idstr: "+string);
+
+                    XAPPUtil.SaveAPPCache("idstr",string);
+
                     adapter.notifyDataSetChanged();
                     addview();
                 }
@@ -243,16 +249,27 @@ public class RecommFragment extends Fragment {
     }
     private void getnewsid() {
         newsid = new ArrayList<>();
-        String idstr = PreferencesUtils.getString(getActivity(), "idstr");
+
+        String idstr = CacheLoaderManager.getInstance().loadString("idstr");
         if (idstr != null) {
-            JSONObject jsonObject = JSON.parseObject(idstr);
-            JSONArray jsonArray = jsonObject.getJSONArray("idlist");
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                hashMap = new HashMap<>();
-                hashMap.put("id", jsonObject1.getString("id"));
-                newsid.add(hashMap);
+            try
+            {
+                idstr = idstr.replace("UTF-8","");
+                JSONObject jsonObject = JSON.parseObject(idstr);
+                JSONArray jsonArray = jsonObject.getJSONArray("idlist");
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                    hashMap = new HashMap<>();
+                    hashMap.put("id", jsonObject1.getString("id"));
+                    newsid.add(hashMap);
+                }
             }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                XNetUtil.APPPrintln(idstr);
+            }
+
         }
     }
 

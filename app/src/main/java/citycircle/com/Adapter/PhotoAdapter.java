@@ -15,9 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import citycircle.com.R;
-import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 
 /**
  * Created by admins on 2015/9/21.
@@ -64,27 +62,10 @@ public class PhotoAdapter extends BaseAdapter {
         final String url= abscure_list.get(position).get("url");
         getItemView.content.setText(abscure_list.get(position).get("title"));
         options=ImageUtils.setnoOptions();
-        int a= PreferencesUtils.getInt(context, "photo");
-//        if (a==1){
+
             ImageLoader.displayImage(url, getItemView.lehuiimg, options,
                     animateFirstListener);
-//        }else {
-//           String urls=  ImageLoader.getDiscCache().get(url).getPath();
-//           boolean bloo= ImageUtils.fileIsExists(urls);
-//           if (bloo){
-//               ImageLoader.displayImage(url, getItemView.lehuiimg, options,
-//                       animateFirstListener);
-//           }else {
-//               getItemView.lehuiimg.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    ImageLoader.displayImage(url, getItemView.lehuiimg, options,
-//                            animateFirstListener);
-//                    getItemView.lehuiimg.setClickable(false);
-//                }
-//            });
-//           }
-//        }
+
 
         return convertView;
     }

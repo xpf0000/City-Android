@@ -44,8 +44,6 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.MyhttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
-import citycircle.com.user.AuthBandPhoneVC;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.PlatformDb;
@@ -54,7 +52,6 @@ import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.friends.Wechat;
 import model.UserModel;
-import util.DataCache;
 import util.HttpResult;
 import util.XActivityindicator;
 import util.XHtmlVC;
@@ -208,33 +205,21 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
                         JSONArray jsonArray = jsonObject1.getJSONArray("info");
                         for (int i = 0; i < jsonArray.size(); i++) {
                             JSONObject jsonObject2 = jsonArray.getJSONObject(i);
-                            PreferencesUtils.putString(Logn.this, "openid", jsonObject2.getString("openid"));
-                            PreferencesUtils.putString(Logn.this, "userid", jsonObject2.getString("uid"));
-                            PreferencesUtils.putString(Logn.this, "username", jsonObject2.getString("username"));
                             setAccount(jsonObject2.getString("uid"));
-                            PreferencesUtils.putString(Logn.this, "nickname", jsonObject2.getString("nickname"));
-                            PreferencesUtils.putString(Logn.this, "headimage", jsonObject2.getString("headimage"));
-                            PreferencesUtils.putString(Logn.this, "mobile", jsonObject2.getString("mobile"));
-                            PreferencesUtils.putInt(Logn.this, "sex", jsonObject2.getIntValue("sex"));
-                            PreferencesUtils.putString(Logn.this, "houseid", jsonObject2.getString("houseid"));
-                            PreferencesUtils.putString(Logn.this, "houseids", jsonObject2.getString("houseid"));
-                            PreferencesUtils.putString(Logn.this, "fanghaoid", jsonObject2.getString("fanghaoid"));
-                            PreferencesUtils.putString(Logn.this, "truename", jsonObject2.getString("truename"));
-                            PreferencesUtils.putString(Logn.this, "birthday", jsonObject2.getString("birthday"));
-                            PreferencesUtils.putString(Logn.this, "address", jsonObject2.getString("address"));
 
                             // JSON串转用户组对象
                             UserModel user = JSON.parseObject(jsonObject2.toJSONString(), UserModel.class);
 
-                            APPDataCache.User.copy(user);
+                            APPDataCache.User = user;
+                            APPDataCache.User.save();
                             APPDataCache.User.registNotice();
                             APPDataCache.User.getUser();
                             APPDataCache.User.getMsgCount();
                         }
 
                         XNotificationCenter.getInstance().postNotice("UserChanged",null);
+                        APPDataCache.land = 1;
 
-                        PreferencesUtils.putInt(Logn.this, "land", 1);
                         Intent intent = new Intent();
                         intent.setAction("com.servicedemo4");
                         intent.putExtra("getmeeage", "0");
@@ -329,25 +314,14 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
             JSONArray jsonArray = jsonObject5.getJSONArray("info");
             for (int i = 0; i < jsonArray.size(); i++) {
                 JSONObject jsonObject6 = jsonArray.getJSONObject(i);
-                PreferencesUtils.putString(Logn.this, "userid", jsonObject6.getString("uid"));
-                PreferencesUtils.putString(Logn.this, "openid", jsonObject6.getString("openid"));
-                PreferencesUtils.putString(Logn.this, "username", jsonObject6.getString("username"));
+
                 setAccount(jsonObject6.getString("uid"));
-                PreferencesUtils.putString(Logn.this, "nickname", jsonObject6.getString("nickname"));
-                PreferencesUtils.putString(Logn.this, "headimage", jsonObject6.getString("headimage"));
-                PreferencesUtils.putString(Logn.this, "mobile", jsonObject6.getString("mobile"));
-                PreferencesUtils.putInt(Logn.this, "sex", jsonObject6.getIntValue("sex"));
-                PreferencesUtils.putInt(Logn.this, "houseid", jsonObject6.getIntValue("houseid"));
-                PreferencesUtils.putString(Logn.this, "houseids", jsonObject6.getString("houseid"));
-                PreferencesUtils.putString(Logn.this, "fanghaoid", jsonObject6.getString("fanghaoid"));
-                PreferencesUtils.putString(Logn.this, "truename", jsonObject6.getString("truename"));
-                PreferencesUtils.putString(Logn.this, "birthday", jsonObject6.getString("birthday"));
-                PreferencesUtils.putString(Logn.this, "address", jsonObject6.getString("address"));
 
                 // JSON串转用户组对象
                 UserModel user = JSON.parseObject(jsonObject6.toJSONString(), UserModel.class);
 
-                APPDataCache.User.copy(user);
+                APPDataCache.User = user;
+                APPDataCache.User.save();
                 APPDataCache.User.registNotice();
                 APPDataCache.User.getUser();
                 APPDataCache.User.getMsgCount();
@@ -355,7 +329,7 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
 
             XNotificationCenter.getInstance().postNotice("UserChanged",null);
 
-            PreferencesUtils.putInt(Logn.this, "land", 1);
+            APPDataCache.land = 1;
             Intent intent = new Intent();
             intent.setAction("com.servicedemo4");
             intent.putExtra("getmeeage", "0");
@@ -560,7 +534,8 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
                 {
                     UserModel user = listHttpResult.getData().getInfo().get(0);
 
-                    APPDataCache.User.copy(user);
+                    APPDataCache.User = user;
+                    APPDataCache.User.save();
 
                     int sex = 0;
                     int houseid = 0;
@@ -585,25 +560,13 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
                         houseid = 0;
                     }
 
-                    PreferencesUtils.putString(Logn.this, "userid", user.getUid());
-                    PreferencesUtils.putString(Logn.this, "username", user.getUsername());
                     setAccount(user.getUid());
-                    PreferencesUtils.putString(Logn.this, "nickname", user.getNickname());
-                    PreferencesUtils.putString(Logn.this, "headimage", user.getHeadimage());
-                    PreferencesUtils.putString(Logn.this, "mobile", user.getMobile());
-                    PreferencesUtils.putInt(Logn.this, "sex", sex);
-                    PreferencesUtils.putInt(Logn.this, "houseid", houseid);
-                    PreferencesUtils.putString(Logn.this, "houseids", user.getHouseid());
-                    PreferencesUtils.putString(Logn.this, "fanghaoid", user.getFanghaoid());
-                    PreferencesUtils.putString(Logn.this, "truename", user.getTruename());
-                    PreferencesUtils.putString(Logn.this, "birthday", user.getBirthday());
-                    PreferencesUtils.putString(Logn.this, "address", user.getAddress());
 
                     APPDataCache.User.registNotice();
                     APPDataCache.User.getUser();
                     APPDataCache.User.getMsgCount();
+                    APPDataCache.land = 1;
 
-                    PreferencesUtils.putInt(Logn.this, "land", 1);
                     Intent intent = new Intent();
                     intent.setAction("com.servicedemo4");
                     intent.putExtra("getmeeage", "0");

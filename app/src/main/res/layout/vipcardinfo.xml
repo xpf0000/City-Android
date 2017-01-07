@@ -182,6 +182,11 @@
                 android:padding="@dimen/ui_10_dip"
                 android:text="用户需知"
                 android:textSize="16dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/linecolor"
+                ></View>
 
             <WebView
                 android:id="@+id/content"

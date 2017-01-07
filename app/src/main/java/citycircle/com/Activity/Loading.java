@@ -16,14 +16,17 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.robin.lazy.cache.CacheLoaderManager;
 import com.umeng.analytics.MobclickAgent;
 
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 import cn.iwgang.countdownview.CountdownView;
+import util.XAPPUtil;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/11/24.
@@ -48,8 +51,21 @@ public class Loading extends Activity {
         setContentView(R.layout.loading);
         logo=(ImageView)findViewById(R.id.logo) ;
         welimg = (ImageView) findViewById(R.id.welimg);
-        frist = PreferencesUtils.getInt(Loading.this, "frist");
-        newimg = PreferencesUtils.getInt(Loading.this, "ornew");
+
+        Integer f = CacheLoaderManager.getInstance().loadSerializable("frist");
+        if(f == null)
+        {
+            f = new Integer(-1);
+        }
+
+        Integer o = CacheLoaderManager.getInstance().loadSerializable("ornew");
+        if(o == null)
+        {
+            o = new Integer(-1);
+        }
+
+        frist = f;
+        newimg = o;
         if (frist != -1){
             logo.setVisibility(View.VISIBLE);
             welimg.setVisibility(View.INVISIBLE);
@@ -69,9 +85,9 @@ public class Loading extends Activity {
                 a=false;
                 Intent Intent = new Intent();
                 if (frist == -1) {
-//                    PreferencesUtils.putInt(Loading.this, "frist", 0);
-                    PreferencesUtils.putInt(Loading.this, "land", 0);
-                    PreferencesUtils.putInt(Loading.this, "photo", 1);
+
+                    XAPPUtil.SaveAPPCache("photo",new Integer(1));
+
                     Intent.setClass(Loading.this, NavigationActivity.class);
                     Loading.this.startActivity(Intent);
                     finish();
@@ -96,9 +112,7 @@ public class Loading extends Activity {
             if (frist == -1) {
 
                 logo.setVisibility(View.GONE);
-//                    PreferencesUtils.putInt(Loading.this, "frist", 0);
-                PreferencesUtils.putInt(Loading.this, "land", 0);
-                PreferencesUtils.putInt(Loading.this, "photo", 1);
+                XAPPUtil.SaveAPPCache("photo",new Integer(1));
                 Intent.setClass(Loading.this, NavigationActivity.class);
                 Loading.this.startActivity(Intent);
                 finish();
@@ -127,9 +141,10 @@ public class Loading extends Activity {
                     if (frist == -1) {
 
                         logo.setVisibility(View.GONE);
-//                    PreferencesUtils.putInt(Loading.this, "frist", 0);
-                        PreferencesUtils.putInt(Loading.this, "land", 0);
-                        PreferencesUtils.putInt(Loading.this, "photo", 1);
+
+                        APPDataCache.land=0;
+                        XAPPUtil.SaveAPPCache("photo",new Integer(1));
+
                         Intent.setClass(Loading.this, NavigationActivity.class);
                         Loading.this.startActivity(Intent);
                         finish();

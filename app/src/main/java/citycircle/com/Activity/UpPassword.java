@@ -20,7 +20,8 @@ import java.util.TimerTask;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/11/30.
@@ -41,8 +42,8 @@ public class UpPassword extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.uppassword);
         intview();
-        username = PreferencesUtils.getString(UpPassword.this, "username");
-        mobile=PreferencesUtils.getString(UpPassword.this, "mobile");
+        username = APPDataCache.User.getUsername();
+        mobile=APPDataCache.User.getMobile();
         url = GlobalVariables.urlstr + "User.updatePass2";
     }
 
@@ -153,8 +154,6 @@ public class UpPassword extends Activity implements OnClickListener {
                 }
                 else {
                     url = GlobalVariables.urlstr + "User.updatePass2&mobile=" + mobile + "&oldpass=" + number.getText().toString()+"&newpass="+password.getText().toString();
-//                    String username = PreferencesUtils.getString(UpPassword.this, "username");
-//
                     getuser(0);
                 }
                 break;

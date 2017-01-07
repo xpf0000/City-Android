@@ -36,7 +36,6 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 import cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager;
 import util.XNetUtil;
 

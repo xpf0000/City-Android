@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.robin.lazy.cache.CacheLoaderManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,8 +39,8 @@ import citycircle.com.R;
 import citycircle.com.Utils.DataString;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.Utils.StringtoJson;
+import util.XAPPUtil;
 
 /**
  * Created by admins on 2015/11/16.
@@ -76,14 +77,23 @@ public class ToplineFragment extends Fragment {
         Bundle mBundle = getArguments();
         titles = mBundle.getString("arg");
         classID = mBundle.getString("classID");
-        String jsonstr = PreferencesUtils.getString(getActivity(), titles);
-        jsonstrs  = PreferencesUtils.getString(getActivity(), titles + "img");
+
+        String jsonstr = CacheLoaderManager.getInstance().loadString(titles);
+        jsonstrs  = CacheLoaderManager.getInstance().loadString(titles + "img");
+
         if (titles.equals("图片")) {
             view = inflater.inflate(R.layout.photo, container, false);
             url = GlobalVariables.urlstr + "News.getBanner&category_id=" + classID;
             newsurl = GlobalVariables.urlstr + "News.getList&category_id=" + classID + "&page=" + page;
             photointview();
             if (jsonstr != null) {
+                jsonstr = jsonstr.replace("UTF-8","");
+
+                if(jsonstrs != null)
+                {
+                    jsonstrs = jsonstrs.replace("UTF-8","");
+                }
+
                 infostr = jsonstrs;
                 newinfo = jsonstr;
                 setphoto();
@@ -360,10 +370,12 @@ System.out.println(array.get(position - 1).get("ordian").equals("0"));
         JSONObject jsonObject1 = jsonObject.getJSONObject("data");
         int a = jsonObject1.getIntValue("code");
         if (a == 0) {
-            String newsstr = PreferencesUtils.getString(getActivity(), "newid");
+
+            String newsstr = CacheLoaderManager.getInstance().loadString("newid");
             if (newsstr == null) {
 
             } else {
+                newsstr = newsstr.replace("UTF-8","");
                 HashMap<String, Object> hashMaps = new HashMap<String, Object>();
                 JSONObject jsonObject2 = JSON.parseObject(newsstr);
                 JSONArray jsonArray = jsonObject2.getJSONArray("news");
@@ -401,7 +413,8 @@ System.out.println(array.get(position - 1).get("ordian").equals("0"));
             try {
                 stringtoJson = new StringtoJson();
                 String json = stringtoJson.getJson(array);
-                PreferencesUtils.putString(getActivity(), titles, json);
+                XAPPUtil.SaveAPPCache(titles,json);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -452,7 +465,9 @@ System.out.println(array.get(position - 1).get("ordian").equals("0"));
             try {
                 stringtoJson = new StringtoJson();
                 String jsons = stringtoJson.getJson(addarray);
-                PreferencesUtils.putString(getActivity(), titles + "img", jsons);
+
+                XAPPUtil.SaveAPPCache(titles + "img",jsons);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -463,18 +478,25 @@ System.out.println(array.get(position - 1).get("ordian").equals("0"));
     }
 
     public void setListViews(int position) {
-        String newsstr = PreferencesUtils.getString(getActivity(), "newid");
+
+        String newsstr = CacheLoaderManager.getInstance().loadString("newid");
         HashMap<String, Object> hashMaps = new HashMap<String, Object>();
         newsid.clear();
         if (newsstr == null) {
+
             hashMaps = new HashMap<String, Object>();
             hashMaps.put("id", array.get(position - 1).get("id"));
             newsid.add(hashMaps);
             hashMaps = new HashMap<String, Object>();
             hashMaps.put("news", newsid);
             String str = JSON.toJSONString(hashMaps);
-            PreferencesUtils.putString(getActivity(), "newid", str);
+
+            XAPPUtil.SaveAPPCache("newid",str);
+
         } else {
+            newsstr = newsstr.replace("UTF-8","");
+
+
             JSONObject jsonObject = JSON.parseObject(newsstr);
             JSONArray jsonArray = jsonObject.getJSONArray("news");
             for (int i = 0; i < jsonArray.size(); i++) {
@@ -489,7 +511,8 @@ System.out.println(array.get(position - 1).get("ordian").equals("0"));
             hashMaps = new HashMap<String, Object>();
             hashMaps.put("news", newsid);
             String str = JSON.toJSONString(hashMaps);
-            PreferencesUtils.putString(getActivity(), "newid", str);
+            XAPPUtil.SaveAPPCache("newid",str);
+
         }
         hashMap = new HashMap<String, String>();
         hashMap.put("description", array.get(position - 1).get("description"));

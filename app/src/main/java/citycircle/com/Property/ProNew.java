@@ -54,7 +54,6 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
@@ -105,12 +104,15 @@ public class ProNew extends Fragment {
         xiaoquid=APPDataCache.User.getHouseid();
 
         addurl = GlobalVariables.urlstr + "News.getGuanggao&typeid=84";
-        int a = PreferencesUtils.getInt(getActivity(), "land");
-        uid=PreferencesUtils.getString(getActivity(),"userid");
+        int a = APPDataCache.land;
+
+        username = APPDataCache.User.getUsername();
+        uid = APPDataCache.User.getUid();
+
+
         if (a == 0) {
             getnewme = GlobalVariables.urlstr + "Quan.getNewsTop&username=0";
         } else {
-            username = PreferencesUtils.getString(getActivity(), "username");
             getnewme = GlobalVariables.urlstr + "Quan.getNewsTop&username=" + username;
         }
         url = GlobalVariables.urlstr + "Quan.getListAll&page=" + page+"&uid="+uid+"&xiaoquid="+xiaoquid;
@@ -202,12 +204,13 @@ public class ProNew extends Fragment {
 
                 page = 1;
 
-                uid=PreferencesUtils.getString(getActivity(),"userid");
-                int a = PreferencesUtils.getInt(getActivity(), "land");
+                username = APPDataCache.User.getUsername();
+                uid = APPDataCache.User.getUid();
+
+                int a = APPDataCache.land;
                 if (a == 0) {
                     getnewme = GlobalVariables.urlstr + "Quan.getNewsTop&username=0";
                 } else {
-                    username = PreferencesUtils.getString(getActivity(), "username");
                     getnewme = GlobalVariables.urlstr + "Quan.getNewsTop&username=" + username;
                 }
 //                newsurl = "http://appapi.rexian.cn:8080/HKCityApi/news/newsFocusList?areaID=1&pageSize=10&pageIndex=" + page;
@@ -314,7 +317,7 @@ public class ProNew extends Fragment {
                 case 4:
                     type=1;
                     String did = array.get(GlobalVariables.position).get("id");
-                    String username = PreferencesUtils.getString(getActivity(), "username");
+                    String username = APPDataCache.User.getUsername();
                     zanurl = GlobalVariables.urlstr + "Quan.addZan&did=" + did + "&username=" + username + "&tuid=" + array.get(GlobalVariables.position).get("uid") + "&dpic=" + GlobalVariables.imgurls;
                     getnews(2);
                     break;
@@ -326,7 +329,7 @@ public class ProNew extends Fragment {
                     if (a == 0) {
                         Toast.makeText(getActivity(), "赞", Toast.LENGTH_SHORT).show();
 //                        addarray.clear();
-                        uid=PreferencesUtils.getString(getActivity(),"userid");
+                        uid=APPDataCache.User.getUid();
                         int pagenumber = page * 10;
                         url = GlobalVariables.urlstr + "Quan.getListAll&page=" + 1 + "&perNumber=" + pagenumber+"&uid="+uid+"&xiaoquid="+xiaoquid;
                         getnews(1);
@@ -368,7 +371,7 @@ public class ProNew extends Fragment {
                     if (b == 0) {
                         Toast.makeText(getActivity(), "评论成功", Toast.LENGTH_SHORT).show();
                         popupWindow.dismiss();
-                        uid=PreferencesUtils.getString(getActivity(),"userid");
+                        uid=APPDataCache.User.getUid();
                         int pagenumber = page * 10;
                         url = GlobalVariables.urlstr + "Quan.getListAll&page=" + 1 + "&perNumber=" + pagenumber+"&uid="+uid+"&xiaoquid="+xiaoquid;
                         getnews(1);
@@ -638,7 +641,7 @@ public class ProNew extends Fragment {
                 if (myviptxt.getText().toString().trim().length() == 0) {
                     Toast.makeText(getActivity(), "内容不能为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    String username = PreferencesUtils.getString(getActivity(), "username");
+                    String username = APPDataCache.User.getUsername();
                     try {
                         if (type==0){
                             addcom = GlobalVariables.urlstr + "Quan.addComment&did=" + array.get(GlobalVariables.position).get("id") + "&username=" + username + "&content=" + URLEncoder.encode(myviptxt.getText().toString(), "UTF-8")+"&tuid="+comarray.get(GlobalVariables.positions).get("uid")+"&dpic="+parray.get(0).get("path")+"&type=1";

@@ -19,7 +19,6 @@ import java.util.HashMap;
 
 import citycircle.com.R;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 
 /**
  * Created by admins on 2015/11/23.
@@ -97,27 +96,10 @@ public class newPhotoAdapter extends BaseAdapter {
 
         }
         options=ImageUtils.setcenterOptions();
-        int a= PreferencesUtils.getInt(context, "photo");
-//        if (a==1){
 
-
-//        }else {
-//           String urls=  ImageLoader.getDiscCache().get(url).getPath();
-//           boolean bloo= ImageUtils.fileIsExists(urls);
-//           if (bloo){
                ImageLoader.displayImage(url, getItemView.lehuiimg, options,
                        animateFirstListener);
-//           }else {
-//               getItemView.lehuiimg.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    ImageLoader.displayImage(url, getItemView.lehuiimg, options,
-//                            animateFirstListener);
-//                    getItemView.lehuiimg.setClickable(false);
-//                }
-//            });
-//           }
-//        }
+
 
         return convertView;
     }

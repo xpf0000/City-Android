@@ -10,7 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import citycircle.com.R;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/1/7.
@@ -59,13 +60,13 @@ public class OaUserinfo extends Activity implements View.OnClickListener {
     }
 
     private void getUserinfo() {
-        adresss = PreferencesUtils.getString(OaUserinfo.this, "address");
-        emails = PreferencesUtils.getString(OaUserinfo.this, "email");
-        qqs = PreferencesUtils.getString(OaUserinfo.this, "qq");
-        numbers = PreferencesUtils.getString(OaUserinfo.this, "oamobile");
-        bumens = PreferencesUtils.getString(OaUserinfo.this, "bm");
-        sexs = PreferencesUtils.getInt(OaUserinfo.this, "oasex");
-        names = PreferencesUtils.getString(OaUserinfo.this, "oatruename");
+        adresss = APPDataCache.OAUser.getAddress();
+        emails = APPDataCache.OAUser.getEmail();
+        qqs = APPDataCache.OAUser.getQq();
+        numbers = APPDataCache.OAUser.getOamobile();
+        bumens = APPDataCache.OAUser.getBm();
+        sexs = APPDataCache.OAUser.getOasex();
+        names = APPDataCache.OAUser.getOatruename();
         adress.setText(adresss);
         email.setText(emails);
         qq.setText(qqs);
@@ -84,15 +85,9 @@ public class OaUserinfo extends Activity implements View.OnClickListener {
         Intent intent=new Intent();
         switch (v.getId()) {
             case R.id.logext:
-                final String[] tags;
-                String jgid=PreferencesUtils.getString(OaUserinfo.this,"jgid");
-                String dwid=PreferencesUtils.getString(OaUserinfo.this,"dwid");
-                String bmid=PreferencesUtils.getString(OaUserinfo.this,"bmid");
-                String uid=PreferencesUtils.getString(OaUserinfo.this,"uid");
-                tags = new String[] { jgid, dwid,
-                        bmid,uid };
-//                settages(tags);
-                PreferencesUtils.putInt(OaUserinfo.this,"oaland",0);
+
+                APPDataCache.OAUser.reSet();
+
                 intent.putExtra("type",0);
                 intent.setClass(OaUserinfo.this,LandActivity.class);
                 OaUserinfo.this.startActivity(intent);

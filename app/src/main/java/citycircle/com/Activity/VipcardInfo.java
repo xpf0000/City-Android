@@ -34,9 +34,10 @@ import citycircle.com.MyViews.CallPhonePop;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.card.CardGetedInfo;
 import okhttp3.Call;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/5/31.
@@ -63,14 +64,14 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vipcardinfo);
-        a = PreferencesUtils.getInt(this, "land");
+        a = APPDataCache.land;
         id = getIntent().getStringExtra("id");
         orlq=getIntent().getIntExtra("orlq",0);
         if (orlq == 0) {
             url = GlobalVariables.urlstr + "Hyk.getArticle&id=" + id;
         } else {
-            username = PreferencesUtils.getString(this, "userid");
-            url = GlobalVariables.urlstr + "Hyk.getArticleYLQ&id=" + id + "&uid=" + username;
+            username = APPDataCache.User.getUid();
+            url = GlobalVariables.urlstr + "Hyk.getArticleYLQ&id=" + id + "&uid=" + APPDataCache.User.getUid();
         }
         intview();
         slay.setVisibility(View.GONE);
@@ -247,14 +248,14 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
                 break;
             case R.id.btn_lq:
 //                Toast.makeText(this,"领取",Toast.LENGTH_SHORT).show();
-                int a = PreferencesUtils.getInt(VipcardInfo.this, "land");
+                int a = APPDataCache.land;
                 if (a == 0) {
                     Intent intent1 = new Intent();
                     intent1.setClass(VipcardInfo.this, Logn.class);
                     VipcardInfo.this.startActivity(intent1);
                 } else {
-                    String username = PreferencesUtils.getString(VipcardInfo.this, "username");
-                    String uid = PreferencesUtils.getString(VipcardInfo.this, "userid");
+                    String username = APPDataCache.User.getUsername();
+                    String uid = APPDataCache.User.getUid();
                     addurl = GlobalVariables.urlstr + "Hyk.addCard&username=" + username + "&cardid=" + id + "&uid=" + uid;
                     getCard();
                 }

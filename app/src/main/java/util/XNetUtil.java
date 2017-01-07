@@ -14,6 +14,8 @@ import rx.schedulers.Schedulers;
 
 public class XNetUtil {
 
+    static public boolean debug = false;
+
     public interface OnHttpResult<T>
     {
         void onError(Throwable e);
@@ -23,7 +25,11 @@ public class XNetUtil {
 
     final static public <T> void APPPrintln(T t)
     {
-        System.out.println(t);
+        if(debug)
+        {
+            System.out.println(t);
+        }
+
     }
 
     public static <T> void Handle(Observable<HttpResult<T>> obj,Subscriber<T> res) {
@@ -48,8 +54,18 @@ public class XNetUtil {
 
                     @Override
                     public void onError(Throwable e) {
+
+                        if(debug)
+                        {
+                            e.printStackTrace();
+                            Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(LocationApplication.context, "网络似乎出问题了", Toast.LENGTH_SHORT).show();
+                        }
                         res.onError(e);
-                        Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
+
                     }
 
                     @Override
@@ -74,9 +90,17 @@ public class XNetUtil {
 
                     @Override
                     public void onError(Throwable e) {
-
-                        Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
+                        if(debug)
+                        {
+                            e.printStackTrace();
+                            Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(LocationApplication.context, "网络似乎出问题了", Toast.LENGTH_SHORT).show();
+                        }
                         res.onError(e);
+
                     }
 
                     @Override
@@ -103,8 +127,17 @@ public class XNetUtil {
                     @Override
                     public void onError(Throwable e) {
                         XActivityindicator.hide();
-                        Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
+                        if(debug)
+                        {
+                            e.printStackTrace();
+                            Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(LocationApplication.context, "网络似乎出问题了", Toast.LENGTH_SHORT).show();
+                        }
                         res.onError(e);
+
                     }
 
                     @Override
@@ -131,7 +164,15 @@ public class XNetUtil {
                     @Override
                     public void onError(Throwable e) {
                         XActivityindicator.hide();
-                        Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
+                        if(debug)
+                        {
+                            e.printStackTrace();
+                            Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(LocationApplication.context, "网络似乎出问题了", Toast.LENGTH_SHORT).show();
+                        }
                         res.onError(e);
                     }
 

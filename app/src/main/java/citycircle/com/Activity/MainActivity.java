@@ -1,6 +1,7 @@
 package citycircle.com.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bigkoo.alertview.AlertView;
+import com.robin.lazy.cache.CacheLoaderManager;
 import com.umeng.analytics.MobclickAgent;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -33,11 +35,9 @@ import citycircle.com.Fragment.FoundFragment;
 import citycircle.com.Fragment.GroupFragment;
 import citycircle.com.Fragment.HomeFragment;
 import citycircle.com.Fragment.MineFragment;
-import citycircle.com.Fragment.VipCardFragment;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.MyEventBus;
-import citycircle.com.Utils.PreferencesUtils;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
@@ -45,6 +45,7 @@ import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.friends.Wechat;
 import model.APPVersionModel;
 import okhttp3.Call;
+import util.XAPPUtil;
 import util.XActivityindicator;
 import util.XNetUtil;
 import util.XNotificationCenter;
@@ -67,6 +68,15 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //XAPPUtil.SaveAPPCache("aaabbb","TTTTTTT !!!!");
+
+
+        XNetUtil.APPPrintln(CacheLoaderManager.getInstance().loadString("aaabbb"));
+
+
+
+
         initComponents();
         EventBus.getDefault().register(this);
         if (activityStyle == null) {
@@ -78,7 +88,7 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
             }
 
         }
-        int a = PreferencesUtils.getInt(MainActivity.this, "land");
+        int a = APPDataCache.land;
         if (a != 0) {
             getJsom();
         } else {
@@ -114,10 +124,9 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
         Alert.show();
         badge.setVisibility(View.GONE);
         home.setChecked(true);
-        PreferencesUtils.putInt(this, "land", 0);
-        PreferencesUtils.putString(this, "userid", null);
         APPDataCache.User.unRegistNotice();
         APPDataCache.User.reSet();
+        APPDataCache.land = 0;
 
         Platform QQ = ShareSDK.getPlatform(QZone.NAME);
         QQ.SSOSetting(true);
@@ -320,10 +329,6 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
             }, 2000); // 如果2秒钟内没有按下返回键，则启动定时器取消掉刚才执行的任务
 
         } else {
-            for (int i = 0; i < GlobalVariables.TITLE.length; i++) {
-                PreferencesUtils.putString(MainActivity.this, GlobalVariables.TITLE[i], null);
-                PreferencesUtils.putString(MainActivity.this, GlobalVariables.TITLE[i] + "img", null);
-            }
             finish();
             System.exit(0);
         }
@@ -341,34 +346,8 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
     }
 
     public void getJsom() {
-        String username = PreferencesUtils.getString(MainActivity.this, "username");
-        String uid = PreferencesUtils.getString(MainActivity.this, "userid");
-        String url = GlobalVariables.urlstr + "user.getMessagesCount&uid=" + uid + "&username=" + username;
-        OkHttpUtils.get().url(url).build().execute(new StringCallback() {
-            @Override
-            public void onError(Call call, Exception e) {
-                Toast.makeText(MainActivity.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
-            }
 
-            @Override
-            public void onResponse(String response) {
-                JSONObject jsonObject = JSON.parseObject(response);
-                JSONObject jsonObject1 = jsonObject.getJSONObject("data");
-                if (jsonObject1.getIntValue("code") == 0) {
-                    JSONObject jsonObject2 = jsonObject1.getJSONObject("info");
-                    if (jsonObject2.getIntValue("count1")==0&&jsonObject2.getIntValue("count2")==0&&jsonObject2.getIntValue("count3")==0){
-                        GlobalVariables.types = false;
-                    }else {
-                        GlobalVariables.types = true;
-                    }
-
-                } else {
-                    EventBus.getDefault().post(
-                            new MyEventBus("show"));
-                    GlobalVariables.types = true;
-                }
-            }
-        });
+        APPDataCache.User.getMsgCount();
     }
 
     private void checkVersion()

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.robin.lazy.cache.CacheLoaderManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -24,8 +25,8 @@ import citycircle.com.JsonMordel.MessageList;
 import citycircle.com.MyViews.MyPopwindows;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
-import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
+import util.XAPPUtil;
 import util.XNetUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -51,8 +52,8 @@ public class MyMessageList extends Activity {
         setContentView(R.layout.mymessage_list);
         type=getIntent().getIntExtra("type",1);
         intview();
-        String username = PreferencesUtils.getString(MyMessageList.this, "username");
-        uid = PreferencesUtils.getString(MyMessageList.this, "userid");
+        String username = APPDataCache.User.getUsername();
+        uid = APPDataCache.User.getUid();
         url= GlobalVariables.urlstr+"user.getMessageslist&uid="+uid+"&username="+username+"&type="+type;
         setViplist();
         getJson();
@@ -79,9 +80,6 @@ public class MyMessageList extends Activity {
         delect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                list.clear();
-//                PreferencesUtils.putString(MyMessageList.this,"messagelist"+type+uid,null);
-//                myMessageItem.notifyDataSetChanged();
 
                 if(delect.getText().toString().equals("编辑"))
                 {
@@ -120,7 +118,9 @@ public class MyMessageList extends Activity {
                     Intent intent=new Intent();
                     list.get(position).setKan("0");
                     String json=JSON.toJSONString(list);
-                    PreferencesUtils.putString(MyMessageList.this,"messagelist"+type+uid,json);
+
+                    XAPPUtil.SaveAPPCache("messagelist"+type+uid,json);
+
                     myMessageItem.notifyDataSetChanged();
                     intent.putExtra("title",list.get(position).getTitle());
                     intent.putExtra("times",list.get(position).getCreate_time());
@@ -147,7 +147,7 @@ public class MyMessageList extends Activity {
                     public void onRefresh() {
                         list.remove(position);
                         String json=JSON.toJSONString(list);
-                        PreferencesUtils.putString(MyMessageList.this,"messagelist"+type+uid,json);
+                        XAPPUtil.SaveAPPCache("messagelist"+type+uid,json);
                         myMessageItem.notifyDataSetChanged();
                     }
                 });
@@ -175,7 +175,7 @@ public class MyMessageList extends Activity {
         myMessageItem.checkedArr.clear();
 
         String json=JSON.toJSONString(list);
-        PreferencesUtils.putString(MyMessageList.this,"messagelist"+type+uid,json);
+        XAPPUtil.SaveAPPCache("messagelist"+type+uid,json);
 
         delect.setText("编辑");
         myMessageItem.editing = false;
@@ -197,7 +197,7 @@ public class MyMessageList extends Activity {
                 }
                 getjson();
                 String json=JSON.toJSONString(list);
-                PreferencesUtils.putString(MyMessageList.this,"messagelist"+type+uid,json);
+                XAPPUtil.SaveAPPCache("messagelist"+type+uid,json);
                 myMessageItem.notifyDataSetChanged();
 
                 APPDataCache.User.getMsgCount();
@@ -206,8 +206,10 @@ public class MyMessageList extends Activity {
     }
 
     private void getjson(){
-        String json=PreferencesUtils.getString(MyMessageList.this,"messagelist"+type+uid);
+        String json=CacheLoaderManager.getInstance().loadString("messagelist"+type+uid);
         if (json!=null){
+            json = json.replace("UTF-8","");
+
             JSONArray jsonArray=JSON.parseArray(json);
             for (int i=0;i<jsonArray.size();i++){
                 JSONObject jsonObject=jsonArray.getJSONObject(i);

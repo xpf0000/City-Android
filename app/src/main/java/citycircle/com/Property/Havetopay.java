@@ -26,7 +26,8 @@ import citycircle.com.Property.PropertyAdapter.PaysAdapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by 飞侠 on 2016/2/23.
@@ -45,10 +46,12 @@ public class Havetopay extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.money, container, false);
-        uid = PreferencesUtils.getString(getActivity(), "userid");
-        username = PreferencesUtils.getString(getActivity(), "username");
-//        houseid = PreferencesUtils.getString(getActivity(), "houseids");
-        fangid = PreferencesUtils.getString(getActivity(), "fanghaoid");
+
+        fangid = APPDataCache.User.getFanghaoid();
+        username = APPDataCache.User.getUsername();
+        uid = APPDataCache.User.getUid();
+        houseid = APPDataCache.User.getHouseid();
+
         Bundle mBundle = getArguments();
         type=mBundle.getString("type");
         intview();

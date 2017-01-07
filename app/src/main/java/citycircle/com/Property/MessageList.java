@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.robin.lazy.cache.CacheLoaderManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +24,9 @@ import citycircle.com.Property.PropertyAdapter.MeeageAdapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+import util.XAPPUtil;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by 飞侠 on 2016/3/18.
@@ -43,8 +46,10 @@ public class MessageList extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.promessagelist);
-        uid = PreferencesUtils.getString(MessageList.this, "userid");
-        username = PreferencesUtils.getString(MessageList.this, "username");
+
+        username = APPDataCache.User.getUsername();
+        uid = APPDataCache.User.getUid();
+
         url = GlobalVariables.urlstr + "Wuye.getUserNewsList&uid=" + uid + "&username=" + username;
         intview();
         getmessagelist();
@@ -85,7 +90,9 @@ public class MessageList extends Activity {
                     hashMaps = new HashMap<String, Object>();
                     hashMaps.put("list", idarray);
                     String json = JSON.toJSONString(hashMaps);
-                    PreferencesUtils.putString(MessageList.this, "proid", json);
+
+                    XAPPUtil.SaveAPPCache("proid",json);
+
                     try {
                         setIdarray();
                     } catch (Exception e) {
@@ -177,7 +184,14 @@ public class MessageList extends Activity {
 
     private void setIdarray() throws Exception {
         idarray.clear();
-        String idjson = PreferencesUtils.getString(MessageList.this, "proid");
+
+        String idjson = CacheLoaderManager.getInstance().loadString("proid");
+
+        if(idjson != null)
+        {
+            idjson = idjson.replace("UTF-8","");
+        }
+
         JSONObject jsonObject = JSON.parseObject(idjson);
         JSONArray jsonArray = jsonObject.getJSONArray("list");
         for (int i = 0; i < jsonArray.size(); i++) {

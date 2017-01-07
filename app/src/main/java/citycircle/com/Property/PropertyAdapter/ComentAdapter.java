@@ -18,7 +18,8 @@ import java.util.HashMap;
 
 import citycircle.com.R;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/2/17.
@@ -67,7 +68,8 @@ public class ComentAdapter extends BaseAdapter {
 
         options=ImageUtils.setCirclelmageOptions();
         if (abscure_list.get(position).get("uid").equals("5")){
-            String url= PreferencesUtils.getString(context,"headimage");
+
+            String url= APPDataCache.User.getHeadimage();
             getItemView.left.setVisibility(View.GONE);
             getItemView.ricontent.setText(abscure_list.get(position).get("content"));
             ImageLoader.displayImage(url, getItemView.rihead, options,

@@ -26,7 +26,8 @@ import citycircle.com.MyViews.MyPopwindows;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/12/7.
@@ -50,7 +51,7 @@ public class Messagelist extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messagelist);
-        username = PreferencesUtils.getString(Messagelist.this, "username");
+        username = APPDataCache.User.getUsername();
         message = GlobalVariables.urlstr + "Quan.getNews&username=" + username;
         footview = LayoutInflater.from(this).inflate(
                 R.layout.footview, null);

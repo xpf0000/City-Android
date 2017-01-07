@@ -46,7 +46,6 @@ import citycircle.com.Property.uitls.UpdateCircle;
 import citycircle.com.R;
 import citycircle.com.Utils.GetPhotos;
 import citycircle.com.Utils.GlobalVariables;
-import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.getPhoto.AlbumActivity;
 import citycircle.com.getPhoto.GalleryActivity;
 import util.Bimp;
@@ -54,6 +53,8 @@ import util.FileUtils;
 import util.ImageItem;
 import util.PublicWay;
 import util.Res;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/4/15.
@@ -181,9 +182,10 @@ public class AddProcircle extends Activity implements View.OnClickListener{
             public void run() {
                 super.run();
                 UpdateCircle upDatephotos = new UpdateCircle();
-                String username = PreferencesUtils.getString(AddProcircle.this, "username");
-                String uid = PreferencesUtils.getString(AddProcircle.this, "userid");
-                String houseid = PreferencesUtils.getString(AddProcircle.this, "houseids");
+
+                String username = APPDataCache.User.getUsername();
+                String houseid = APPDataCache.User.getHouseid();
+
                 String contents = content.getText().toString();
                 String City = ((LocationApplication) getApplication()).city + " " + ((LocationApplication) getApplication()).getStreet;
                 urlstr = upDatephotos.uploadFile(url, "68", username, contents, City, houseid);

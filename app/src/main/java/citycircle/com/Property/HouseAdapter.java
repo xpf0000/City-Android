@@ -2,16 +2,13 @@ package citycircle.com.Property;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import citycircle.com.R;
-import citycircle.com.Utils.GlobalVariables;
-import citycircle.com.Utils.PreferencesUtils;
 import model.HouseModel;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -80,7 +75,7 @@ public class HouseAdapter extends BaseAdapter {
         final String houseid= APPDataCache.User.getHouseid();
         final String fanghaoid=APPDataCache.User.getFanghaoid();
 
-        String truename=PreferencesUtils.getString(context,"truename");
+        String truename=APPDataCache.User.getTruename();
         getItemView.yanzheng.setText("业主:"+truename);
         if (dataArr.get(position).getHouseid().equals(houseid)&&dataArr.get(position).getFanghaoid().equals(fanghaoid)){
             Drawable drawable=context.getResources().getDrawable(R.mipmap.checkbox_blue_selected);

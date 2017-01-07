@@ -21,7 +21,6 @@ import java.util.HashMap;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 
 /**
  * Created by admins on 2015/11/30.
@@ -84,27 +83,10 @@ public class Collect_Adapter extends BaseAdapter {
         holder.tv.setText(list.get(position).get("title"));
         String url=list.get(position).get("url");
         options=ImageUtils.setOptions();
-        int a = PreferencesUtils.getInt(context, "photo");
-//        if (a==1){
+
         ImageLoader.displayImage(url, holder.img, options,
                 animateFirstListener);
-//        }else {
-//           String urls=  ImageLoader.getDiscCache().get(url).getPath();
-//           boolean bloo= ImageUtils.fileIsExists(urls);
-//           if (bloo){
-//               ImageLoader.displayImage(url, getItemView.lehuiimg, options,
-//                       animateFirstListener);
-//           }else {
-//               getItemView.lehuiimg.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    ImageLoader.displayImage(url, getItemView.lehuiimg, options,
-//                            animateFirstListener);
-//                    getItemView.lehuiimg.setClickable(false);
-//                }
-//            });
-//           }
-//        }
+
         holder.cb.setEnabled(false);
         holder.cb.setChecked(list.get(position).get("flag").equals("true"));
         holder.btn.setOnClickListener(new View.OnClickListener() {

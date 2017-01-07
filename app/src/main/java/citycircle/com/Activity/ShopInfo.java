@@ -139,9 +139,9 @@ public class ShopInfo extends Activity implements View.OnClickListener {
                             renzheng.setVisibility(View.GONE);
                         }
 
-                        String strs="电话:" + list.get(i).getTel();
+                        String strs=list.get(i).getTel();
                         tell_phone.setText(strs);
-                        adress.setText("地址:" + list.get(i).getAddress());
+                        adress.setText("地址: " + list.get(i).getAddress());
                         String info = "<html>\r\n\t"
                                 + "<head>\r\n"
                                 + "<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\"/>"

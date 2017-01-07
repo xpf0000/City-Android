@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.alibaba.sdk.android.push.CloudPushService;
 import com.alibaba.sdk.android.push.CommonCallback;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
+import com.robin.lazy.cache.CacheLoaderManager;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
@@ -28,12 +29,12 @@ import java.text.DecimalFormat;
 import citycircle.com.MyViews.CheckSwitchButton;
 import citycircle.com.R;
 import citycircle.com.Utils.MyEventBus;
-import citycircle.com.Utils.PreferencesUtils;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.friends.Wechat;
+import util.XAPPUtil;
 import util.XNotificationCenter;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -165,14 +166,17 @@ public class SetActivity extends Activity {
             }
         });
         mPush = (CheckSwitchButton) findViewById(R.id.mPush);
-        int b = PreferencesUtils.getInt(SetActivity.this, "photo");
-        if (b == 2) {
+
+        Integer b = CacheLoaderManager.getInstance().loadSerializable("photo");
+        b = b == null ? new Integer(0) : b;
+
+        if (b.intValue() == 2) {
             mPush.setChecked(false);
         } else {
             mPush.setChecked(true);
         }
-        int a = PreferencesUtils.getInt(SetActivity.this, "land");
-        Intent intent = new Intent();
+        int a = APPDataCache.land;
+
         if (a == 0) {
             logout.setVisibility(View.GONE);
         } else {
@@ -182,34 +186,13 @@ public class SetActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    PreferencesUtils.putInt(SetActivity.this, "photo", 1);
-//                    Toast.makeText(SetActivity.this, "推送已关闭", Toast.LENGTH_SHORT)
-//                            .show();
-                    ;
+                    XAPPUtil.SaveAPPCache("photo",new Integer(1));
                 } else {
-                    PreferencesUtils.putInt(SetActivity.this, "photo", 2);
-//                    Toast.makeText(SetActivity.this, "推送打开", Toast.LENGTH_SHORT)
-//                            .show();
-                    ;
+                    XAPPUtil.SaveAPPCache("photo",new Integer(2));
                 }
             }
         });
-//        mCheckSwithcButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked) {
-//                    PreferencesUtils.putInt(SetActivity.this, "photo", 1);
-//                    Toast.makeText(SetActivity.this, "无图模式已关闭", Toast.LENGTH_SHORT)
-//                            .show();
-//                    ;
-//                } else {
-//                    PreferencesUtils.putInt(SetActivity.this, "photo", 2);
-//                    Toast.makeText(SetActivity.this, "无图模式已打开", Toast.LENGTH_SHORT)
-//                            .show();
-//                    ;
-//                }
-//            }
-//        });
+
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -237,12 +220,12 @@ public class SetActivity extends Activity {
 
                 APPDataCache.User.unRegistNotice();
                 APPDataCache.User.reSet();
+                APPDataCache.land = 0;
                 EventBus.getDefault().post(
                         new MyEventBus("hidden"));
                 XNotificationCenter.getInstance().postNotice("UserChanged",null);
 
-                PreferencesUtils.putInt(SetActivity.this, "land", 0);
-                PreferencesUtils.putString(SetActivity.this, "userid", null);
+
                 Intent intent = new Intent();
                 intent.setAction("com.servicedemo4");
                 intent.putExtra("getmeeage", "1");

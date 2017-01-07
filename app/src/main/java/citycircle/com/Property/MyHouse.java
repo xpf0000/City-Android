@@ -4,35 +4,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ScrollDirectionListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import citycircle.com.Adapter.GroupSearchAdapter;
 import citycircle.com.R;
-import citycircle.com.Utils.GlobalVariables;
-import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
-import model.GroupModel;
 import model.HouseModel;
-import util.DensityUtil;
-import util.XActivityindicator;
 import util.XNetUtil;
 import util.XNotificationCenter;
 
@@ -60,8 +46,10 @@ public class MyHouse extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myhouse);
-        uid = PreferencesUtils.getString(MyHouse.this, "userid");
-        username = PreferencesUtils.getString(MyHouse.this, "username");
+
+        username = APPDataCache.User.getUsername();
+        uid = APPDataCache.User.getUid();
+
         intview();
         getData();
 

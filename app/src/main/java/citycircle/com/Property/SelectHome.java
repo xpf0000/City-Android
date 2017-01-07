@@ -27,13 +27,9 @@ import java.util.HashMap;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
-import model.HouseModel;
-import util.XNetUtil;
 import util.XNotificationCenter;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
-import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 /**
  * Created by admins on 2016/1/30.
@@ -54,10 +50,11 @@ public class SelectHome extends Fragment implements OnItemClickListener, View.On
         view = inflater.inflate(R.layout.selecthome, container, false);
         intview();
         types = getActivity().getIntent().getIntExtra("types", 0);
-        username = PreferencesUtils.getString(getActivity(), "username");
-        ;
-        uid = PreferencesUtils.getString(getActivity(), "userid");
-        ;
+
+
+        username = APPDataCache.User.getUsername();
+        uid = APPDataCache.User.getUid();
+
 //        Alertshow(new String[]{"其他按钮1", "其他按钮2", "其他按钮3"});
         return view;
     }

@@ -26,7 +26,8 @@ import citycircle.com.OA.uitls.PinyinComparator;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/1/6.
@@ -43,9 +44,12 @@ public class Allfragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.alllist, container, false);
-        username = PreferencesUtils.getString(getActivity(), "oausername");
-        dwid = PreferencesUtils.getString(getActivity(), "dwid");
-        uid = PreferencesUtils.getString(getActivity(), "oauid");
+
+        uid = APPDataCache.OAUser.getOauid();
+        username = APPDataCache.OAUser.getOausername();
+
+        dwid = APPDataCache.OAUser.getDwid();
+
         url = GlobalVariables.oaurlstr + "Tel.getList&dwid=130&uid=1&username=test";
         intview();
         getStr();

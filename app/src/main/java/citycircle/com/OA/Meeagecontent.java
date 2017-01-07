@@ -15,7 +15,8 @@ import citycircle.com.R;
 import citycircle.com.Utils.DateUtils;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/1/7.
@@ -33,8 +34,10 @@ public class Meeagecontent extends Activity {
         id = getIntent().getStringExtra("id");
         intview();
         dateUtils=new DateUtils();
-        username= PreferencesUtils.getString(Meeagecontent.this, "oausername");
-        bid = PreferencesUtils.getString(Meeagecontent.this, "oauid");
+
+        bid = APPDataCache.OAUser.getOauid();
+        username = APPDataCache.OAUser.getOausername();
+
         url= GlobalVariables.oaurlstr+"News.getArticle&id="+id+"&bid="+bid+"&username="+username;
         getmessagecon(url,1);
     }

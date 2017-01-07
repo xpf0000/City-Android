@@ -20,7 +20,6 @@ import citycircle.com.Activity.NewsInfoActivity;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 
 public class Myviewpageadapater extends PagerAdapter {
 	private List<View> mList;
@@ -85,23 +84,14 @@ public class Myviewpageadapater extends PagerAdapter {
 		final View view = mList.get(position);
 		image = (ImageView) view.findViewById(R.id.viewimage);
 		final String url= imgarray.get(position).get("url");
-		final int[] a = {PreferencesUtils.getInt(context, "photo")};
-//		if (a==1){
+
 			ImageLoader.displayImage(url, image, options,
 					animateFirstListener);
-//		}else {
-//			String urls=  ImageLoader.getDiscCache().get(url).getPath();
-//			boolean bloo= ImageUtils.fileIsExists(urls);
-//			if (bloo){
-//				ImageLoader.displayImage(url, image, options,
-//						animateFirstListener);
-//			}else {
+
 		image.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-//						ImageLoader.displayImage(url,image, options,
-//								animateFirstListener);
-//						image.setClickable(false);
+
 						Intent intent=new Intent();
 						intent.putExtra("id",imgarray.get(position).get("id"));
 						GlobalVariables.position=position;
@@ -117,8 +107,6 @@ public class Myviewpageadapater extends PagerAdapter {
 					}
 				});
 
-////			}
-//		}
 		container.removeView(mList.get(position));
 		container.addView(mList.get(position));
 		return mList.get(position);

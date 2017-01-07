@@ -183,36 +183,6 @@ public class UserModel implements Serializable {
         save();
     }
 
-    public void copy(UserModel u)
-    {
-        uid = u.uid;
-        nickname = u.nickname;
-        headimage = u.headimage;
-        qdday = u.qdday;
-        hfb = u.hfb;
-        wqd = u.wqd;
-        orqd = u.orqd;
-        sex = u.sex;
-        username = u.username;
-        openid = u.openid;
-        mobile = u.mobile;
-        houseid = u.houseid;
-        fanghaoid = u.fanghaoid;
-        truename = u.truename;
-        louhaoid = u.louhaoid;
-        danyuanid = u.danyuanid;
-        birthday = u.birthday;
-        address = u.address;
-        token = u.token;
-
-        aihao = u.aihao;
-        qianming = u.qianming;
-
-        orwsinfo = u.orwsinfo;
-
-        save();
-    }
-
     public void save()
     {
         XNetUtil.APPPrintln(this.toString());
@@ -306,6 +276,7 @@ public class UserModel implements Serializable {
     }
 
     public String getMobile() {
+        mobile = mobile == null? "" : mobile;
         return mobile;
     }
 
@@ -427,6 +398,8 @@ public class UserModel implements Serializable {
             @Override
             public void onError(Throwable e) {
 
+                XNetUtil.APPPrintln("checkToken error !!!!!!!!!!");
+                XNetUtil.APPPrintln(e);
             }
 
             @Override
@@ -458,7 +431,8 @@ public class UserModel implements Serializable {
             @Override
             public void onError(Throwable e) {
 
-                XNetUtil.APPPrintln("!!!!!! jifenGetUinfo error: "+e);
+                XNetUtil.APPPrintln("getUinfo error !!!!!!!!!!");
+                XNetUtil.APPPrintln(e);
 
             }
 
@@ -493,6 +467,7 @@ public class UserModel implements Serializable {
             @Override
             public void onError(Throwable e) {
 
+                XNetUtil.APPPrintln("getUser error !!!!!!!!!!");
                 XNetUtil.APPPrintln(e);
             }
 
@@ -535,51 +510,45 @@ public class UserModel implements Serializable {
             return;
         }
 
-        String url = GlobalVariables.urlstr + "user.getMessagesCount&uid=" + uid + "&username=" + uname;
-
-        XNetUtil.APPPrintln("url: "+url);
-
-        OkHttpUtils.get().url(url).build().execute(new StringCallback() {
+        XNetUtil.Handle(APPService.userGetMessagesCount(uid, uname), new XNetUtil.OnHttpResult<MessageCountModel>() {
             @Override
-            public void onError(Call call, Exception e) {
-                Toast.makeText(context, R.string.intent_error, Toast.LENGTH_SHORT).show();
+            public void onError(Throwable e) {
+
+                XNetUtil.APPPrintln("getMsgCount error !!!!!!!!!!");
+                XNetUtil.APPPrintln(e);
             }
 
             @Override
-            public void onResponse(String response) {
-                JSONObject jsonObject = JSON.parseObject(response);
-                JSONObject jsonObject1 = jsonObject.getJSONObject("data");
-                if (jsonObject1.getIntValue("code") == 0) {
-                    JSONObject jsonObject2 = jsonObject1.getJSONObject("info");
+            public void onSuccess(MessageCountModel model) {
 
-                    try
+                try
+                {
+                    int c1 = Integer.parseInt(model.getCount1());
+                    int c2 = Integer.parseInt(model.getCount2());
+                    int c3 = Integer.parseInt(model.getCount3());
+
+                    if(c1+c2+c3 > 0)
                     {
-                        int c1 = Integer.parseInt(jsonObject2.getString("count1"));
-                        int c2 = Integer.parseInt(jsonObject2.getString("count2"));
-                        int c3 = Integer.parseInt(jsonObject2.getString("count3"));
-
-                        if(c1+c2+c3 > 0)
-                        {
-                            EventBus.getDefault().post(
-                                    new MyEventBus("show"));
-                            APPDataCache.msgshow = true;
-                        }
-                        else
-                        {
-                            EventBus.getDefault().post(
-                                    new MyEventBus("hidden"));
-                            APPDataCache.msgshow = false;
-                        }
+                        EventBus.getDefault().post(
+                                new MyEventBus("show"));
+                        APPDataCache.msgshow = true;
                     }
-                    catch (Exception e)
+                    else
                     {
-                        e.printStackTrace();
+                        EventBus.getDefault().post(
+                                new MyEventBus("hidden"));
+                        APPDataCache.msgshow = false;
                     }
-
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
 
             }
         });
+
+
     }
 
     public String getId() {

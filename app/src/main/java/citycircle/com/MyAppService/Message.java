@@ -8,7 +8,6 @@ import com.alibaba.sdk.android.push.notification.CPushMessage;
 import org.greenrobot.eventbus.EventBus;
 
 import citycircle.com.Utils.MyEventBus;
-import citycircle.com.Utils.PreferencesUtils;
 import util.XNotificationCenter;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -21,7 +20,7 @@ public class Message extends MessageReceiver {
     protected void onMessage(Context context, CPushMessage cPushMessage) {
         super.onMessage(context, cPushMessage);
         System.out.println("cPushMessage:"+cPushMessage.getTitle());
-        int a = PreferencesUtils.getInt(context, "land");
+        int a = APPDataCache.land;
         if (a != 0) {
             EventBus.getDefault().post(
                 new MyEventBus("show"));

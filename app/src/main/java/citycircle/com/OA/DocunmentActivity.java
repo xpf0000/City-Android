@@ -25,6 +25,7 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.baoyz.swipemenulistview.SwipeMenuListView.OnMenuItemClickListener;
+import com.robin.lazy.cache.CacheLoaderManager;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -37,7 +38,9 @@ import citycircle.com.R;
 import citycircle.com.Utils.DateUtils;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+import util.XAPPUtil;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 public class DocunmentActivity extends Activity {
     AutoCompleteTextView messageslistserach;
@@ -63,17 +66,26 @@ public class DocunmentActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.document);
         strtojson = new StringtoJsontoo();
-        username=PreferencesUtils.getString(DocunmentActivity.this, "oausername");
-        userid = PreferencesUtils.getString(DocunmentActivity.this, "oauid");
-        dwid = PreferencesUtils.getString(DocunmentActivity.this, "dwid");
-        bmid=PreferencesUtils.getString(DocunmentActivity.this, "bmid");
+
+        bmid=APPDataCache.OAUser.getBmid();
+
+        userid = APPDataCache.OAUser.getOauid();
+        username = APPDataCache.OAUser.getOausername();
+
+        dwid = APPDataCache.OAUser.getDwid();
+
+
         url= GlobalVariables.oaurlstr+"Document.getList&dwid="+dwid+"&bmid="+bmid+"&username="+username+"&uid="+userid;
-        String mymessage = PreferencesUtils.getString(DocunmentActivity.this,
-                userid + "Document");
+
+        String mymessage = CacheLoaderManager.getInstance().loadString(userid + "Document");
 
         try {
             if (mymessage == null) {
+
+
+
             } else {
+                mymessage = mymessage.replace("UTF-8","");
                 setmymessagelist(mymessage);
             }
 
@@ -118,9 +130,10 @@ public class DocunmentActivity extends Activity {
                                     searchitems.remove(position);
                                     adapter.notifyDataSetChanged();
                                     String myjson = strtojson.getJson(items);
-                                    PreferencesUtils.putString(
-                                            DocunmentActivity.this, userid
-                                                    + "Document", myjson);
+
+                                    XAPPUtil.SaveAPPCache(userid
+                                            + "Document",myjson);
+
                                     break;
                                 }
 
@@ -129,8 +142,9 @@ public class DocunmentActivity extends Activity {
                             items.remove(position);
                             adapter.notifyDataSetChanged();
                             String myjson = strtojson.getJson(items);
-                            PreferencesUtils.putString(DocunmentActivity.this, userid
-                                    + "Document", myjson);
+
+                            XAPPUtil.SaveAPPCache(userid
+                                    + "Document",myjson);
                         }
                         break;
 
@@ -163,7 +177,11 @@ public class DocunmentActivity extends Activity {
             @Override
             public void onClick(View v) {
 //				getmessagestr(getuser, 5);
-                int a=PreferencesUtils.getInt(DocunmentActivity.this, "新增日程");
+
+                Integer x = CacheLoaderManager.getInstance().loadSerializable("新增日程");
+                x = x == null ? new Integer(0):x;
+                int a=x.intValue();
+
                 if(a==0){
                     Toast.makeText(DocunmentActivity.this, "暂无权限", Toast.LENGTH_SHORT).show();
                 }else{
@@ -288,8 +306,10 @@ public class DocunmentActivity extends Activity {
             items.addAll(myitems);
             handler.sendEmptyMessage(2);
             String myjson = strtojson.getJson(items);
-            PreferencesUtils.putString(DocunmentActivity.this,
-                    userid + "Document", myjson);
+
+            XAPPUtil.SaveAPPCache(userid
+                    + "Document",myjson);
+
         } else {
             handler.sendEmptyMessage(4);
         }

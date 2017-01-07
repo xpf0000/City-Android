@@ -19,7 +19,6 @@ import java.util.HashMap;
 import citycircle.com.R;
 import citycircle.com.Utils.DateUtils;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 
 /**
  * Created by admins on 2015/11/20.
@@ -76,27 +75,8 @@ public class SalseAdapter extends BaseAdapter {
         getItemView.view.setText(abscure_list.get(position).get("view"));
         getItemView.hottel.setText(starttime + "至" + endtime);
         options = ImageUtils.setnoOptions();
-        int a = PreferencesUtils.getInt(context, "photo");
-//        if (a==1){
         ImageLoader.displayImage(url, getItemView.lehuiimg, options,
                 animateFirstListener);
-//        }else {
-//           String urls=  ImageLoader.getDiscCache().get(url).getPath();
-//           boolean bloo= ImageUtils.fileIsExists(urls);
-//           if (bloo){
-//               ImageLoader.displayImage(url, getItemView.lehuiimg, options,
-//                       animateFirstListener);
-//           }else {
-//               getItemView.lehuiimg.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    ImageLoader.displayImage(url, getItemView.lehuiimg, options,
-//                            animateFirstListener);
-//                    getItemView.lehuiimg.setClickable(false);
-//                }
-//            });
-//           }
-//        }
 
         return convertView;
     }

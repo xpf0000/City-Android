@@ -26,7 +26,8 @@ import citycircle.com.Property.PropertyAdapter.PaysAdapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by 飞侠 on 2016/2/23.
@@ -49,10 +50,12 @@ public class NonpaymentFr extends Fragment {
         type=mBundle.getString("type");
         intview();
         setArrayList();
-        uid = PreferencesUtils.getString(getActivity(), "userid");
-        username = PreferencesUtils.getString(getActivity(), "username");
-//        houseid = PreferencesUtils.getString(getActivity(), "houseids");
-        fangid=PreferencesUtils.getString(getActivity(),"fanghaoid");
+
+        fangid = APPDataCache.User.getFanghaoid();
+        username = APPDataCache.User.getUsername();
+        uid = APPDataCache.User.getUid();
+        houseid = APPDataCache.User.getHouseid();
+
 //        url = GlobalVariables.urlstr + "wuye.getPayList&uid=" + uid + "&username=" + username + "&houseid=" + houseid + "&type=" + type + "&status=0";
         url= GlobalVariables.urlstr+"wuye.getPayList&uid="+uid+"&username="+username+"&fanghaoid="+fangid+"&type="+type+"&status=0";
         getList();

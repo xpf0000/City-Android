@@ -18,6 +18,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.apache.log4j.jmx.AppenderDynamicMBean;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -25,8 +27,9 @@ import citycircle.com.Adapter.MyVipcardAdapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.Loadmore;
-import citycircle.com.Utils.PreferencesUtils;
 import okhttp3.Call;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/6/17.
@@ -47,11 +50,11 @@ public class ShopVipcard extends Activity implements AdapterView.OnItemClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shopvipcard);
         shopid = getIntent().getStringExtra("id");
-        a = PreferencesUtils.getInt(ShopVipcard.this, "land");
+        a = APPDataCache.land;
         if (a==0){
             url = GlobalVariables.urlstr + "Hyk.getShopCard&id=" + shopid;
         }else {
-            username = PreferencesUtils.getString(ShopVipcard.this, "username");
+            username = APPDataCache.User.getUsername();
             url = GlobalVariables.urlstr + "Hyk.getShopCard&id=" + shopid+"&username="+username;
         }
 

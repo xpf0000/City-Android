@@ -8,7 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import citycircle.com.R;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/1/6.
@@ -48,8 +49,8 @@ public class HomePageActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         Intent intent = new Intent();
-        int a = PreferencesUtils.getInt(HomePageActivity.this, "oaland");
-        if (a == 0) {
+        String oaid = APPDataCache.OAUser.getOauid();
+        if (oaid.length() == 0) {
             intent.setClass(HomePageActivity.this, LandActivity.class);
             HomePageActivity.this.startActivity(intent);
         } else {

@@ -23,8 +23,9 @@ import citycircle.com.Activity.Newphoto;
 import citycircle.com.Activity.ReplyPhoto;
 import citycircle.com.Adapter.MyFragmentPagerAdapter;
 import citycircle.com.R;
-import citycircle.com.Utils.PreferencesUtils;
 import info.hoang8f.android.segmented.SegmentedGroup;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/11/14.
@@ -126,7 +127,7 @@ public class CityCircleFragment extends Fragment implements View.OnClickListener
                 getActivity().startActivity(intent);
                 break;
             case R.id.newsphoto:
-                int a= PreferencesUtils.getInt(getActivity(), "land");
+                int a= APPDataCache.land;
                 if (a==0){
                     intent.setClass(getActivity(),Logn.class);
                     getActivity().startActivity(intent);

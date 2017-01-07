@@ -28,7 +28,8 @@ import citycircle.com.Property.PropertyAdapter.FeeAdapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
-import citycircle.com.Utils.PreferencesUtils;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/2/15.
@@ -52,9 +53,11 @@ public class FeeBack extends Activity implements View.OnClickListener {
         FeeBack.this.startService(intent);
         IntentFilter filter = new IntentFilter(CityServices.action);
         registerReceiver(broadcastReceiver, filter);
-        username = PreferencesUtils.getString(FeeBack.this, "username");
-        uid = PreferencesUtils.getString(FeeBack.this, "userid");
-        houseid = PreferencesUtils.getString(FeeBack.this, "houseids");
+
+        username = APPDataCache.User.getUsername();
+        uid = APPDataCache.User.getUid();
+        houseid = APPDataCache.User.getHouseid();
+
         url = GlobalVariables.urlstr + "wuye.getFeedList&uid=" + uid + "&username=" + username + "&page=" + page + "&houseid=" + houseid;
         intview();
         setComentlist();

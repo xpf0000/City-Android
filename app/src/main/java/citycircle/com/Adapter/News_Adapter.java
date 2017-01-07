@@ -37,12 +37,13 @@ import citycircle.com.R;
 import citycircle.com.Utils.DateUtils;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
-import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.Utils.Timechange;
 import citycircle.com.user.MyMinePage;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import util.XNetUtil;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/11/23.
@@ -218,7 +219,7 @@ public class News_Adapter extends BaseAdapter {
 //                intent.putExtra("id", abscure_list.get(position).get("id"));
 //                intent.setClass(context, Cityinfo.class);
 //                context.startActivity(intent);
-                int a = PreferencesUtils.getInt(context, "land");
+                int a = APPDataCache.land;
                 if (a == 0) {
                     Intent intent = new Intent();
                     intent.setClass(context, Logn.class);
@@ -258,7 +259,7 @@ public class News_Adapter extends BaseAdapter {
         getItemView.collect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int a = PreferencesUtils.getInt(context, "land");
+                int a = APPDataCache.land;
                 if (a == 0) {
                     Intent intent = new Intent();
                     intent.setClass(context, Logn.class);
@@ -285,14 +286,14 @@ public class News_Adapter extends BaseAdapter {
         getItemView.myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int positions, long id) {
-                int a = PreferencesUtils.getInt(context, "land");
+                int a = APPDataCache.land;
                 if (a == 0) {
                     Intent intent = new Intent();
                     intent.setClass(context, Logn.class);
                     context.startActivity(intent);
                 } else {
                     comarrays.clear();
-                    String nickname=PreferencesUtils.getString(context,"nickname");
+                    String nickname=APPDataCache.User.getNickname();
                     String comstr=abscure_list.get(position).get("commentList");
                     JSONArray jsonArray1=JSON.parseArray(comstr);
                     for (int i=0;i<jsonArray1.size();i++){

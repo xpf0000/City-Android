@@ -34,9 +34,10 @@ import citycircle.com.MyViews.MyClassPopwd;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.Loadmore;
-import citycircle.com.Utils.PreferencesUtils;
 import citycircle.com.card.CardGetedInfo;
 import okhttp3.Call;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2016/7/21.
@@ -63,7 +64,7 @@ public class Yerec extends Fragment implements View.OnClickListener, AdapterView
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.alrec, null);
-        a = PreferencesUtils.getInt(getActivity(), "land");
+        a = APPDataCache.land;
         Intent intent = new Intent(getActivity(), CityServices.class);
         getActivity().startService(intent);
         IntentFilter filter = new IntentFilter(CityServices.action);
@@ -75,7 +76,7 @@ public class Yerec extends Fragment implements View.OnClickListener, AdapterView
         } else {
             nostr.setVisibility(View.GONE);
             allclassurl = GlobalVariables.urlstr + "hyk.getCategory ";
-            username = PreferencesUtils.getString(getActivity(), "username");
+            username = APPDataCache.User.getUsername();
             url = GlobalVariables.urlstr + "hyk.getuserlist&category_id=" + category_id + "&typeid=" + typeid + "&page=" + page + "&username=" + username;
             setadapter();
             getjson(0);
@@ -281,7 +282,7 @@ public class Yerec extends Fragment implements View.OnClickListener, AdapterView
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            a = PreferencesUtils.getInt(getActivity(), "land");
+            a = APPDataCache.land;
             if (a == 0) {
                 listView.setVisibility(View.GONE);
                 classlay.setVisibility(View.GONE);
@@ -292,7 +293,7 @@ public class Yerec extends Fragment implements View.OnClickListener, AdapterView
                 nostr.setVisibility(View.GONE);
                 listView.setVisibility(View.VISIBLE);
                 classlay.setVisibility(View.VISIBLE);
-                username = PreferencesUtils.getString(getActivity(), "username");
+                username = APPDataCache.User.getUsername();
                 allclassurl = GlobalVariables.urlstr + "hyk.getCategory ";
                 url = GlobalVariables.urlstr + "hyk.getuserlist&category_id=" + category_id + "&typeid=" + typeid + "&page=" + page + "&username=" + username;
                 setadapter();
