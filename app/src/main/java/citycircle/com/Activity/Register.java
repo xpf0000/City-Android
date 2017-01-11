@@ -16,6 +16,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Timer;
@@ -27,6 +29,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.Emailtest;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
+import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.MyhttpRequest;
 import model.UserModel;
 
@@ -144,6 +147,10 @@ public class Register extends Activity implements View.OnClickListener {
                         intent.putExtra("getmeeage", "0");
                         Register.this.sendBroadcast(intent);
                         Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+
+                        EventBus.getDefault().post(
+                                new MyEventBus("LoginSuccess"));
+
                         finish();
                     } else {
                         Toast.makeText(Register.this, jsonob.getString("msg"), Toast.LENGTH_SHORT).show();
@@ -205,7 +212,7 @@ public class Register extends Activity implements View.OnClickListener {
                 Pattern p = Pattern.compile(regEx);
                 Matcher m = p.matcher(nick);
                 if( m.find()){
-                    Toast.makeText(this, "昵称不允许输入特殊符号！", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "昵称不允许输入特殊符号！", Toast.LENGTH_SHORT).show();
                     return;
                 }
 

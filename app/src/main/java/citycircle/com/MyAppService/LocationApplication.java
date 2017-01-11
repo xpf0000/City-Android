@@ -173,8 +173,8 @@ public class LocationApplication extends Application {
 
 
         context = getApplicationContext();
-        MemoryCache memoryCache= MemoryCacheUtils.createLruMemoryCache(50*1024*1024);
-        CacheLoaderConfiguration config = new CacheLoaderConfiguration(this, new HashCodeFileNameGenerator(), 1024 * 1024 * 64, 20000, memoryCache,60*24*30*365*20);
+        MemoryCache memoryCache= MemoryCacheUtils.createLruMemoryCache(1024*1024*256);
+        CacheLoaderConfiguration config = new CacheLoaderConfiguration(this, new HashCodeFileNameGenerator(), 1024 * 1024 * 1024*64, 200000, memoryCache,60*24*30*365*20);
         CacheLoaderManager.getInstance().init(config);
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();

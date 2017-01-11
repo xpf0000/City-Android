@@ -22,6 +22,9 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -47,6 +50,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -59,9 +63,12 @@ import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
+import model.NewsModel;
 import util.XAPPUtil;
+import util.XNetUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 /**
  * Created by admins on 2015/11/19.
@@ -93,7 +100,7 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
     private View xCustomView;
     private FrameLayout video_fullView;// 全屏时视频加载view
     private WebChromeClient.CustomViewCallback xCustomViewCallback;
-    @SuppressLint({"SetJavaScriptEnabled", "JavascriptInterface"})
+    @SuppressLint({"SetJavaScriptEnabled", "JavascriptInterface","NewApi"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -145,6 +152,30 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
         webtxt = getIntent().getStringExtra("title");
         description = getIntent().getStringExtra("description");
         path = getIntent().getStringExtra("url");
+
+
+        XNetUtil.Handle(APPService.newsGetArticleInfo(id), new XNetUtil.OnHttpResult<List<NewsModel>>() {
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onSuccess(List<NewsModel> models) {
+
+                if(models.size() > 0)
+                {
+                    NewsModel model = models.get(0);
+                    webtxt = model.getTitle();
+                    description = model.getDescription();
+                    path = model.getUrl();
+
+                }
+            }
+        });
+
+
+
        try {
            JSONArray jsonArray = JSON.parseArray(path);
            for (int i = 0; i < jsonArray.size(); i++) {
@@ -163,8 +194,122 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
         getcollext();
 //        submit.setText("看评论");
         getWEbciew(1);
+
+
+        myview.setWebViewClient(new WebViewClient(){
+
+
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+
+                String url = request.getUrl().toString().toLowerCase();
+
+                if(url.contains("http://101.201.169.38/city/news_info.php?id="))
+                {
+                    url = url.replace("http://101.201.169.38/city/news_info.php?id=","");
+                    url = url.replace("&type=1","");
+
+                    if(!url.equals(id))
+                    {
+                        Intent intent = new Intent();
+                        intent.putExtra("id", url);
+                        intent.putExtra("title", "");
+                        intent.putExtra("description", "");
+                        intent.putExtra("url", "");
+                        intent.setClass(NewsInfoActivity.this, NewsInfoActivity.class);
+                        NewsInfoActivity.this.startActivity(intent);
+                    }
+
+                    view.stopLoading();
+                    return false;
+                }
+
+                return false;
+
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String u) {
+
+                String url = u.toLowerCase();
+                if(url.contains("http://101.201.169.38/city/news_info.php?id="))
+                {
+                    url = url.replace("http://101.201.169.38/city/news_info.php?id=","");
+                    url = url.replace("&type=1","");
+
+                    if(!url.equals(id))
+                    {
+                        Intent intent = new Intent();
+                        intent.putExtra("id", url);
+                        intent.putExtra("title", "");
+                        intent.putExtra("description", "");
+                        intent.putExtra("url", "");
+                        intent.setClass(NewsInfoActivity.this, NewsInfoActivity.class);
+                        NewsInfoActivity.this.startActivity(intent);
+                    }
+
+                    view.stopLoading();
+                    return false;
+                }
+
+                return false;
+            }
+
+            @Override
+            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+                super.onReceivedHttpError(view, request, errorResponse);
+
+                boolean b = request.getUrl().toString().toLowerCase().equals(url.toLowerCase());
+
+                if(errorResponse.getStatusCode() > 400 && b)
+                {
+                    view.stopLoading();
+                    //用javascript隐藏系统定义的404页面信息
+                    String data = "";
+                    view.loadUrl("javascript:document.body.innerHTML=\"" + data + "\"");
+                }
+
+            }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+
+                boolean b = request.getUrl().toString().toLowerCase().equals(url.toLowerCase());
+
+                if(error.getErrorCode() > 400 && b)
+                {
+                    view.stopLoading();
+                    //用javascript隐藏系统定义的404页面信息
+                    String data = "";
+                    view.loadUrl("javascript:document.body.innerHTML=\"" + data + "\"");
+                }
+
+            }
+        });
+
         myview.setWebChromeClient(new WebChromeClient() {
             private View xprogressvideo;
+
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+
+                if(title == null){
+
+                    view.stopLoading();
+                    view.loadUrl("javascript:document.body.innerHTML=\""+""+"\"");
+                }
+
+                String t = title.toLowerCase();
+
+                if(t.contains("error") || t.contains("网页无法打开"))
+                {
+                    view.stopLoading();
+                    view.loadUrl("javascript:document.body.innerHTML=\""+""+"\"");
+                }
+            }
 
             public void onProgressChanged(WebView view, int progress) {
 
@@ -225,7 +370,7 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void run() {
                         String str1 = str;
-//                        Toast.makeText(NewsInfoActivity.this, "测试调用java" + str1, Toast.LENGTH_LONG).show();
+//                        Toast.makeText(NewsInfoActivity.this, "测试调用java" + str1, Toast.LENGTH_SHORT).show();
                         JSONObject jsonObject = JSON.parseObject(str);
                         int a = jsonObject.getIntValue("index");
                         JSONArray jsonArray = jsonObject.getJSONArray("list");

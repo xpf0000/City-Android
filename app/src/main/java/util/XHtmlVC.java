@@ -57,6 +57,8 @@ public class XHtmlVC extends BaseActivity {
         // 设置支持JavaScript等
         mWebSettings = webView.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
+        mWebSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+
 
         webView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {

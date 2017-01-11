@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.sdk.android.push.CommonCallback;
+import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.bigkoo.alertview.AlertView;
 import com.robin.lazy.cache.CacheLoaderManager;
 import com.umeng.analytics.MobclickAgent;
@@ -69,11 +71,20 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //XAPPUtil.SaveAPPCache("aaabbb","TTTTTTT !!!!");
+        if(APPDataCache.User.getUid().equals(""))
+        {
+            PushServiceFactory.getCloudPushService().removeAlias("",new CommonCallback() {
+                @Override
+                public void onSuccess(String s) {
+                    XNetUtil.APPPrintln("removeAlias success!!!!!!");
+                }
 
-
-        XNetUtil.APPPrintln(CacheLoaderManager.getInstance().loadString("aaabbb"));
-
+                @Override
+                public void onFailed(String s, String s1) {
+                    XNetUtil.APPPrintln("removeAlias fail!!!!!! "+s+" | "+s1);
+                }
+            });
+        }
 
 
 

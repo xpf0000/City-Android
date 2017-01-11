@@ -124,7 +124,7 @@ public class AuthBandPhoneVC extends BaseActivity {
     {
         if(Logn.otheruser == null)
         {
-            Toast.makeText(this, "用户信息已过期,请重新获取", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "用户信息已过期,请重新获取", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -148,7 +148,7 @@ public class AuthBandPhoneVC extends BaseActivity {
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(nickname);
         if( m.find()){
-            Toast.makeText(this, "昵称不允许输入特殊符号！", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "昵称不允许输入特殊符号！", Toast.LENGTH_SHORT).show();
             return;
         }
 

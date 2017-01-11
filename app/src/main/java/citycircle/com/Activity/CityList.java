@@ -90,7 +90,7 @@ public class CityList extends Activity implements OnGetPoiSearchResultListener, 
     public void onGetPoiResult(PoiResult result) {
         if (result == null
                 || result.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {
-            Toast.makeText(CityList.this, "未找到结果", Toast.LENGTH_LONG)
+            Toast.makeText(CityList.this, "未找到结果", Toast.LENGTH_SHORT)
                     .show();
             return;
         }

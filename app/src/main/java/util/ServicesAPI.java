@@ -150,6 +150,9 @@ public interface ServicesAPI {
     @GET("?service=News.getArticle&id=6892")  //怀府币规则
     Observable<HttpResult<List<NewsModel>>> newsGetArticle();
 
+    @GET("?service=News.getArticle")  //资讯详情
+    Observable<HttpResult<List<NewsModel>>> newsGetArticleInfo(@Query("id") String id);
+
 
     @GET("?service=Quan.getMyList")  //用户领取的商家优惠列表
     Observable<HttpResult<List<QuanModel>>> quanGetMyList(

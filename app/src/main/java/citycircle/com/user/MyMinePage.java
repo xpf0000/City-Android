@@ -112,10 +112,8 @@ public class MyMinePage extends BaseActivity {
             adapter.setUser(APPDataCache.User);
             adapter1.setUser(APPDataCache.User);
         }
-        else
-        {
-            btn.setVisibility(View.GONE);
-        }
+
+        btn.setVisibility(View.GONE);
 
         adapter.setOnItemClickLitener(new XInterface()
         {
@@ -166,13 +164,19 @@ public class MyMinePage extends BaseActivity {
                         mRecyclerView.removeItemDecoration(headersDecor1);
                         if(flag == 0)
                         {
+                            btn.setVisibility(View.GONE);
                             mRecyclerView.addItemDecoration(headersDecor);
                             mRecyclerView.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
-
                         }
                         else
                         {
+
+                            if(uid.equals(APPDataCache.User.getUid()))
+                            {
+                                btn.setVisibility(View.VISIBLE);
+                            }
+
                             mRecyclerView.addItemDecoration(headersDecor1);
                             mRecyclerView.setAdapter(adapter1);
                             adapter1.notifyDataSetChanged();

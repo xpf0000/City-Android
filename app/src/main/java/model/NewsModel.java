@@ -41,6 +41,16 @@ public class NewsModel implements Serializable {
     private String update_time;
     private String content;
     private String description;
+    private String url;
+
+    public String getUrl() {
+        url = url == null ? "" : url;
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public String getId() {
         return id;

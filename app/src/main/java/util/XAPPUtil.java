@@ -135,12 +135,12 @@ public class XAPPUtil {
 
         if(values instanceof String)
         {
-            return CacheLoaderManager.getInstance().saveString(key, (String) values,60*24*30*12*5);
+            return CacheLoaderManager.getInstance().saveString(key, (String) values,60*24*30*12*5*10);
         }
 
         if(values instanceof Serializable)
         {
-            return CacheLoaderManager.getInstance().saveSerializable(key,values,60*24*30*12*5);
+            return CacheLoaderManager.getInstance().saveSerializable(key,values,60*24*30*12*5*10);
         }
 
         XNetUtil.APPPrintln("key: "+key+" | values: "+values);

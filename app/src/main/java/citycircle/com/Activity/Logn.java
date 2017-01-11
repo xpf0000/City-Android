@@ -594,7 +594,7 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
             Pattern p = Pattern.compile(regEx);
             Matcher m = p.matcher(name);
             if( m.find()){
-                Toast.makeText(this, "昵称不允许输入特殊符号！", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "昵称不允许输入特殊符号！", Toast.LENGTH_SHORT).show();
                 return;
             }
 

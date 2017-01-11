@@ -99,7 +99,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 	 * @param msg
 	 */
 	public void doShowToastLong(String msg) {
-		Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
+		Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
 	}
 
 	/**
@@ -108,7 +108,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 	 * @param msg
 	 */
 	public void doShowToastLong(int msg) {
-		Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
+		Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override

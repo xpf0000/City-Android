@@ -58,7 +58,7 @@ public class XNetUtil {
                         if(debug)
                         {
                             e.printStackTrace();
-                            Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_SHORT).show();
                         }
                         else
                         {
@@ -93,7 +93,7 @@ public class XNetUtil {
                         if(debug)
                         {
                             e.printStackTrace();
-                            Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_SHORT).show();
                         }
                         else
                         {
@@ -130,7 +130,7 @@ public class XNetUtil {
                         if(debug)
                         {
                             e.printStackTrace();
-                            Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_SHORT).show();
                         }
                         else
                         {
@@ -167,7 +167,7 @@ public class XNetUtil {
                         if(debug)
                         {
                             e.printStackTrace();
-                            Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(LocationApplication.context, e.toString(), Toast.LENGTH_SHORT).show();
                         }
                         else
                         {

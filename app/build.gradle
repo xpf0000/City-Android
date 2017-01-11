@@ -9,8 +9,8 @@ android {
         applicationId "citycircle.com"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 11
-        versionName "3.6"
+        versionCode 12
+        versionName "3.7"
         multiDexEnabled true
     }
     buildTypes {
@@ -95,7 +95,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.bigkoo:svprogresshud:1.0.6'
-    compile 'com.robin.lazy.cache:CacheLibrary:1.0.5'
+    compile 'com.robin.lazy.cache:CacheLibrary:1.0.6'
     //compile project(':PullToRefresh')
     compile 'com.bigkoo:pickerview:2.1.1'
     compile 'com.kevin:pulltorefresh:1.0.8'
