@@ -25,6 +25,7 @@ import citycircle.com.Property.PropertyAdapter.InfoAdapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
+import util.XActivityindicator;
 
 /**
  * Created by admins on 2016/1/30.
@@ -166,7 +167,7 @@ public class SelectMessage extends Activity {
                     adapter.notifyDataSetChanged();
                     break;
                 case 2:
-                    Toast.makeText(SelectMessage.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                    XActivityindicator.showToast(getResources().getString(R.string.intent_error));
                     break;
                 case 3:
                     break;

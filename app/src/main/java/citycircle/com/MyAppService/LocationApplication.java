@@ -34,6 +34,8 @@ import com.robin.lazy.cache.disk.naming.HashCodeFileNameGenerator;
 import com.robin.lazy.cache.memory.MemoryCache;
 import com.robin.lazy.cache.util.MemoryCacheUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -49,6 +51,7 @@ import java.util.TimeZone;
 
 import citycircle.com.Activity.MainActivity;
 import citycircle.com.R;
+import citycircle.com.Utils.MyEventBus;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -265,7 +268,8 @@ public class LocationApplication extends Application {
                     }
                 }
 
-                XNotificationCenter.getInstance().postNotice("ShowAccountLogout",null);
+                EventBus.getDefault().post(
+                        new MyEventBus("ShowAccountLogout"));
 
             }
         });

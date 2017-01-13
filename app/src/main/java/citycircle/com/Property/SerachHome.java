@@ -28,6 +28,7 @@ import java.util.HashMap;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
+import util.XActivityindicator;
 import util.XNotificationCenter;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -128,7 +129,7 @@ public class SerachHome extends Fragment implements View.OnClickListener, OnItem
                     break;
                 case 2:
                     try {
-                        Toast.makeText(getActivity(), R.string.intent_error, Toast.LENGTH_SHORT).show();
+                        XActivityindicator.showToast(getResources().getString(R.string.intent_error));
                     } catch (Exception e) {
 
                     }

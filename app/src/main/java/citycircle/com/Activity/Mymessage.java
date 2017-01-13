@@ -24,6 +24,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.MyEventBus;
 import okhttp3.Call;
+import util.XActivityindicator;
 import util.XNetUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -91,7 +92,7 @@ public class Mymessage extends Activity implements View.OnClickListener {
         OkHttpUtils.get().url(url).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
-                Toast.makeText(Mymessage.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                XActivityindicator.showToast(getResources().getString(R.string.intent_error));
             }
 
             @Override
@@ -118,7 +119,7 @@ public class Mymessage extends Activity implements View.OnClickListener {
                         }
                         else
                         {
-                            APPDataCache.msgshow = true;
+                            APPDataCache.msgshow = false;
                             EventBus.getDefault().post(
                                     new MyEventBus("hidden"));
                         }

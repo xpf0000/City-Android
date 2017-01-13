@@ -9,7 +9,7 @@ public class BannerModel {
 
     /**
      * picurl : http://7xotdz.com2.z0.glb.qiniucdn.com/2016-07-26_5796d6bda81bf.jpg
-     * url : http://101.201.169.38/city/news_info.php?id=5717&type=1
+     * url : http://wap.huaifuwang.com/city/news_info.php?id=5717&type=1
      * title : 推荐
      */
 

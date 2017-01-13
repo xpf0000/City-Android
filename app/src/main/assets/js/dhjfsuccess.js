@@ -6,9 +6,9 @@ var time = "";
 var jifen = "";
 var sname = "";
 
-requirejs(['main'], function (main) {  
-	
-		require(['avalon','net'], function() {
+//requirejs(['main'], function (main) {
+//
+//		require(['avalon','net'], function() {
 	     		
 	     		hfb = $.getUrlParam('hfb');
 	     		time = $.getUrlParam('time');
@@ -33,10 +33,10 @@ requirejs(['main'], function (main) {
 		  		
 		  		
   				
-	});
-	
-   
-});
+//	});
+//
+//
+//});
 
 
 

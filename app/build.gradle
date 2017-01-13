@@ -9,8 +9,8 @@ android {
         applicationId "citycircle.com"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 12
-        versionName "3.7"
+        versionCode 13
+        versionName "3.8"
         multiDexEnabled true
     }
     buildTypes {

@@ -228,7 +228,10 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
 
                         finish();
                     } else {
-                        handler.sendEmptyMessage(3);
+                        String msgStr = jsonObject1.getString("msg");
+                        msgStr = msgStr == null ? "用户名或密码错误" : msgStr;
+                        dialog.dismiss();
+                        Toast.makeText(Logn.this, msgStr, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case 2:

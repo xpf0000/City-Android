@@ -3,9 +3,9 @@ var vm;
 var type = "";
 var openid = "";
 
-requirejs(['main'], function (main) {  
-	
-		require(['avalon','net'], function() {	
+//requirejs(['main'], function (main) {
+//
+//		require(['avalon','net'], function() {
 	     		 
 	     		type = $.getUrlParam('type');
 	     		openid = $.getUrlParam('openid');
@@ -34,10 +34,10 @@ requirejs(['main'], function (main) {
 		  		}
 		  					  		
   				
-	});
-	
-   
-});
+//	});
+//
+//
+//});
 
 function doLogin()
 {

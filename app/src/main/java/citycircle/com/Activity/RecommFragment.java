@@ -34,6 +34,7 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.Loadmore;
 import okhttp3.Call;
 import util.XAPPUtil;
+import util.XActivityindicator;
 import util.XNetUtil;
 
 /**
@@ -156,7 +157,7 @@ public class RecommFragment extends Fragment {
             @Override
             public void onError(Call call, Exception e) {
                 swipeRefreshLayout.setRefreshing(false);
-                Toast.makeText(getActivity(), R.string.intent_error, Toast.LENGTH_SHORT).show();
+                XActivityindicator.showToast(getActivity().getResources().getString(R.string.intent_error));
             }
 
             @Override

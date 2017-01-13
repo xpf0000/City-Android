@@ -34,6 +34,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.DateUtils;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
+import util.XActivityindicator;
 
 /**
  * Created by admins on 2016/2/17.
@@ -165,7 +166,7 @@ public class ComentInfo extends Activity {
 //                    comentlist.setSelection(array.size());
                     break;
                 case 2:
-                    Toast.makeText(ComentInfo.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                    XActivityindicator.showToast(getResources().getString(R.string.intent_error));
                     break;
                 case 3:
                     JSONObject jsonObject=JSON.parseObject(feurlstr);

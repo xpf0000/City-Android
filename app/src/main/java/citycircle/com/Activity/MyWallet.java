@@ -21,6 +21,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.Loadmore;
 import okhttp3.Call;
+import util.XActivityindicator;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
@@ -83,7 +84,7 @@ public class MyWallet extends Activity {
             @Override
             public void onError(Call call, Exception e) {
                 swipeRefreshLayout.setRefreshing(false);
-                Toast.makeText(MyWallet.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                XActivityindicator.showToast(getResources().getString(R.string.intent_error));
             }
 
             @Override

@@ -1,8 +1,8 @@
 var id = "";
 
-requirejs(['main'], function (main) {  
-	
-		require(['avalon','net'], function() {
+//requirejs(['main'], function (main) {
+//
+//		require(['avalon','net'], function() {
 	     			 
 	     		id = $.getUrlParam('id');
 	     			 
@@ -42,10 +42,10 @@ requirejs(['main'], function (main) {
 		  		
 		  		
   				
-	});
-	
-   
-});
+//	});
+//
+//
+//});
 
 
 

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import citycircle.com.R;
 import citycircle.com.Utils.HttpRequest;
+import util.XActivityindicator;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
@@ -33,7 +34,7 @@ public class Info_info extends Activity {
         uid = APPDataCache.User.getUid();
 
 //        url = GlobalVariables.urlstr + "Wuye.getNewsContent&uid=" + uid + "&username=" + username + "&id=" + id;
-        url="http://101.201.169.38/city/wuyeNotice.html?uid="+uid+"&username="+username+"&id="+id;
+        url="http://wap.huaifuwang.com/city/wuyeNotice.html?uid="+uid+"&username="+username+"&id="+id;
         intview();
 //        getcntent();
     }
@@ -93,7 +94,7 @@ public class Info_info extends Activity {
 //                    }
                     break;
                 case 2:
-                    Toast.makeText(Info_info.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                    XActivityindicator.showToast(getResources().getString(R.string.intent_error));
                     break;
                 case 3:
                     Toast.makeText(Info_info.this, "公告已被删除或不存在！", Toast.LENGTH_SHORT).show();

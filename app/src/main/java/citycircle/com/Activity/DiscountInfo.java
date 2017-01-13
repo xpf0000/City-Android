@@ -154,7 +154,7 @@ public class DiscountInfo extends Activity implements View.OnClickListener {
                                 + content + "\r\n</body>" + "</html>";
                         webview.loadDataWithBaseURL(null,info , "text/html", "utf-8", null);
                     }else {
-                        webview.loadUrl("http://101.201.169.38/city/dis_info_info.php?id=" + id);
+                        webview.loadUrl("http://wap.huaifuwang.com/city/dis_info_info.php?id=" + id);
                     }
                     break;
                 case 2:

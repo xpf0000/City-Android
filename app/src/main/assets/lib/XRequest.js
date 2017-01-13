@@ -2,7 +2,7 @@
 function XHttpGet(url,callBack)
 {
 	$.support.cors = true;
-	
+
 				$.ajax
 				({
             
@@ -15,7 +15,7 @@ function XHttpGet(url,callBack)
 					{
 						console.log(url);
 						console.log(data);
-	          	  		callBack(data);	                
+	          	  		callBack(data);
             		}, 
 					error: function (err) 
 					{

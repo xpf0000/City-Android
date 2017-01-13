@@ -128,7 +128,7 @@ public class HfbCenter extends BaseActivity {
 
     public void doQD(final View v) {
 
-        if(APPDataCache.User.getOrqd() == 1)
+        if(APPDataCache.User.getOrqd() == 1 && XAPPUtil.isNetWorkAvailable(this))
         {
             Bundle bundle = new Bundle();
             bundle.putString("url","file:///android_asset/index.html?uid="+uid+"&uname="+uname);
@@ -221,11 +221,15 @@ public class HfbCenter extends BaseActivity {
 
     public void doDH(final View v,final GoodsModel model) {
 
-        String id = model.getId();
-        Bundle bundle = new Bundle();
-        bundle.putString("url","file:///android_asset/duihuaninfo.html?id="+id+"&uid="+uid+"&uname="+uname);
-        bundle.putString("title","兑换详情");
-        pushVC(XHtmlVC.class,bundle);
+        if(XAPPUtil.isNetWorkAvailable(this))
+        {
+            String id = model.getId();
+            Bundle bundle = new Bundle();
+            bundle.putString("url","file:///android_asset/duihuaninfo.html?id="+id+"&uid="+uid+"&uname="+uname);
+            bundle.putString("title","兑换详情");
+            pushVC(XHtmlVC.class,bundle);
+        }
+
 
     }
 

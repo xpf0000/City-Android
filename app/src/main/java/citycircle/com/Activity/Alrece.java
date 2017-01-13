@@ -35,6 +35,7 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.Loadmore;
 import citycircle.com.card.CardGetedInfo;
 import okhttp3.Call;
+import util.XActivityindicator;
 import util.XNetUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -134,7 +135,7 @@ public class Alrece extends Fragment implements View.OnClickListener, AdapterVie
             @Override
             public void onError(Call call, Exception e) {
                 Refresh.setRefreshing(false);
-                Toast.makeText(getActivity(), R.string.intent_error, Toast.LENGTH_SHORT).show();
+                XActivityindicator.showToast(getActivity().getResources().getString(R.string.intent_error));
             }
 
             @Override

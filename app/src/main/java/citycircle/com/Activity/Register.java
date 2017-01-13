@@ -32,6 +32,7 @@ import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.MyhttpRequest;
 import model.UserModel;
+import util.XHtmlVC;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
@@ -222,7 +223,7 @@ public class Register extends Activity implements View.OnClickListener {
                 } else if (password.getText().toString().trim().length() == 0) {
                     Toast.makeText(Register.this, "请输入密码！", Toast.LENGTH_SHORT).show();
                 } else if (!password.getText().toString().trim().equals(surepassword.getText().toString().trim())) {
-                    Toast.makeText(Register.this, "密码与缺人密码不一致！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Register.this, "密码与确认密码不一致！", Toast.LENGTH_SHORT).show();
                 } else {
                     String nickname = name.getText().toString();
                     String passwords = password.getText().toString();

@@ -5,9 +5,9 @@ var type = "";
 var nick = "";
 var openid = "";
 
-requirejs(['main'], function (main) {  
-	
-		require(['avalon','net'], function() {	
+//requirejs(['main'], function (main) {
+//
+//		require(['avalon','net'], function() {
 	     		 
 	     		header = $.getUrlParam('header');
 	     		type = $.getUrlParam('type');
@@ -29,10 +29,10 @@ requirejs(['main'], function (main) {
 		  		vm.nick = nick;
 		  					  		
   				
-	});
-	
-   
-});
+//	});
+//
+//
+//});
 
 
 function show(header,type,nick)

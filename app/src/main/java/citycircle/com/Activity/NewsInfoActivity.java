@@ -134,20 +134,19 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
         collects.setOnClickListener(this);
         myview.setVerticalScrollBarEnabled(false); //垂直不显示
         WebSettings ws = myview.getSettings();
-        ws.setBuiltInZoomControls(true);// 隐藏缩放按钮
-        // ws.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);// 排版适应屏幕
 
+        ws.setJavaScriptEnabled(true);
+        ws.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        ws.setDomStorageEnabled(false);
+        ws.setDatabaseEnabled(false);
+        ws.setGeolocationEnabled(false);
+        ws.setAppCacheEnabled(false);
+
+        ws.setBuiltInZoomControls(true);// 隐藏缩放按钮
         ws.setUseWideViewPort(true);// 可任意比例缩放
         ws.setLoadWithOverviewMode(true);// setUseWideViewPort方法设置webview推荐使用的窗口。setLoadWithOverviewMode方法是设置webview加载的页面的模式。
 
-        ws.setSavePassword(true);
-        ws.setSaveFormData(true);// 保存表单数据
-        ws.setJavaScriptEnabled(true);
-        ws.setGeolocationEnabled(true);// 启用地理定位
-        ws.setGeolocationDatabasePath("/data/data/org.itri.html5webview/databases/");// 设置定位的数据库路径
-        ws.setDomStorageEnabled(true);
-        ws.setSupportMultipleWindows(true);// 新加
-        myview.setWebViewClient(new HelloWebViewClient());
+
         id = getIntent().getStringExtra("id");
         webtxt = getIntent().getStringExtra("title");
         description = getIntent().getStringExtra("description");
@@ -186,7 +185,7 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
 
        }
 //        url = GlobalVariables.urlstr + "News.getArticle&id=71";
-        url = "http://101.201.169.38/city/news_info.php?id=" + id + "&type=1";
+        url = "http://wap.huaifuwang.com/city/news_info.php?id=" + id + "&type=1";
 //        url="http://www.bilibili.com/video/av6150055/";
 //        url="http://123.57.28.170/zxd/city/android.html";
         addurl = GlobalVariables.urlstr + "News.getArticle&id=" + id;
@@ -197,17 +196,14 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
 
 
         myview.setWebViewClient(new WebViewClient(){
-
-
-
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 
                 String url = request.getUrl().toString().toLowerCase();
 
-                if(url.contains("http://101.201.169.38/city/news_info.php?id="))
+                if(url.contains("http://wap.huaifuwang.com/city/news_info.php?id="))
                 {
-                    url = url.replace("http://101.201.169.38/city/news_info.php?id=","");
+                    url = url.replace("http://wap.huaifuwang.com/city/news_info.php?id=","");
                     url = url.replace("&type=1","");
 
                     if(!url.equals(id))
@@ -233,9 +229,9 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
             public boolean shouldOverrideUrlLoading(WebView view, String u) {
 
                 String url = u.toLowerCase();
-                if(url.contains("http://101.201.169.38/city/news_info.php?id="))
+                if(url.contains("http://wap.huaifuwang.com/city/news_info.php?id="))
                 {
-                    url = url.replace("http://101.201.169.38/city/news_info.php?id=","");
+                    url = url.replace("http://wap.huaifuwang.com/city/news_info.php?id=","");
                     url = url.replace("&type=1","");
 
                     if(!url.equals(id))
@@ -296,6 +292,10 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
 
+                XNetUtil.APPPrintln("----------------");
+                XNetUtil.APPPrintln(view);
+                XNetUtil.APPPrintln("----------------\r\n");
+
                 if(title == null){
 
                     view.stopLoading();
@@ -332,13 +332,16 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
                 xCustomView = view;
                 xCustomViewCallback = callback;
                 video_fullView.setVisibility(View.VISIBLE);
+
             }
 
             // 视频播放退出全屏会被调用的
             @Override
             public void onHideCustomView() {
                 if (xCustomView == null)// 不是全屏播放状态
+                {
                     return;
+                }
 
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 xCustomView.setVisibility(View.GONE);
@@ -362,6 +365,8 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
 //            }
 
         });
+
+
         myview.addJavascriptInterface(new Object() {
             @JavascriptInterface
             public void runAndroidMethod(final String str) {
@@ -601,7 +606,14 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        myview.loadUrl("https://www.baidu.com/");
+        myview.stopLoading();
+        myview.clearCache(true);
+        myview.clearHistory();
+        myview.setWebChromeClient(null);
+        myview.setWebViewClient(null);
+        myview.removeJavascriptInterface("android");
+        myview = null;
+        //myview.loadUrl("https://www.baidu.com/");
     }
 
     public void setAdoutnews() {
@@ -665,27 +677,6 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
         });
     }
 
-    private class HelloWebViewClient extends WebViewClient {
-
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (url.contains("news_info.php?")) {
-
-                int a = url.indexOf("=") + 1;
-                String id = url.substring(a, url.length());
-                Intent intent = new Intent();
-                intent.putExtra("id", id);
-                intent.putExtra("title", "");
-                intent.putExtra("description", "");
-                intent.putExtra("url", "");
-                intent.setClass(NewsInfoActivity.this, NewsInfoActivity.class);
-                NewsInfoActivity.this.startActivity(intent);
-            }
-
-            return true;
-        }
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -696,7 +687,7 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
                 View.OnClickListener listener = new View.OnClickListener() {
                     public void onClick(View v) {
                         ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                        clip.setText("http://101.201.169.38/city/news_info.php?id=" + id);
+                        clip.setText("http://wap.huaifuwang.com/city/news_info.php?id=" + id);
                         Toast.makeText(NewsInfoActivity.this, "已经复制到粘贴板", Toast.LENGTH_SHORT).show();
                     }
                 };
@@ -768,23 +759,22 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onPause() {
         super.onPause();
-        myview.onPause();
-        myview.pauseTimers();
+//        myview.onPause();
+//        myview.pauseTimers();
     }
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onResume() {
         super.onResume();
-        super.onResume();
-        myview.onResume();
-        myview.resumeTimers();
+//        myview.onResume();
+//        myview.resumeTimers();
 
         /**
          * 设置为横屏
          */
-        if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+//        if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+//            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        }
     }
     private void getcollext() {
 

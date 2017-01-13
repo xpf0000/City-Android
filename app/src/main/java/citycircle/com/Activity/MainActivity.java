@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
 
 import citycircle.com.Fragment.CityCircleFragment;
 import citycircle.com.Fragment.FoundFragment;
@@ -106,13 +107,6 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
             GlobalVariables.types = false;
         }
 
-        XNotificationCenter.getInstance().addObserver("ShowAccountLogout", new XNotificationCenter.OnNoticeListener() {
-            @Override
-            public void OnNotice(Object obj) {
-                showAccountLogout();
-            }
-        });
-
         checkVersion();
 
     }
@@ -139,6 +133,7 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
         APPDataCache.User.reSet();
         APPDataCache.land = 0;
 
+        ShareSDK.initSDK(this);
         Platform QQ = ShareSDK.getPlatform(QZone.NAME);
         QQ.SSOSetting(true);
         if(QQ.isAuthValid() ){
@@ -353,6 +348,18 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
         } else if(myEventBus.getMsg().equals("hidden")) {
             badge.setVisibility(View.GONE);
         }
+        else if(myEventBus.getMsg().equals("ShowAccountLogout")) {
+            try
+            {
+                showAccountLogout();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+
 
     }
 

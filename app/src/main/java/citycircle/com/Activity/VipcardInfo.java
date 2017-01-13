@@ -36,6 +36,7 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
 import citycircle.com.card.CardGetedInfo;
 import okhttp3.Call;
+import util.XActivityindicator;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
@@ -114,7 +115,7 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
         OkHttpUtils.get().url(url).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
-                Toast.makeText(VipcardInfo.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                XActivityindicator.showToast(getResources().getString(R.string.intent_error));
             }
 
             @Override
@@ -200,7 +201,7 @@ public class VipcardInfo extends Activity implements View.OnClickListener {
         OkHttpUtils.get().url(addurl).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
-                Toast.makeText(VipcardInfo.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                XActivityindicator.showToast(getResources().getString(R.string.intent_error));
             }
 
             @Override

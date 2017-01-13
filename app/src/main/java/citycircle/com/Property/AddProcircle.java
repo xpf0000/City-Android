@@ -53,6 +53,7 @@ import util.FileUtils;
 import util.ImageItem;
 import util.PublicWay;
 import util.Res;
+import util.XActivityindicator;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
@@ -228,7 +229,7 @@ public class AddProcircle extends Activity implements View.OnClickListener{
 
                     break;
                 case 2:
-                    Toast.makeText(AddProcircle.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                    XActivityindicator.showToast(getResources().getString(R.string.intent_error));
                     break;
                 case 3:
                     break;

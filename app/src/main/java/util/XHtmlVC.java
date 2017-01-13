@@ -1,12 +1,18 @@
 package util;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -21,8 +27,12 @@ import com.handmark.pulltorefresh.library.extras.PullToRefreshWebView2;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
+import citycircle.com.Activity.NewsInfoActivity;
 import citycircle.com.Activity.UpPasswords;
 import citycircle.com.R;
 import citycircle.com.Utils.MyEventBus;
@@ -33,6 +43,7 @@ import model.UserModel;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 import static citycircle.com.MyAppService.LocationApplication.APPService;
+import static citycircle.com.MyAppService.LocationApplication.context;
 
 /**
  * Created by X on 2016/11/27.
@@ -40,27 +51,99 @@ import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 public class XHtmlVC extends BaseActivity {
 
-    private PullToRefreshWebView2 web;
-    private WebSettings mWebSettings;
+    private WebView web;
     Handler handlers = new Handler();
 
+    @SuppressLint({"SetJavaScriptEnabled", "JavascriptInterface","NewApi"})
     @Override
     protected void setupUi() {
         setContentView(R.layout.xhtmlvc);
 
         EventBus.getDefault().register(this);
 
-        web = (PullToRefreshWebView2)findViewById(R.id.web);
-        web.setMode(PullToRefreshBase.Mode.DISABLED);
-        WebView webView = web.getRefreshableView();
+        web = (WebView)findViewById(R.id.web);
+        //web.setMode(PullToRefreshBase.Mode.DISABLED);
+        //WebView webView = web;
 
         // 设置支持JavaScript等
-        mWebSettings = webView.getSettings();
+        WebSettings mWebSettings = web.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
         mWebSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        mWebSettings.setDomStorageEnabled(false);
+        mWebSettings.setDatabaseEnabled(false);
+        mWebSettings.setGeolocationEnabled(false);
+        mWebSettings.setAppCacheEnabled(false);
+
+        web.setWebViewClient(new WebViewClient(){
 
 
-        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+
+
+                XNetUtil.APPPrintln("shouldInterceptRequest000 url: "+request.getUrl());
+
+                return super.shouldInterceptRequest(view, request);
+
+            }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+
+                XNetUtil.APPPrintln(view);
+                XNetUtil.APPPrintln("shouldInterceptRequest111 url: "+url);
+                return super.shouldInterceptRequest(view, url);
+
+
+            }
+
+            @Override
+            public void onLoadResource(WebView view, String url) {
+                super.onLoadResource(view, url);
+
+                XNetUtil.APPPrintln("onLoadResource url: "+url);
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+
+                String url = request.getUrl().toString().toLowerCase();
+
+                XNetUtil.APPPrintln("url000: "+url);
+
+                return false;
+
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String u) {
+
+                String url = u.toLowerCase();
+                XNetUtil.APPPrintln("url111: "+url);
+
+                return false;
+            }
+
+            @Override
+            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+                super.onReceivedHttpError(view, request, errorResponse);
+
+                XNetUtil.APPPrintln("request000: "+request.getUrl());
+                XNetUtil.APPPrintln("errorResponse000: "+errorResponse.toString());
+
+            }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+
+                XNetUtil.APPPrintln("request111: "+request.getUrl());
+                XNetUtil.APPPrintln("errorResponse111: "+error.toString());
+
+            }
+        });
+
+        web.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
 
                 if (progress == 100) {
@@ -69,7 +152,7 @@ public class XHtmlVC extends BaseActivity {
             }
 
         });
-        webView.addJavascriptInterface(new Object() {
+        web.addJavascriptInterface(new Object() {
             @JavascriptInterface
             public void runAndroidMethod(final String str) {
                 handlers.post(new Runnable() {
@@ -94,14 +177,79 @@ public class XHtmlVC extends BaseActivity {
 
         if(url.equals("怀府币规则"))
         {
-            getHFBGuize();
+            getHFBGuize("6892");
+        }
+        else if(url.equals("服务条款"))
+        {
+            getHFBGuize("6243");
         }
         else
         {
-            webView.loadUrl(url);
+            web.loadUrl(url);
         }
 
     }
+
+    private static final String APP_CACAHE_DIRNAME ="/webcache";
+    /**
+     * 清除WebView缓存  在onDestroy调用这个方法就可以了
+     */
+    public void clearWebViewCache(){
+
+        web.stopLoading();
+        web.clearCache(true);
+        web.clearHistory();
+        web.setWebChromeClient(null);
+        web.setWebViewClient(null);
+        web.removeJavascriptInterface("android");
+        web = null;
+
+
+        //清理Webview缓存数据库
+        try{
+            deleteDatabase("webview.db");
+            deleteDatabase("webviewCache.db");
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        //WebView 缓存文件
+        File appCacheDir =new File(getFilesDir().getAbsolutePath()+APP_CACAHE_DIRNAME);
+
+        File webviewCacheDir =new File(getCacheDir().getAbsolutePath()+"/webviewCache");
+
+        //删除webview 缓存目录
+        if(webviewCacheDir.exists()){
+            deleteFile(webviewCacheDir);
+        }
+        //删除webview 缓存 缓存目录
+        if(appCacheDir.exists()){
+            deleteFile(appCacheDir);
+        }
+    }
+
+    /**
+     * 递归删除 文件/文件夹
+     *
+     * @param file
+     */
+    public void deleteFile(File file) {
+
+        if(file.exists()) {
+            if(file.isFile()) {
+                file.delete();
+            }else if(file.isDirectory()) {
+                File files[] = file.listFiles();
+                for(int i = 0; i < files.length; i++) {
+                    deleteFile(files[i]);
+                }
+            }
+            file.delete();
+        }else{
+
+        }
+    }
+
 
     private void handleMsg(JSONObject obj)
     {
@@ -118,13 +266,16 @@ public class XHtmlVC extends BaseActivity {
 
         if(type.equals("1") && msg.equals("兑换商品"))
         {
-            String uid = APPDataCache.User.getUid();
-            String uname = APPDataCache.User.getUsername();
-            String id = obj.getString("id");
-            Bundle bundle = new Bundle();
-            bundle.putString("url","file:///android_asset/duihuaninfo.html?id="+id+"&uid="+uid+"&uname="+uname);
-            bundle.putString("title","兑换详情");
-            pushVC(XHtmlVC.class,bundle);
+            if(XAPPUtil.isNetWorkAvailable(this))
+            {
+                String uid = APPDataCache.User.getUid();
+                String uname = APPDataCache.User.getUsername();
+                String id = obj.getString("id");
+                Bundle bundle = new Bundle();
+                bundle.putString("url","file:///android_asset/duihuaninfo.html?id="+id+"&uid="+uid+"&uname="+uname);
+                bundle.putString("title","兑换详情");
+                pushVC(XHtmlVC.class,bundle);
+            }
 
         }
 
@@ -355,9 +506,9 @@ public class XHtmlVC extends BaseActivity {
         });
     }
 
-    private void getHFBGuize()
+    private void getHFBGuize(String id)
     {
-        XNetUtil.Handle(APPService.newsGetArticle(), new XNetUtil.OnHttpResult<List<NewsModel>>() {
+        XNetUtil.Handle(APPService.newsGetArticleInfo(id), new XNetUtil.OnHttpResult<List<NewsModel>>() {
             @Override
             public void onError(Throwable e) {
 
@@ -380,7 +531,7 @@ public class XHtmlVC extends BaseActivity {
                             + "img {width:100%}\r\n" + "</style>\r\n\t"
                             + "</head>\r\n" + "<body style=\"width:[width]\">\r\n"
                             + str + "\r\n</body>" + "</html>";
-                    web.getRefreshableView().loadDataWithBaseURL(null,infos , "text/html", "utf-8", null);
+                    web.loadDataWithBaseURL(null,infos , "text/html", "utf-8", null);
 
                 }
             }
@@ -401,6 +552,8 @@ public class XHtmlVC extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        clearWebViewCache();
+        XNetUtil.APPPrintln("xhtml vc destrory !!!!!!");
     }
 
     @Subscribe

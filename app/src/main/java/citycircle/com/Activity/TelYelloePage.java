@@ -30,6 +30,7 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.Loadmore;
 import okhttp3.Call;
+import util.XActivityindicator;
 
 /**
  * Created by admins on 2015/11/19.
@@ -139,7 +140,7 @@ private void gettelstr(final int type){
     OkHttpUtils.get().url(hoturl).build().execute(new StringCallback() {
         @Override
         public void onError(Call call, Exception e) {
-            Toast.makeText(TelYelloePage.this,R.string.intent_error,Toast.LENGTH_SHORT).show();
+            XActivityindicator.showToast(getResources().getString(R.string.intent_error));
         }
 
         @Override

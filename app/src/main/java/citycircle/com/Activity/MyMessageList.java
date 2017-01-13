@@ -27,6 +27,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import okhttp3.Call;
 import util.XAPPUtil;
+import util.XActivityindicator;
 import util.XNetUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -186,7 +187,7 @@ public class MyMessageList extends Activity {
         OkHttpUtils.get().url(url).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
-                Toast.makeText(MyMessageList.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                XActivityindicator.showToast(getResources().getString(R.string.intent_error));
             }
 
             @Override

@@ -434,18 +434,26 @@ public class Newphoto extends Fragment {
     }
 
     public void setMesarray(String str) {
-        JSONObject jsonObject = JSON.parseObject(str);
-        JSONObject jsonObject1 = jsonObject.getJSONObject("data");
-        int a = jsonObject1.getIntValue("code");
-        if (a == 0) {
-            JSONObject jsonObject2 = jsonObject1.getJSONObject("info");
-            hashMap = new HashMap<>();
-            hashMap.put("count", jsonObject2.getString("count") == null ? "" : jsonObject2.getString("count"));
-            hashMap.put("top", jsonObject2.getString("top") == null ? "" : jsonObject2.getString("top"));
-            mesarray.add(hashMap);
+        try {
 
-        } else {
+            JSONObject jsonObject = JSON.parseObject(str);
+            JSONObject jsonObject1 = jsonObject.getJSONObject("data");
+            int a = jsonObject1.getIntValue("code");
+            if (a == 0) {
+                JSONObject jsonObject2 = jsonObject1.getJSONObject("info");
+                hashMap = new HashMap<>();
+                hashMap.put("count", jsonObject2.getString("count") == null ? "" : jsonObject2.getString("count"));
+                hashMap.put("top", jsonObject2.getString("top") == null ? "" : jsonObject2.getString("top"));
+                mesarray.add(hashMap);
+
+            } else {
+            }
         }
+        catch (Exception e)
+        {
+
+        }
+
     }
 
     public void setAddarray(String str) {

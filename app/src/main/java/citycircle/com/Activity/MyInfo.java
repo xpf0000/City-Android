@@ -32,9 +32,13 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bigkoo.pickerview.TimePickerView;
+import com.bigkoo.svprogresshud.SVProgressHUD;
+import com.bigkoo.svprogresshud.listener.OnDismissListener;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +46,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import citycircle.com.MyViews.MyDialog;
 import citycircle.com.R;
@@ -49,11 +55,19 @@ import citycircle.com.Utils.GetPhotos;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
+import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.UpUserHead;
 import citycircle.com.Utils.mDateUtil;
+import model.NewsModel;
+import okhttp3.RequestBody;
 import util.FileUtils;
+import util.HttpResult;
+import util.XAPPUtil;
+import util.XActivityindicator;
+import util.XNetUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 /**
  * Created by admins on 2015/11/21.
@@ -160,44 +174,8 @@ public class MyInfo extends Activity implements View.OnClickListener {
             public void onTimeSelect(Date date) {
                 birthday.setText(mDateUtil.getTime(date));
                 birth_day=birthday.getText().toString();
-                try {
-                    upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
-                            "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                getuserinfo(1);
             }
         });
-    }
-
-    public void getuserinfo(final int type) {
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                if (type == 0) {
-                    upUserHead = new UpUserHead();
-                    String username = APPDataCache.User.getUsername();
-                    urlstr = upUserHead.uploadFile(url, tempFile, username);
-                    if (urlstr.equals("失败")) {
-                        handler.sendEmptyMessage(2);
-                    } else {
-                        handler.sendEmptyMessage(3);
-                    }
-                } else {
-                    HttpRequest httpRequest = new HttpRequest();
-                    upinfostr = httpRequest.doGet(upinfourl);
-                    if (upinfostr.equals("网络超时")) {
-                        handler.sendEmptyMessage(4);
-                    } else {
-                        handler.sendEmptyMessage(5);
-                    }
-                }
-
-            }
-        }.start();
-
     }
 
     Handler handler = new Handler() {
@@ -229,76 +207,20 @@ public class MyInfo extends Activity implements View.OnClickListener {
 
                     if (sexs.equals("1")) {
                         sex.setText("男");
-                    } else {
+                    } else if(sexs.equals("0")) {
                         sex.setText("女");
                     }
+                    else
+                    {
+                        sex.setText("未选择");
+                    }
+
+
                     options = ImageUtils.setCirclelmageOptions();
                     ImageLoader.displayImage(headimage, uesrhead, options,
                             animateFirstListener);
                     break;
-                case 2:
-                    dialog.dismiss();
-                    Toast.makeText(MyInfo.this, "上传头像失败！", Toast.LENGTH_SHORT).show();
-                    break;
-                case 3:
-                    JSONObject jsonObject2 = JSON.parseObject(urlstr);
-                    JSONObject jsonObject3 = jsonObject2.getJSONObject("data");
-                    if (jsonObject3.getIntValue("code") == 0) {
-                        String hedimg = jsonObject3.getString("msg");
-                        APPDataCache.User.setHeadimage(hedimg);
-                        APPDataCache.User.save();
-                        handler.sendEmptyMessage(1);
-                        Toast.makeText(MyInfo.this, "上传头像成功！", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent();
-                        intent.setAction("com.servicedemo4");
-                        intent.putExtra("getmeeage", "0");
-                        MyInfo.this.sendBroadcast(intent);
-                        dialog.dismiss();
-                    } else {
-                        Toast.makeText(MyInfo.this, "上传头像失败！", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
-                    break;
-                case 4:
-                    Toast.makeText(MyInfo.this, "网络似乎有问题了！", Toast.LENGTH_SHORT).show();
-                    break;
-                case 5:
-                    JSONObject jsonObject = JSON.parseObject(upinfostr);
-                    JSONObject jsonObject1 = jsonObject.getJSONObject("data");
-                    if (jsonObject1.getIntValue("code") == 0) {
-                        Toast.makeText(MyInfo.this, "修改成功！", Toast.LENGTH_SHORT).show();
 
-                        APPDataCache.User.setNickname(nickname);
-                        APPDataCache.User.setSex(sexs);
-                        APPDataCache.User.setTruename(true_name);
-                        APPDataCache.User.setBirthday(birth_day);
-                        APPDataCache.User.setAddress(addr_ess);
-                        APPDataCache.User.setAihao(aihaostr);
-                        APPDataCache.User.setQianming(qianmingstr);
-
-                        APPDataCache.User.save();
-
-                        Intent intent = new Intent();
-                        intent.setAction("com.servicedemo4");
-                        intent.putExtra("getmeeage", "0");
-                        MyInfo.this.sendBroadcast(intent);
-                        handler.sendEmptyMessage(1);
-                        try {
-                            popupWindow.dismiss();
-                        } catch (Exception e) {
-
-                        }
-//                       if (types==1){
-//                           if (type == 1) {
-//                               Intent intent1 = new Intent();
-//                               intent1.setClass(MyInfo.this, AddHome.class);
-//                               MyInfo.this.startActivity(intent);
-//                           }
-//                       }
-                    } else {
-                        Toast.makeText(MyInfo.this, "修改失败！", Toast.LENGTH_SHORT).show();
-                    }
-                    break;
             }
         }
     };
@@ -308,45 +230,40 @@ public class MyInfo extends Activity implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case PHOTO_REQUEST_TAKEPHOTO:
-//                getPhotos.startPhotoZoom(Uri.fromFile(tempFile), 150, MyInfo.this);
-//                file = tempFile;
-                String fileName = String.valueOf(System.currentTimeMillis());
-//                    String a=tempFile.toString();
-//                    System.out.println(a);
-//                    Bitmap bm = (Bitmap) data.getExtras().get("data");
-                Bitmap bm = BitmapFactory.decodeFile(tempFile.toString());
-                File file = FileUtils.saveBitmap(bm, fileName, tempFile.toString());
-                tempFile = file;
-                getuserinfo(0);
+
+                try
+                {
+                    Bitmap bm = BitmapFactory.decodeFile(tempFile.toString());
+                    uploadHeadImg(bm);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
                 break;
 
             case PHOTO_REQUEST_GALLERY:
                 if (data != null)
-//                    getPhotos.startPhotoZoom(data.getData(), 150, MyInfo.this);
                 {
-                    File files = getPhotos.Getalbum(data, MyInfo.this);
-                    tempFile = files;
-                    Uri uri = Uri.fromFile(files);
-                    ContentResolver cr = this.getContentResolver();
                     try {
+                        File files = getPhotos.Getalbum(data, MyInfo.this);
+                        tempFile = files;
+                        Uri uri = Uri.fromFile(files);
+                        ContentResolver cr = this.getContentResolver();
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(cr, uri);
-                        uesrhead.setImageBitmap(bitmap);
-//                        getUserinfo(2);
-                        getuserinfo(0);
-                        dialog.show();
+                        uploadHeadImg(bitmap);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    ;
                 }
                 break;
 
             case PHOTO_REQUEST_CUT:
-                if (data != null)
-//                    getUserinfo(2);
-                    getuserinfo(0);
+
                 try {
-                    uesrhead.setImageDrawable(getPhotos.setPicToView(data));
+                    Bitmap bitmap = BitmapFactory.decodeFile(tempFile.toString());
+                    uploadHeadImg(bitmap);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Uri uri = Uri.fromFile(tempFile);
@@ -354,13 +271,12 @@ public class MyInfo extends Activity implements View.OnClickListener {
                     Bitmap bitmap = null;
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(cr, uri);
+                        uploadHeadImg(bitmap);
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
-//                    getUserinfo(2)
-                    dialog.show();
-                    getuserinfo(0);
-                    uesrhead.setImageBitmap(bitmap);
+
+
                 }
 
                 break;
@@ -446,28 +362,17 @@ public class MyInfo extends Activity implements View.OnClickListener {
                             Toast.makeText(MyInfo.this, "昵称不能为空", Toast.LENGTH_SHORT).show();
                         } else {
                             nickname = myviptxt.getText().toString();
-                            try {
-                                upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
-                                        "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            }
-                            getuserinfo(1);
+                            name.setText(nickname);
+                            popupWindow.dismiss();
                         }
                         break;
                     case R.id.truenamelay:
                         if (myviptxt.getText().toString().trim().length() == 0) {
-                            popupWindow.dismiss();
+                            Toast.makeText(MyInfo.this, "真实姓名不能为空", Toast.LENGTH_SHORT).show();
                         } else {
                             true_name = myviptxt.getText().toString();
-                            try {
-                                upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
-                                        "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            }
-                            type = 1;
-                            getuserinfo(1);
+                            truename.setText(true_name);
+                            popupWindow.dismiss();
                         }
                         break;
                     case R.id.addresslay:
@@ -475,14 +380,8 @@ public class MyInfo extends Activity implements View.OnClickListener {
                             popupWindow.dismiss();
                         } else {
                             addr_ess = myviptxt.getText().toString();
-                            try {
-                                upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
-                                        "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            }
-                            type = 1;
-                            getuserinfo(1);
+                            address.setText(addr_ess);
+                            popupWindow.dismiss();
                         }
                         break;
 
@@ -491,14 +390,8 @@ public class MyInfo extends Activity implements View.OnClickListener {
                             popupWindow.dismiss();
                         } else {
                             aihaostr = myviptxt.getText().toString();
-                            try {
-                                upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
-                                        "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            }
-                            type = 1;
-                            getuserinfo(1);
+                            aihao.setText(aihaostr);
+                            popupWindow.dismiss();
                         }
                         break;
 
@@ -507,14 +400,8 @@ public class MyInfo extends Activity implements View.OnClickListener {
                             popupWindow.dismiss();
                         } else {
                             qianmingstr = myviptxt.getText().toString();
-                            try {
-                                upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
-                                        "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            }
-                            type = 1;
-                            getuserinfo(1);
+                            qianming.setText(qianmingstr);
+                            popupWindow.dismiss();
                         }
                         break;
                 }
@@ -546,23 +433,11 @@ public class MyInfo extends Activity implements View.OnClickListener {
                 switch (checkedId) {
                     case R.id.man:
                         sexs = "1";
-                        try {
-                            upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
-                                    "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                        getuserinfo(1);
+                        sex.setText("男");
                         break;
                     case R.id.woman:
                         sexs = "0";
-                        try {
-                            upinfourl = GlobalVariables.urlstr + "User.userEdit&username=" + username + "&nickname=" + URLEncoder.encode(nickname, "UTF-8") + "&sex=" + sexs + "&truename=" + URLEncoder.encode(true_name, "UTF-8")+
-                                    "&birthday="+birth_day+"&address="+addr_ess+"&aihao="+aihaostr+"&qianming="+qianmingstr;
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                        getuserinfo(1);
+                        sex.setText("女");
                         break;
                 }
                 menuWindow.dismiss();
@@ -570,4 +445,129 @@ public class MyInfo extends Activity implements View.OnClickListener {
         });
         return CheckView;
     }
+
+    private void uploadHeadImg(Bitmap bitmap)
+    {
+        if(bitmap == null)
+        {
+            return;
+        }
+
+        uesrhead.setImageBitmap(bitmap);
+        Map<String , RequestBody> params = new HashMap<>();
+        params.put("username", XAPPUtil.createBody(APPDataCache.User.getUsername()));
+        params.put("file\"; filename=\"xtest.jpg",XAPPUtil.createBody(bitmap));
+
+        XNetUtil.HandleReturnAll(APPService.userHeadEdit(params), new XNetUtil.OnHttpResult<HttpResult<Object>>() {
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onSuccess(HttpResult<Object> res) {
+                if(res.getData().getCode() == 0)
+                {
+                    APPDataCache.User.setHeadimage(res.getData().getMsg());
+                    APPDataCache.User.save();
+                    options = ImageUtils.setCirclelmageOptions();
+                    ImageLoader.displayImage(res.getData().getMsg(), uesrhead, options,
+                            animateFirstListener);
+
+                    EventBus.getDefault().post(
+                            new MyEventBus("UserInfoUpdated"));
+
+                    return;
+                }
+
+                String msg = res.getData().getMsg();
+                msg = msg == null ? "头像上传失败" : msg;
+                Toast.makeText(MyInfo.this, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void doSubmit(View v)
+    {
+       if(APPDataCache.User.getHeadimage().equals(""))
+       {
+           Toast.makeText(MyInfo.this, "请设置头像", Toast.LENGTH_SHORT).show();
+           return;
+       }
+
+        if(sexs.equals(""))
+        {
+            Toast.makeText(MyInfo.this, "请设置性别", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(true_name.equals(""))
+        {
+            Toast.makeText(MyInfo.this, "请设置真实姓名", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(birth_day.equals(""))
+        {
+            Toast.makeText(MyInfo.this, "请设置出生年月", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        XActivityindicator.create(this).show();
+
+        XNetUtil.Handle(APPService.userUserEdit(APPDataCache.User.getUsername(),
+                nickname, sexs, true_name, birth_day, addr_ess, aihaostr,
+                qianmingstr), "修改成功！", "修改失败！", new XNetUtil.OnHttpResult<Boolean>() {
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onSuccess(Boolean aBoolean) {
+
+                if(aBoolean)
+                {
+                    APPDataCache.User.setNickname(nickname);
+                    APPDataCache.User.setSex(sexs);
+                    APPDataCache.User.setTruename(true_name);
+                    APPDataCache.User.setBirthday(birth_day);
+                    APPDataCache.User.setAddress(addr_ess);
+                    APPDataCache.User.setAihao(aihaostr);
+                    APPDataCache.User.setQianming(qianmingstr);
+                    APPDataCache.User.save();
+
+                    Intent intent = new Intent();
+                    intent.setAction("com.servicedemo4");
+                    intent.putExtra("getmeeage", "0");
+                    MyInfo.this.sendBroadcast(intent);
+                    EventBus.getDefault().post(
+                            new MyEventBus("UserInfoUpdated"));
+                    try {
+                        popupWindow.dismiss();
+                    } catch (Exception e) {
+
+                    }
+
+                    XActivityindicator.getHud().setOnDismissListener(new OnDismissListener() {
+                        @Override
+                        public void onDismiss(SVProgressHUD hud) {
+
+                            finish();
+
+                        }
+                    });
+
+
+
+
+                }
+            }
+        });
+
+
+
+
+    }
+
 }

@@ -37,6 +37,7 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
 import cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager;
+import util.XActivityindicator;
 import util.XNetUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -329,7 +330,7 @@ public class PropertyHome extends Activity implements View.OnClickListener {
                     }
                     break;
                 case 2:
-                    Toast.makeText(PropertyHome.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                    XActivityindicator.showToast(getResources().getString(R.string.intent_error));
                     break;
                 case 3:
                     Toast.makeText(PropertyHome.this, "未审核通过", Toast.LENGTH_SHORT).show();

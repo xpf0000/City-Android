@@ -27,6 +27,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.Loadmore;
 import okhttp3.Call;
+import util.XActivityindicator;
 
 /**
  * Created by admins on 2016/6/28.
@@ -93,7 +94,7 @@ public class SearchNews extends Activity implements View.OnClickListener {
             @Override
             public void onError(Call call, Exception e) {
 
-                Toast.makeText(SearchNews.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                XActivityindicator.showToast(getResources().getString(R.string.intent_error));
             }
 
             @Override

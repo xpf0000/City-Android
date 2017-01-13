@@ -22,6 +22,9 @@ import citycircle.com.R;
 import citycircle.com.Utils.Emailtest;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
+import util.XHtmlVC;
+
+import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/12/4.
@@ -202,5 +205,15 @@ public class ForgetPass extends Activity implements View.OnClickListener {
                 }
                 break;
         }
+    }
+
+    public void toTiaokuan(View v)
+    {
+        Bundle bundle = new Bundle();
+        bundle.putString("url","服务条款");
+        bundle.putString("title","服务条款");
+        Intent intent=new Intent(this, XHtmlVC.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

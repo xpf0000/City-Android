@@ -1,25 +1,26 @@
 var BaseUrl = "http://182.92.70.85/hfapi/Public/Found/?service=";
 
-require.config({
-    baseUrl: 'lib',  //相对于index.html页面文件的地址
-    paths:{   //这里配置的地址，都是相对于上方的baseUrl的
-        avalon: 'avalon.min',
-        domReady:'domReady',
-        jquery : 'jquery-1.8.0.min',
-        net: 'XRequest',
-    },
-    shim:{
-	    avalon: { deps: ['domReady!'],exports: "avalon" },
-        net:{ deps: ['jquery']}, 
-    }
-});
-
-
-require(['jquery','net'], function() {	    
-
-	console.log("main js loaded!!!!!!");
-
-})
+//require.config({
+//    baseUrl: 'lib',  //相对于index.html页面文件的地址
+//    paths:{   //这里配置的地址，都是相对于上方的baseUrl的
+//        avalon: 'avalon.min',
+//        domReady:'domReady',
+//        jquery : 'jquery-1.8.0.min',
+//        net: 'XRequest',
+//    },
+//    waitSeconds: 20,
+//    shim:{
+//	    avalon: { deps: ['domReady!'],exports: "avalon" },
+//        net:{ deps: ['jquery']},
+//    }
+//});
+//
+//
+//require(['jquery','net'], function() {
+//
+//	console.log("main js loaded!!!!!!");
+//
+//})
 
 
 //只能输入数字

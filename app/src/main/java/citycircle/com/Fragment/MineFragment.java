@@ -37,6 +37,7 @@ import citycircle.com.hfb.HfbCenter;
 import citycircle.com.user.MyMinePage;
 import citycircle.com.user.MyYouhuiquan;
 import model.UserModel;
+import util.XAPPUtil;
 import util.XActivityindicator;
 import util.XHtmlVC;
 import util.XNetUtil;
@@ -119,7 +120,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
             XNetUtil.APPPrintln("APPDataCache.msgshow: "+APPDataCache.msgshow);
 
-            if (APPDataCache.msgshow) {
+            if (APPDataCache.msgshow == true) {
                 messageicon.setImageResource(R.mipmap.my_icon3_1);
             } else {
                 messageicon.setImageResource(R.mipmap.my_icon3);
@@ -302,7 +303,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         String uid = APPDataCache.User.getUid();
         String uname = APPDataCache.User.getUsername();
 
-        if(APPDataCache.User.getOrqd() == 1)
+        if(APPDataCache.User.getOrqd() == 1 && XAPPUtil.isNetWorkAvailable(getActivity()))
         {
             Intent intent = new Intent();
             intent.setClass(getActivity(), XHtmlVC.class);
@@ -388,11 +389,12 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         {
             messageicon.setImageResource(R.mipmap.my_icon3);
         }
-        else if(myEventBus.getMsg().equals("LoginSuccess"))
+        else if(myEventBus.getMsg().equals("LoginSuccess") || myEventBus.getMsg().equals("UserInfoUpdated"))
         {
             show();
             getHFB();
         }
+
 
     }
 

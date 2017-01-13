@@ -43,6 +43,7 @@ import citycircle.com.Utils.MyEventBus;
 import citycircle.com.Utils.XAlertView;
 import util.DataCache;
 import util.DensityUtil;
+import util.XAPPUtil;
 import util.XActivityindicator;
 import util.XHtmlVC;
 import util.XNetUtil;
@@ -152,7 +153,7 @@ public class HomeFragment extends Fragment {
             return;
         }
 
-        if(APPDataCache.User.getOrqd() == 1)
+        if(APPDataCache.User.getOrqd() == 1 && XAPPUtil.isNetWorkAvailable(getActivity()))
         {
             Intent intent = new Intent();
             intent.setClass(getActivity(), XHtmlVC.class);

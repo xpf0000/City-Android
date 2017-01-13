@@ -25,7 +25,7 @@ public class Statement extends Activity {
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().getJavaScriptEnabled();
         webview.setWebChromeClient(new WebChromeClient());
-        webview.loadUrl("http://101.201.169.38/city/news_info.php?id=6243&type=108");
+        webview.loadUrl("http://wap.huaifuwang.com/city/news_info.php?id=6243&type=108");
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

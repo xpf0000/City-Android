@@ -1,6 +1,7 @@
 package util;
 
 import java.util.List;
+import java.util.Map;
 
 import model.APPVersionModel;
 import model.ActityModel;
@@ -16,8 +17,11 @@ import model.QuanModel;
 import model.RenzhengModel;
 import model.UserModel;
 import model.YouhuiquanModel;
+import okhttp3.RequestBody;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -238,12 +242,29 @@ public interface ServicesAPI {
  Observable<HttpResult<List<APPVersionModel>>> commonGetAppVersion();
 
  @GET("?service=User.getMessagesCount")  //获取用户消息数量
- Observable<HttpResult<MessageCountModel>> userGetMessagesCount(
+ Observable<HttpResult<List<MessageCountModel>>> userGetMessagesCount(
          @Query("uid") String uid,
          @Query("username") String username
  );
 
+ @Multipart
+ @POST("?service=User.headEdit")//上传用户头像
+ Observable<HttpResult<Object>> userHeadEdit(@PartMap Map<String , RequestBody> params);
 
+ @POST("?service=User.userEdit")  //完善个人信息
+ Observable<HttpResult<Object>> userUserEdit(
+         @Query("username") String username,
+         @Query("nickname") String nickname,
+         @Query("sex") String sex,
+         @Query("truename") String truename,
+         @Query("birthday") String birthday,
+         @Query("address") String address,
+         @Query("aihao") String aihao,
+         @Query("qianming") String qianming
+ );
+
+ @GET("?service=User.getOrNickname")  //检测昵称是否重复
+ Observable<HttpResult<Object>> userGetOrNickname(@Query("nickname") String nickname);
 
 }
 

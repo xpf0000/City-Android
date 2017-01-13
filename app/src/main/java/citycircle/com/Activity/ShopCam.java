@@ -24,6 +24,7 @@ import citycircle.com.Adapter.Camadapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import okhttp3.Call;
+import util.XActivityindicator;
 
 /**
  * Created by admins on 2016/6/17.
@@ -75,7 +76,7 @@ public class ShopCam extends Activity {
         OkHttpUtils.get().url(url).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
-                Toast.makeText(ShopCam.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                XActivityindicator.showToast(getResources().getString(R.string.intent_error));
             }
 
             @Override

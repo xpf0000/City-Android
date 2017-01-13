@@ -28,6 +28,7 @@ import model.BannerModel;
 import model.GoodsModel;
 import util.BaseActivity;
 import util.NetworkImageHolderView;
+import util.XAPPUtil;
 import util.XActivityindicator;
 import util.XHtmlVC;
 import util.XInterface;
@@ -118,11 +119,14 @@ public class GoodsCenter extends BaseActivity {
 
     public void doDH(final View v,final int p) {
 
-        String id = dataArr.get(p).getId();
-        Bundle bundle = new Bundle();
-        bundle.putString("url","file:///android_asset/duihuaninfo.html?id="+id+"&uid="+uid+"&uname="+uname);
-        bundle.putString("title","兑换详情");
-        pushVC(XHtmlVC.class,bundle);
+        if(XAPPUtil.isNetWorkAvailable(this))
+        {
+            String id = dataArr.get(p).getId();
+            Bundle bundle = new Bundle();
+            bundle.putString("url","file:///android_asset/duihuaninfo.html?id="+id+"&uid="+uid+"&uname="+uname);
+            bundle.putString("title","兑换详情");
+            pushVC(XHtmlVC.class,bundle);
+        }
 
     }
 

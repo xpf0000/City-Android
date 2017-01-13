@@ -8,9 +8,9 @@ var need = -1;
 var has = -1;
 var running = false;
 
-requirejs(['main'], function (main) {  
-	
-		require(['avalon','net'], function() {
+//requirejs(['main'], function (main) {
+//
+//		require(['avalon','net'], function() {
 	     	
 	     	id = $.getUrlParam('id');
 	     	uid = $.getUrlParam('uid');
@@ -181,12 +181,12 @@ requirejs(['main'], function (main) {
 
 	
 		
-	})
-	
-	
-     
-   
-});
+//	})
+//
+//
+//
+//
+//});
 
 function toGoodsCenter()
 {

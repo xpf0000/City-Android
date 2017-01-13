@@ -25,6 +25,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import util.XAPPUtil;
+import util.XActivityindicator;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
@@ -136,7 +137,7 @@ public class MessageList extends Activity {
                     break;
                 case 2:
                     Refresh.setRefreshing(false);
-                    Toast.makeText(MessageList.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                    XActivityindicator.showToast(getResources().getString(R.string.intent_error));
                     break;
                 case 3:
                     Refresh.setRefreshing(false);

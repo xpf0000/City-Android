@@ -5,9 +5,9 @@ var uid = "";
 var uname = "";
 var ordernumber = "";
 
-requirejs(['main'], function (main) {  
-	
-		require(['avalon','net'], function() {
+//requirejs(['main'], function (main) {
+//
+//		require(['avalon','net'], function() {
 	     		
 	     		uid = $.getUrlParam('uid');
 	     		uname = $.getUrlParam('uname');
@@ -56,10 +56,10 @@ requirejs(['main'], function (main) {
 		  		
 		  		
   				
-	});
-	
-   
-});
+//	});
+//
+//
+//});
 
 
 

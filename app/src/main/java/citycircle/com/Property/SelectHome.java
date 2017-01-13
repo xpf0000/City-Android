@@ -27,6 +27,7 @@ import java.util.HashMap;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
+import util.XActivityindicator;
 import util.XNotificationCenter;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -134,7 +135,7 @@ public class SelectHome extends Fragment implements OnItemClickListener, View.On
                     break;
                 case 2:
                     try {
-                        Toast.makeText(getActivity(), R.string.intent_error, Toast.LENGTH_SHORT).show();
+                        XActivityindicator.showToast(getResources().getString(R.string.intent_error));
                     } catch (Exception e) {
 
                     }

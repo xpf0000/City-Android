@@ -331,6 +331,7 @@ public class UserModel implements Serializable {
 
     public String getBirthday() {
         birthday = birthday == null? "" : birthday;
+        birthday = birthday.replace("0000-00-00","");
         return birthday;
     }
 
@@ -510,7 +511,7 @@ public class UserModel implements Serializable {
             return;
         }
 
-        XNetUtil.Handle(APPService.userGetMessagesCount(uid, uname), new XNetUtil.OnHttpResult<MessageCountModel>() {
+        XNetUtil.Handle(APPService.userGetMessagesCount(uid, uname), new XNetUtil.OnHttpResult<List<MessageCountModel>>() {
             @Override
             public void onError(Throwable e) {
 
@@ -519,10 +520,20 @@ public class UserModel implements Serializable {
             }
 
             @Override
-            public void onSuccess(MessageCountModel model) {
+            public void onSuccess(List<MessageCountModel> models) {
 
                 try
                 {
+                    if(models.size() == 0)
+                    {
+                        EventBus.getDefault().post(
+                                new MyEventBus("hidden"));
+                        APPDataCache.msgshow = false;
+                        return;
+                    }
+
+                    MessageCountModel model = models.get(0);
+
                     int c1 = Integer.parseInt(model.getCount1());
                     int c2 = Integer.parseInt(model.getCount2());
                     int c3 = Integer.parseInt(model.getCount3());

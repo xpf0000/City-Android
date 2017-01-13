@@ -26,6 +26,7 @@ import citycircle.com.Property.PropertyAdapter.PaysAdapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
+import util.XActivityindicator;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
@@ -124,7 +125,7 @@ public class NonpaymentFr extends Fragment {
                     }
                     break;
                 case 2:
-                    Toast.makeText(getActivity(), R.string.intent_error, Toast.LENGTH_SHORT).show();
+                    XActivityindicator.showToast(getResources().getString(R.string.intent_error));
                     break;
                 case 3:
                     Toast.makeText(getActivity(), R.string.nomore, Toast.LENGTH_SHORT).show();

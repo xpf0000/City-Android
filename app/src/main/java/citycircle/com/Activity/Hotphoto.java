@@ -31,6 +31,7 @@ import citycircle.com.headRecy.ExStaggeredGridLayoutManager;
 import citycircle.com.headRecy.HeaderAndFooterRecyclerViewAdapter;
 import citycircle.com.headRecy.HeaderSpanSizeLookup;
 import okhttp3.Call;
+import util.XActivityindicator;
 
 /**
  * Created by admins on 2015/11/23.
@@ -84,7 +85,7 @@ public class Hotphoto extends Fragment {
             @Override
             public void onError(Call call, Exception e) {
                 lehuirefresh.setRefreshing(false);
-                Toast.makeText(getActivity(), R.string.intent_error, Toast.LENGTH_SHORT).show();
+                XActivityindicator.showToast(getActivity().getResources().getString(R.string.intent_error));
                 RecyclerViewStateUtils.setFooterViewState(getActivity(), mRecyclerView, 10, LoadingFooter.State.NetWorkError, null);
             }
 

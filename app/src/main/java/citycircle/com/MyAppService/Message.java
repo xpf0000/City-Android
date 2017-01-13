@@ -19,13 +19,6 @@ public class Message extends MessageReceiver {
     @Override
     protected void onMessage(Context context, CPushMessage cPushMessage) {
         super.onMessage(context, cPushMessage);
-        System.out.println("cPushMessage:"+cPushMessage.getTitle());
-        int a = APPDataCache.land;
-        if (a != 0) {
-            EventBus.getDefault().post(
-                new MyEventBus("show"));
-            APPDataCache.msgshow = true;
-        }
 
         if(cPushMessage.getTitle().equals("账号在其它设备已登陆"))
         {
@@ -37,6 +30,20 @@ public class Message extends MessageReceiver {
                 APPDataCache.msgshow = false;
             }
 
+        }
+        else
+        {
+            if (!APPDataCache.User.getUid().equals("")) {
+                EventBus.getDefault().post(
+                        new MyEventBus("show"));
+                APPDataCache.msgshow = true;
+            }
+            else
+            {
+                EventBus.getDefault().post(
+                        new MyEventBus("hidden"));
+                APPDataCache.msgshow = false;
+            }
         }
 
 

@@ -5,9 +5,9 @@ var end = false;
 var uid = "";
 var uname="";
 
-requirejs(['main'], function (main) {  
-
-		require(['avalon','net'], function() {
+//requirejs(['main'], function (main) {
+//
+//		require(['avalon','net'], function() {
 	     
 	     console.log("index js loaded!!!!!!");
 	     
@@ -52,14 +52,14 @@ requirejs(['main'], function (main) {
 		  		lxqdday : "0"
 		  		
 		  		});
-		  		
-		  		
+
+
 		  		getQDDay();
 		  		getTj();
-		  		
+
 		  		var date = new Date();
 		  		rili.today = date.toLocaleDateString().replace(/\//gm, "-");
-		  		
+
 		  		date.setDate(1);
 		  		var weekday=new Array(7);
 		  		weekday[0]="星期日" ;
@@ -69,27 +69,27 @@ requirejs(['main'], function (main) {
 		  		weekday[4]="星期四";
 		  		weekday[5]="星期五";
 		  		weekday[6]="星期六";
-		  		
+
 		  		var b = date.getDay();
-		  		
-		  		
+
+
 		  		date.setMonth(date.getMonth());
 		  		var lastDate = new Date(date - 3600000*24);
 
-		  		
+
 		  		var last = lastDate.getDate();
-		  		
+
 
 		  		date.setMonth(date.getMonth() + 1);
 		  		var lastDate = new Date(date - 3600000*24);
 
-		  		
+
 		  		var now = lastDate.getDate();
-		  		
+
 		  		var nowb = lastDate.getDay();
-		  		
-		  		
-		  		
+
+
+
 		  		for(i=b-1;i>=0;i--)
 		  		{
 			  		var item = {};
@@ -99,7 +99,7 @@ requirejs(['main'], function (main) {
 			  		item.css = 'noenable';
 			  		rili.riliArr.push(item);
 		  		}
-		  		
+
 		  		for(i=1;i<=now;i++)
 		  		{
 			  		var item = {};
@@ -109,7 +109,7 @@ requirejs(['main'], function (main) {
 			  		item.css = 'normal';
 			  		rili.riliArr.push(item);
 		  		}
-		  		
+
 		  		var j=1;
 		  		for(i=nowb+1;i<7;i++)
 		  		{
@@ -119,13 +119,13 @@ requirejs(['main'], function (main) {
 			  		item.enable = false;
 			  		item.css = 'noenable';
 			  		rili.riliArr.push(item);
-			  		
+
 			  		j++;
 		  		}
-		  		
-		  		
-		  		
-		  		
+
+
+
+
 		  		function getTj()
 		  		 {
 		  		 	var url = BaseUrl+"jifen.getproductList&page="+page+"&perNumber=20";
@@ -175,7 +175,7 @@ requirejs(['main'], function (main) {
 		  		 	XHttpGet( url, function(data) 
 		  		 	{
 			  		 	banner.lxqdday = data.data.lxqdday;
-			  		 	
+
 		  		 		var info = data.data.info;
 		  		 		
 		  		 		if(info)
@@ -184,11 +184,9 @@ requirejs(['main'], function (main) {
 		  		 			{
 			  		 			var time = new Date(item.create_time * 1000);
 			  		 			item.day = time.getDate();
-			  		 			
+
 			  		 			qdarr.push(item);
-			  		 			
-			  		 			
-			  		 			$(rili.riliArr).each(function(index,item1)
+			  		 		    $(rili.riliArr).each(function(index,item1)
 		  		 			{
 			  		 			if(item1.month == 1 && item.day == item1.day)
 			  		 			{
@@ -198,20 +196,20 @@ requirejs(['main'], function (main) {
 							});
 
 							});
-							
-			
+
+
 						}
 
 					});
 				}
 
 		
-	})
-	
-	
-     
-   
-});
+//	})
+//
+//
+//
+//
+//});
 
 function toQDGZ()
 {

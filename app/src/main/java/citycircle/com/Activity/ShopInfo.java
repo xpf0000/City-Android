@@ -35,6 +35,7 @@ import citycircle.com.card.CardGetedInfo;
 import citycircle.com.card.ShopsRenzheng;
 import citycircle.com.card.ShopsYouhuiquan;
 import okhttp3.Call;
+import util.XActivityindicator;
 
 import static citycircle.com.MyAppService.LocationApplication.SW;
 
@@ -110,7 +111,7 @@ public class ShopInfo extends Activity implements View.OnClickListener {
         OkHttpUtils.get().url(url).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
-                Toast.makeText(ShopInfo.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                XActivityindicator.showToast(getResources().getString(R.string.intent_error));
             }
 
             @Override

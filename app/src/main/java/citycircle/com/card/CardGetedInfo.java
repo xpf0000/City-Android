@@ -33,6 +33,7 @@ import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.ImageUtils;
 import okhttp3.Call;
+import util.XActivityindicator;
 import util.XHtmlVC;
 import util.XNotificationCenter;
 
@@ -129,7 +130,7 @@ public class CardGetedInfo extends Activity implements View.OnClickListener {
         OkHttpUtils.get().url(url).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
-                Toast.makeText(CardGetedInfo.this, R.string.intent_error, Toast.LENGTH_SHORT).show();
+                XActivityindicator.showToast(getResources().getString(R.string.intent_error));
             }
 
             @Override

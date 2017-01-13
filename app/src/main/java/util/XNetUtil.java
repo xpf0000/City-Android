@@ -2,6 +2,7 @@ package util;
 
 import android.widget.Toast;
 import citycircle.com.MyAppService.LocationApplication;
+import citycircle.com.R;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -62,7 +63,7 @@ public class XNetUtil {
                         }
                         else
                         {
-                            Toast.makeText(LocationApplication.context, "网络似乎出问题了", Toast.LENGTH_SHORT).show();
+                            XActivityindicator.showToast(LocationApplication.context.getResources().getString(R.string.intent_error));
                         }
                         res.onError(e);
 
@@ -97,7 +98,7 @@ public class XNetUtil {
                         }
                         else
                         {
-                            Toast.makeText(LocationApplication.context, "网络似乎出问题了", Toast.LENGTH_SHORT).show();
+                            XActivityindicator.showToast(LocationApplication.context.getResources().getString(R.string.intent_error));
                         }
                         res.onError(e);
 
@@ -134,7 +135,7 @@ public class XNetUtil {
                         }
                         else
                         {
-                            Toast.makeText(LocationApplication.context, "网络似乎出问题了", Toast.LENGTH_SHORT).show();
+                            XActivityindicator.showToast(LocationApplication.context.getResources().getString(R.string.intent_error));
                         }
                         res.onError(e);
 
@@ -171,7 +172,7 @@ public class XNetUtil {
                         }
                         else
                         {
-                            Toast.makeText(LocationApplication.context, "网络似乎出问题了", Toast.LENGTH_SHORT).show();
+                            XActivityindicator.showToast(LocationApplication.context.getResources().getString(R.string.intent_error));
                         }
                         res.onError(e);
                     }
@@ -229,7 +230,7 @@ public class XNetUtil {
 
             XActivityindicator.hide();
 
-            if (httpResult.getRet() != 200) {
+            if (httpResult.getRet() != 200 && fail != null) {
 
                 XActivityindicator.create(LocationApplication.context).showErrorWithStatus(fail);
 
@@ -237,7 +238,7 @@ public class XNetUtil {
             }
             else
             {
-                if(httpResult.getData().getCode() != 0)
+                if(httpResult.getData().getCode() != 0 && fail != null)
                 {
                     String msg = httpResult.getData().getMsg();
                     msg = msg.length() == 0 ? fail : msg;

@@ -180,7 +180,7 @@ public class News_Adapter extends BaseAdapter {
                 View.OnClickListener listener = new View.OnClickListener() {
                     public void onClick(View v) {
                         ClipboardManager clip = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
-                        clip.setText("http://101.201.169.38/city/city_info.html?id="+abscure_list.get(position).get("id"));
+                        clip.setText("http://wap.huaifuwang.com/city/city_info.html?id="+abscure_list.get(position).get("id"));
                         Toast.makeText(context,"已经复制到粘贴板",Toast.LENGTH_SHORT).show();
                     }
                 };

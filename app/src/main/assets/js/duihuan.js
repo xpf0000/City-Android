@@ -4,9 +4,9 @@ var uid = "";
 var uname="";
 var cid = "";
 var sname = "";
-requirejs(['main'], function (main) {  
-	
-		require(['avalon','net'], function() {
+//requirejs(['main'], function (main) {
+//
+//		require(['avalon','net'], function() {
 	     		 
 	     		
 	     		 uid = $.getUrlParam('uid');
@@ -109,12 +109,12 @@ requirejs(['main'], function (main) {
 				}
 
 		
-			})
-	
-	
-     
-   
-});
+//			})
+//
+//
+//
+//
+//});
 
 function doJifenDuihuan()
 {

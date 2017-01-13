@@ -1,6 +1,9 @@
 package citycircle.com.user;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +26,7 @@ import citycircle.com.Utils.Emailtest;
 import citycircle.com.Utils.MyEventBus;
 import model.UserModel;
 import util.BaseActivity;
+import util.XAPPUtil;
 import util.XActivityindicator;
 import util.XNetUtil;
 
@@ -56,6 +60,57 @@ public class AuthBandPhoneVC extends BaseActivity {
         getcode = (Button)findViewById(R.id.getcode);
 
         type = getIntent().getStringExtra("type");
+
+        nickET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                checkNickName();
+            }
+        });
+    }
+
+    private boolean nickhased = false;
+    private void checkNickName()
+    {
+        if(nickET.getText().toString().length() < 2 || nickET.getText().toString().length() > 12)
+        {
+            nickET.setTextColor(Color.BLACK);
+            nickhased = false;
+            return;
+        }
+
+        nickhased = true;
+        XNetUtil.Handle(APPService.userGetOrNickname(nickET.getText().toString()), null, "昵称已存在,请更换", new XNetUtil.OnHttpResult<Boolean>() {
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onSuccess(Boolean aBoolean) {
+                nickhased = !aBoolean;
+                if(nickhased)
+                {
+                    Toast.makeText(AuthBandPhoneVC.this, "昵称已存在,请更换", Toast.LENGTH_SHORT).show();
+                    nickET.setTextColor(Color.RED);
+                }
+                else
+                {
+                    nickET.setTextColor(Color.BLACK);
+                }
+
+            }
+        });
     }
 
     public void gettime() {
@@ -88,6 +143,12 @@ public class AuthBandPhoneVC extends BaseActivity {
 
     public void getCode(View v)
     {
+        if(nickhased)
+        {
+            Toast.makeText(AuthBandPhoneVC.this, "昵称已存在,请更换", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String tel = phoneET.getText().toString().trim();
         if (tel.isEmpty()) {
             Toast.makeText(this, "请输入手机号", Toast.LENGTH_SHORT).show();
@@ -125,6 +186,12 @@ public class AuthBandPhoneVC extends BaseActivity {
         if(Logn.otheruser == null)
         {
             Toast.makeText(this, "用户信息已过期,请重新获取", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(nickhased)
+        {
+            Toast.makeText(this, "昵称已存在,请更换", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -174,7 +241,7 @@ public class AuthBandPhoneVC extends BaseActivity {
         XNetUtil.Handle(APPService.userOpenRegister(openid,type,nickname,sex,headimage,tel,pass1,code), new XNetUtil.OnHttpResult<List<UserModel>>() {
             @Override
             public void onError(Throwable e) {
-
+                XActivityindicator.hide();
             }
 
             @Override
