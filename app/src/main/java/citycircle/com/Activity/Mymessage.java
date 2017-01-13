@@ -18,16 +18,19 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import citycircle.com.Adapter.MyMessageAdapter;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.MyEventBus;
+import model.MessageCountModel;
 import okhttp3.Call;
 import util.XActivityindicator;
 import util.XNetUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
+import static citycircle.com.MyAppService.LocationApplication.APPService;
 
 /**
  * Created by admins on 2016/6/3.
@@ -85,55 +88,64 @@ public class Mymessage extends Activity implements View.OnClickListener {
     public void getJsom() {
         String username = APPDataCache.User.getUsername();
         String uid = APPDataCache.User.getUid();
-        url = GlobalVariables.urlstr + "user.getMessagesCount&uid=" + uid + "&username=" + username;
 
-        XNetUtil.APPPrintln("url: "+url);
-
-        OkHttpUtils.get().url(url).build().execute(new StringCallback() {
+        XNetUtil.Handle(APPService.userGetMessagesCount(uid, username), new XNetUtil.OnHttpResult<List<MessageCountModel>>() {
             @Override
-            public void onError(Call call, Exception e) {
-                XActivityindicator.showToast(getResources().getString(R.string.intent_error));
+            public void onError(Throwable e) {
+
+                XNetUtil.APPPrintln("getMsgCount error !!!!!!!!!!");
+                XNetUtil.APPPrintln(e);
             }
 
             @Override
-            public void onResponse(String response) {
-                JSONObject jsonObject = JSON.parseObject(response);
-                JSONObject jsonObject1 = jsonObject.getJSONObject("data");
-                if (jsonObject1.getIntValue("code") == 0) {
-                    JSONObject jsonObject2 = jsonObject1.getJSONObject("info");
+            public void onSuccess(List<MessageCountModel> models) {
+
+                try
+                {
+                    if(models.size() == 0)
+                    {
+                        EventBus.getDefault().post(
+                                new MyEventBus("hidden"));
+                        APPDataCache.msgshow = false;
+                        return;
+                    }
+
+                    MessageCountModel model = models.get(0);
+
                     message.clear();
-                    message.add(jsonObject2.getString("count1"));
-                    message.add(jsonObject2.getString("count2"));
-                    message.add(jsonObject2.getString("count3"));
-                    try
-                    {
-                        int c1 = Integer.parseInt(jsonObject2.getString("count1"));
-                        int c2 = Integer.parseInt(jsonObject2.getString("count2"));
-                        int c3 = Integer.parseInt(jsonObject2.getString("count3"));
+                    message.add(model.getCount1());
+                    message.add(model.getCount2());
+                    message.add(model.getCount3());
 
-                        if(c1+c2+c3 > 0)
-                        {
-                            APPDataCache.msgshow = true;
-                            EventBus.getDefault().post(
-                                    new MyEventBus("show"));
-                        }
-                        else
-                        {
-                            APPDataCache.msgshow = false;
-                            EventBus.getDefault().post(
-                                    new MyEventBus("hidden"));
-                        }
+                    int c1 = Integer.parseInt(model.getCount1());
+                    int c2 = Integer.parseInt(model.getCount2());
+                    int c3 = Integer.parseInt(model.getCount3());
+
+                    if(c1+c2+c3 > 0)
+                    {
+                        EventBus.getDefault().post(
+                                new MyEventBus("show"));
+                        APPDataCache.msgshow = true;
                     }
-                    catch (Exception e)
+                    else
                     {
-
+                        EventBus.getDefault().post(
+                                new MyEventBus("hidden"));
+                        APPDataCache.msgshow = false;
                     }
 
+                    list.clear();
+                    setMyListView();
                 }
-                list.clear();
-                setMyListView();
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
             }
         });
+
+
     }
 
     @Override
