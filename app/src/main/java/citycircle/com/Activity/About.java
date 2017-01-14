@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import citycircle.com.R;
+import util.XAPPUtil;
 import util.XNetUtil;
 
 /**
@@ -16,11 +17,13 @@ import util.XNetUtil;
 public class About extends Activity {
     ImageView back;
     TextView txt;
+    TextView versionname;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
         txt=(TextView)findViewById(R.id.txt);
+        versionname=(TextView)findViewById(R.id.versionname);
         back=(ImageView)findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +39,8 @@ public class About extends Activity {
                 About.this.startActivity(intent);
             }
         });
+
+        versionname.setText("怀府网 v"+XAPPUtil.getAppVersionName(this));
     }
 
     private int count = 0;

@@ -41,6 +41,7 @@
 
 
     <TextView
+        android:id="@+id/versionname"
         android:text="怀府网 v3.3"
         android:textSize="16sp"
         android:layout_marginTop="10dp"

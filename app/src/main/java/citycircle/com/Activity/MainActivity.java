@@ -38,6 +38,7 @@ import citycircle.com.Fragment.FoundFragment;
 import citycircle.com.Fragment.GroupFragment;
 import citycircle.com.Fragment.HomeFragment;
 import citycircle.com.Fragment.MineFragment;
+import citycircle.com.MyAppService.LocationApplication;
 import citycircle.com.R;
 import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.MyEventBus;
@@ -55,6 +56,7 @@ import util.XNotificationCenter;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 import static citycircle.com.MyAppService.LocationApplication.APPService;
+import static citycircle.com.MyAppService.LocationApplication.needShowAccountLogout;
 
 public class MainActivity extends FragmentActivity implements CompoundButton.OnCheckedChangeListener {
     private RadioButton home, rb_lehui, rb_subscribe, rb_mall, rb_vipcard;
@@ -109,10 +111,29 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
 
         checkVersion();
 
+        XNetUtil.APPPrintln("needShowAccountLogout is "+needShowAccountLogout);
+
+        if(needShowAccountLogout)
+        {
+            needShowAccountLogout = false;
+            try
+            {
+                showAccountLogout();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     private void showAccountLogout()
     {
+        XNetUtil.APPPrintln("showAccountLogout #######");
+
+        XActivityindicator.hide();
+
         AlertView Alert = new AlertView("提醒", "您的账户已在其他设备登录", null, null,
                 new String[]{"确定"},
                 this, AlertView.Style.Alert, new com.bigkoo.alertview.OnItemClickListener() {
@@ -305,6 +326,8 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
     public void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        LocationApplication.isInited = true;
+
     }
 
     public void onPause() {
@@ -319,13 +342,6 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
         if (isExit == false) {
             isExit = true; // 准备退出
             Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-            // 提示放屏幕中间
-            // Toast toast;
-            // toast = Toast.makeText(getApplicationContext(), "再按一次退出程序",
-            // Toast.LENGTH_SHORT);
-            // toast.setGravity(Gravity.CENTER, 0, 0);
-            // toast.show();
-
             tExit = new Timer();
             tExit.schedule(new TimerTask() {
                 @Override
@@ -335,8 +351,9 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
             }, 2000); // 如果2秒钟内没有按下返回键，则启动定时器取消掉刚才执行的任务
 
         } else {
-            finish();
-            System.exit(0);
+
+            XNotificationCenter.getInstance().postNotice("APPFinish",null);
+
         }
     }
 
@@ -393,13 +410,15 @@ public class MainActivity extends FragmentActivity implements CompoundButton.OnC
 
     private void checkVersion(final APPVersionModel model)
     {
-        XActivityindicator.hide();
+
         try
         {
             double v = Double.parseDouble(model.getNum());
 
             if(getVersion() < v)
             {
+                XActivityindicator.hide();
+
                 AlertView Alert = new AlertView("版本更新", model.getContent().replace("<br />",""), null, null,
                         new String[]{"取消","立即升级"},
                         this, AlertView.Style.Alert, new com.bigkoo.alertview.OnItemClickListener() {

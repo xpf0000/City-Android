@@ -78,7 +78,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 getHFB();
             }
         });
-        XNetUtil.APPPrintln("onCreateView &&&&&&&&&&&&&&");
 
         intview();
 
@@ -147,7 +146,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         {
             if(mine.getChildAt(i).getTag() != null)
             {
-                System.out.println(mine.getChildAt(i)) ;
                 mine.getChildAt(i).setClickable(true);
                 mine.getChildAt(i).setOnClickListener(this);
             }

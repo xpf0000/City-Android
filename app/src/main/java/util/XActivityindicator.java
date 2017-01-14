@@ -55,6 +55,7 @@ public class XActivityindicator {
 
     public static void hide()
     {
+        XNetUtil.APPPrintln("XActivityindicator hide ^^^^^^^^");
         if(alert != null && alert.get() != null)
         {
             alert.get().dismissImmediately();

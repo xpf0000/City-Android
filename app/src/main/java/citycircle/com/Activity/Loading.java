@@ -24,6 +24,7 @@ import citycircle.com.Utils.GlobalVariables;
 import citycircle.com.Utils.HttpRequest;
 import citycircle.com.Utils.ImageUtils;
 import cn.iwgang.countdownview.CountdownView;
+import util.DataCache;
 import util.XAPPUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
@@ -49,6 +50,9 @@ public class Loading extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading);
+
+        APPDataCache = new DataCache();
+
         logo=(ImageView)findViewById(R.id.logo) ;
         welimg = (ImageView) findViewById(R.id.welimg);
 

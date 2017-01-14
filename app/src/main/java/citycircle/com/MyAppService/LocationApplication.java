@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.provider.SyncStateContract;
 import android.support.multidex.MultiDex;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -61,6 +62,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import util.DataCache;
 import util.ServicesAPI;
+import util.XAPPUtil;
 import util.XNetUtil;
 import util.XNotificationCenter;
 
@@ -95,6 +97,8 @@ public class LocationApplication extends Application {
 
     public static long serverTimeInterval;
 
+    public static boolean isInited = false;
+    public static boolean needShowAccountLogout = false;
     /**
      * 创建全局变量 全局变量一般都比较倾向于创建一个单独的数据类文件，并使用static静态变量
      *
@@ -120,6 +124,10 @@ public class LocationApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        String processName = XAPPUtil.getProcessName(this, android.os.Process.myPid());
+
+        XNetUtil.APPPrintln("processName: "+processName);
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
@@ -171,9 +179,6 @@ public class LocationApplication extends Application {
 
             }
         });
-
-
-
 
         context = getApplicationContext();
         MemoryCache memoryCache= MemoryCacheUtils.createLruMemoryCache(1024*1024*256);
@@ -256,6 +261,12 @@ public class LocationApplication extends Application {
             @Override
             public void OnNotice(Object obj) {
 
+                if(!isInited){
+                    XNetUtil.APPPrintln("APP is not inited !!!!!!!!");
+                    needShowAccountLogout = true;
+                    return;
+                }
+
                 for(WeakReference<Activity> item : vcArrs)
                 {
                     if(item.get() != null)
@@ -274,7 +285,29 @@ public class LocationApplication extends Application {
             }
         });
 
-        APPDataCache = new DataCache();
+        XNotificationCenter.getInstance().addObserver("APPFinish", new XNotificationCenter.OnNoticeListener() {
+            @Override
+            public void OnNotice(Object obj) {
+
+                for(WeakReference<Activity> item : vcArrs)
+                {
+                    if(item.get() != null)
+                    {
+                        item.get().finish();
+                        item.clear();
+                    }
+                }
+
+                vcArrs.clear();
+                vcArrs = null;
+
+                System.exit(0);
+                //android.os.Process.killProcess(android.os.Process.myPid());
+
+            }
+        });
+
+
 
         System.out.println("================init============");
     }
