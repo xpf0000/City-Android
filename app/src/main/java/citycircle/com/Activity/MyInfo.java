@@ -31,9 +31,15 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.bigkoo.alertview.AlertView;
+import com.bigkoo.alertview.OnItemClickListener;
 import com.bigkoo.pickerview.TimePickerView;
 import com.bigkoo.svprogresshud.SVProgressHUD;
 import com.bigkoo.svprogresshud.listener.OnDismissListener;
+import com.google.gson.Gson;
+import com.jph.takephoto.app.TakePhotoActivity;
+import com.jph.takephoto.model.TImage;
+import com.jph.takephoto.model.TResult;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -47,6 +53,7 @@ import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import citycircle.com.MyViews.MyDialog;
@@ -72,7 +79,7 @@ import static citycircle.com.MyAppService.LocationApplication.APPService;
 /**
  * Created by admins on 2015/11/21.
  */
-public class MyInfo extends Activity implements View.OnClickListener {
+public class MyInfo extends TakePhotoActivity implements View.OnClickListener {
     TextView name, sex, tell_phone, truename,birthday,address,aihao,qianming;
     ImageView uesrhead, back;
     com.nostra13.universalimageloader.core.ImageLoader ImageLoader;
@@ -98,6 +105,10 @@ public class MyInfo extends Activity implements View.OnClickListener {
     int type = 0;
     int types=0;
     TimePickerView pvTime;
+    AlertView alertView;
+
+    private int position = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,6 +132,37 @@ public class MyInfo extends Activity implements View.OnClickListener {
         tempFile = new File(file, getPhotos.getPhotoFileName());
         url = GlobalVariables.urlstr + "User.headEdit";
         intview();
+
+
+        alertView = new AlertView("选择图片", null, "取消", null,
+                new String[]{"拍照", "从相册中选择"},
+                this, AlertView.Style.ActionSheet, new OnItemClickListener(){
+            public void onItemClick(Object o,int p){
+
+                position = p;
+
+            }
+        });
+
+        File f = new File(getExternalFilesDir(""), "temp.jpg");
+        final Uri uri = Uri.fromFile(f);
+
+        alertView.setOnDismissListener(new com.bigkoo.alertview.OnDismissListener() {
+            @Override
+            public void onDismiss(Object o) {
+                if(position == 0)
+                {
+                    getTakePhoto().onPickFromCapture(uri);
+                }
+                else if(position == 1)
+                {
+                    getTakePhoto().onPickFromGallery();
+
+                }
+            }
+        });
+
+
     }
 
     public void intview() {
@@ -287,7 +329,8 @@ public class MyInfo extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.uesrhead:
-                getPhotos.showDialog(MyInfo.this, tempFile);
+                //getPhotos.showDialog(MyInfo.this, tempFile);
+                alertView.show();
                 break;
             case R.id.back:
                 finish();
@@ -316,6 +359,29 @@ public class MyInfo extends Activity implements View.OnClickListener {
                 showpop("请输入个性签名", R.id.qianminglay);
                 break;
         }
+
+    }
+
+
+    @Override
+    public void takeSuccess(TResult result) {
+        super.takeSuccess(result);
+
+        String path = result.getImages().get(0).getOriginalPath();
+        Bitmap bitmap= BitmapFactory.decodeFile(path);
+        uploadHeadImg(bitmap);
+
+    }
+
+    @Override
+    public void takeFail(TResult result, String msg) {
+        super.takeFail(result, msg);
+        XNetUtil.APPPrintln(msg);
+    }
+
+    @Override
+    public void takeCancel() {
+        super.takeCancel();
 
     }
 

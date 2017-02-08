@@ -90,9 +90,9 @@ public class Logn extends Activity implements View.OnClickListener, Handler.Call
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ShareSDK.initSDK(this);
         setContentView(R.layout.logn);
 
+        ShareSDK.initSDK(this,"ccae6a09a59e");
         EventBus.getDefault().register(this);
 
         pushService = PushServiceFactory.getCloudPushService();

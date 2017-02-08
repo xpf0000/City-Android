@@ -313,7 +313,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 		mToolBarHelper = new ToolBarHelper(this,layoutResID) ;
 		toolbar = mToolBarHelper.getToolBar() ;
 		setContentView(mToolBarHelper.getContentView());
-        /*把 toolbar 设置到Activity 中*/
+        /*把 apptoolbar 设置到Activity 中*/
 		setSupportActionBar(toolbar);
         /*自定义的一些操作*/
 		onCreateCustomToolBar(toolbar) ;

@@ -42,6 +42,16 @@ public class NewsModel implements Serializable {
     private String content;
     private String description;
     private String url;
+    private String image;
+
+    public String getImage() {
+        image = image == null ? "" : image;
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public String getUrl() {
         url = url == null ? "" : url;

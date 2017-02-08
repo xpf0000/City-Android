@@ -310,7 +310,7 @@ public class PhotoNewsIn extends Activity implements View.OnClickListener {
                         Toast.makeText(PhotoNewsIn.this,"已经复制到粘贴板",Toast.LENGTH_SHORT).show();
                     }
                 };
-                oks.setCustomerLogo(logo,logo,"复制链接",listener);
+                oks.setCustomerLogo(logo,"复制链接",listener);
                 //关闭sso授权
                 oks.disableSSOWhenAuthorize();
 

@@ -27,7 +27,7 @@ public class ToolBarHelper {
     /*用户定义的view*/
     private View mUserView;
 
-    /*toolbar*/
+    /*apptoolbar*/
     private Toolbar mToolBar;
 
     private Toolbar stateBar;
@@ -68,9 +68,9 @@ public class ToolBarHelper {
 
     private void initToolBar() {
         /*通过inflater获取toolbar的布局文件*/
-        View toolbar = mInflater.inflate(R.layout.toolbar, mContentView);
+        View toolbar = mInflater.inflate(R.layout.apptoolbar, mContentView);
         mToolBar = (Toolbar) toolbar.findViewById(R.id.id_tool_bar);
-        //stateBar =  (Toolbar) toolbar.findViewById(R.id.statebar);
+        //stateBar =  (Toolbar) apptoolbar.findViewById(R.id.statebar);
 
 //        ViewGroup.LayoutParams layoutParams = stateBar.getLayoutParams();
 //        layoutParams.height = ApplicationClass.stateBarHeight;

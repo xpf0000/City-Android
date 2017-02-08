@@ -167,13 +167,10 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
                     NewsModel model = models.get(0);
                     webtxt = model.getTitle();
                     description = model.getDescription();
-                    path = model.getUrl();
-
+                    path = model.getImage();
                 }
             }
         });
-
-
 
        try {
            JSONArray jsonArray = JSON.parseArray(path);
@@ -683,6 +680,7 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
             case R.id.share:
                 ShareSDK.initSDK(this);
                 OnekeyShare oks = new OnekeyShare();
+
                 Bitmap logo = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_share_copylink);
                 View.OnClickListener listener = new View.OnClickListener() {
                     public void onClick(View v) {
@@ -691,7 +689,7 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
                         Toast.makeText(NewsInfoActivity.this, "已经复制到粘贴板", Toast.LENGTH_SHORT).show();
                     }
                 };
-                oks.setCustomerLogo(logo, logo, "复制链接", listener);
+                oks.setCustomerLogo(logo, "复制链接", listener);
                 //关闭sso授权
                 oks.disableSSOWhenAuthorize();
 
@@ -710,7 +708,11 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
                 oks.setTitleUrl("http://wap.huaifuwang.com/city/news_info.php?id=" + id + "&type=0");
                 // text是分享文本，所有平台都需要这个字段
 //                oks.setText(description);
+
                 oks.setImageUrl(path);
+
+                XNetUtil.APPPrintln("share img path: "+path);
+
 //                oks.setImageUrl("http://f1.sharesdk.cn/imgs/2014/02/26/owWpLZo_638x960.jpg");
                         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
 //        oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
@@ -722,7 +724,6 @@ public class NewsInfoActivity extends Activity implements View.OnClickListener {
                 oks.setSite(getString(R.string.app_name));
                 // siteUrl是分享此内容的网站地址，仅在QQ空间使用
                 oks.setSiteUrl("http://wap.huaifuwang.com/city/news_info.php?id=" + id + "&type=0");
-
 // 启动分享GUI
                 oks.show(this);
                 break;

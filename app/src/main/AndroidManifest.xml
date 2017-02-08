@@ -53,6 +53,7 @@
     <!-- SDK1.5需要android.permission.GET_TASKS权限判断本程序是否为当前运行的应用? -->
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <!-- 来电消音 -->
@@ -135,14 +136,22 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
+            <!-- 调用新浪原生SDK，需要注册的回调activity -->
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
         </activity>
+
         <!--微信分享回调 -->
         <activity
             android:name=".wxapi.WXEntryActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:screenOrientation="portrait" />
 
         <!--支付宝 -->
         <activity
@@ -534,6 +543,10 @@
         <activity
             android:name="util.XHtmlVC"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".Activity.PhotoPreView"
             android:screenOrientation="portrait"></activity>
 
 

@@ -38,6 +38,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baidu.location.LocationClient;
+import com.bigkoo.alertview.AlertView;
+import com.bigkoo.alertview.OnItemClickListener;
+import com.jph.takephoto.app.TakePhotoActivity;
+import com.jph.takephoto.model.TImage;
+import com.jph.takephoto.model.TResult;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,19 +64,18 @@ import util.FileUtils;
 import util.ImageItem;
 import util.PublicWay;
 import util.Res;
+import util.XNetUtil;
 
 import static citycircle.com.MyAppService.LocationApplication.APPDataCache;
 
 /**
  * Created by admins on 2015/11/28.
  */
-public class ReplyPhoto extends Activity {
+public class ReplyPhoto extends TakePhotoActivity {
 
     private MyGridView noScrollgridview, calss;
     private GridAdapter adapter;
     private View parentView;
-    private PopupWindow pop = null;
-    private LinearLayout ll_popup;
     public static Bitmap bimap;
     ImageView back;
     String url, urlstr;
@@ -87,22 +91,15 @@ public class ReplyPhoto extends Activity {
     EditText content;
     Dialog dialog;
     String str;
-    GetPhotos getPhotos;
-    File tempFile;
+    AlertView alertView;
+    private int position = -1;
 
     //    private ArrayList<ImageItem> dataList;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GlobalVariables.Typr = 0;
         Res.init(this);
-        getPhotos = new GetPhotos();
-        File sd = Environment.getExternalStorageDirectory();
-        String path = sd.getPath() + "/citycircle/Cache";
-        File file = new File(path);
-        if (!file.exists())
-            file.mkdir();
 
-        tempFile = new File(file, getPhotos.getPhotoFileName());
         dialog = MyDialog.createLoadingDialog(ReplyPhoto.this, "正在上传...");
         bimap = BitmapFactory.decodeResource(getResources(),
                 R.mipmap.icon_addpic_unfocused);
@@ -139,57 +136,34 @@ public class ReplyPhoto extends Activity {
 
     public void Init() {
 
-        pop = new PopupWindow(ReplyPhoto.this);
 
-        View view = getLayoutInflater().inflate(R.layout.item_popupwindows,
-                null);
+        alertView = new AlertView("选择图片", null, "取消", null,
+                new String[]{"拍照", "从相册中选择"},
+                this, AlertView.Style.ActionSheet, new OnItemClickListener(){
+            public void onItemClick(Object o,int p){
 
-        ll_popup = (LinearLayout) view.findViewById(R.id.ll_popup);
+                position = p;
 
-        pop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        pop.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        pop.setBackgroundDrawable(new BitmapDrawable());
-        pop.setFocusable(true);
-        pop.setOutsideTouchable(true);
-        pop.setContentView(view);
+            }
+        });
 
-        RelativeLayout parent = (RelativeLayout) view.findViewById(R.id.parent);
-        Button bt1 = (Button) view.findViewById(R.id.item_popupwindows_camera);
-        Button bt2 = (Button) view.findViewById(R.id.item_popupwindows_Photo);
-        Button bt3 = (Button) view.findViewById(R.id.item_popupwindows_cancel);
-        parent.setOnClickListener(new View.OnClickListener() {
+        File f = new File(getExternalFilesDir(""), "temp.jpg");
+        final Uri uri = Uri.fromFile(f);
 
+        alertView.setOnDismissListener(new com.bigkoo.alertview.OnDismissListener() {
             @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                pop.dismiss();
-                ll_popup.clearAnimation();
+            public void onDismiss(Object o) {
+                if(position == 0)
+                {
+                    getTakePhoto().onPickFromCapture(uri);
+                }
+                else if(position == 1)
+                {
+                    getTakePhoto().onPickMultiple(9-Bimp.tempSelectBitmap.size());
+                }
             }
         });
-        bt1.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                photo();
-                pop.dismiss();
-                ll_popup.clearAnimation();
-            }
-        });
-        bt2.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(ReplyPhoto.this,
-                        AlbumActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.activity_translate_in,
-                        R.anim.activity_translate_out);
-                pop.dismiss();
-                ll_popup.clearAnimation();
-            }
-        });
-        bt3.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                pop.dismiss();
-                ll_popup.clearAnimation();
-            }
-        });
+
         content = (EditText) findViewById(R.id.content);
         activity_selectimg_send = (TextView) findViewById(R.id.activity_selectimg_send);
         city = (TextView) findViewById(R.id.city);
@@ -269,14 +243,13 @@ public class ReplyPhoto extends Activity {
                                     long arg3) {
                 if (arg2 == Bimp.tempSelectBitmap.size()) {
                     Log.i("ddddddd", "----------");
-                    ll_popup.startAnimation(AnimationUtils.loadAnimation(
-                            ReplyPhoto.this, R.anim.activity_translate_in));
-                    pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);
+
+                    alertView.show();
+
                 } else {
                     Intent intent = new Intent(ReplyPhoto.this,
-                            GalleryActivity.class);
-                    intent.putExtra("position", "1");
-                    intent.putExtra("ID", arg2);
+                            PhotoPreView.class);
+                    intent.putExtra("index", arg2);
                     startActivity(intent);
                 }
             }
@@ -366,6 +339,103 @@ public class ReplyPhoto extends Activity {
         }
     };
 
+    public String getString(String s) {
+        String path = null;
+        if (s == null)
+            return "";
+        for (int i = s.length() - 1; i > 0; i++) {
+            s.charAt(i);
+        }
+        return path;
+    }
+
+    protected void onRestart() {
+        super.onRestart();
+
+        XNetUtil.APPPrintln("onRestart !!!!!!!!!!!");
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        XNetUtil.APPPrintln("onResume !!!!!!!!!!!");
+
+        adapter.notifyDataSetChanged();
+        City = GlobalVariables.city;
+        city.setText(City);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Bimp.tempSelectBitmap.clear();
+    }
+
+    @Override
+    public void takeSuccess(TResult result) {
+        super.takeSuccess(result);
+
+        if (Bimp.tempSelectBitmap.size() < 9 ) {
+            try {
+                for(TImage img : result.getImages())
+                {
+                    BitmapFactory.Options opts = new BitmapFactory.Options();
+                    opts.inJustDecodeBounds = true;
+
+                    String path = img.getOriginalPath();
+                    Bitmap bitmap= BitmapFactory.decodeFile(path, opts);
+                    ImageItem takePhoto = new ImageItem();
+                    takePhoto.setImagePath(path);
+                    takePhoto.setBitmap(bitmap);
+                    Bimp.tempSelectBitmap.add(takePhoto);
+
+                    bitmap = null;
+
+                }
+
+            } catch (Exception e) {
+                Toast.makeText(ReplyPhoto.this, "手机可运行内存不足，照片保存失败，请清理后操作", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+
+    }
+
+    @Override
+    public void takeFail(TResult result, String msg) {
+        super.takeFail(result, msg);
+        XNetUtil.APPPrintln("###@@@ :"+msg);
+    }
+
+    @Override
+    public void takeCancel() {
+        super.takeCancel();
+
+    }
+
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            for (int i = 0; i < PublicWay.activityList.size(); i++) {
+                if (null != PublicWay.activityList.get(i)) {
+                    PublicWay.activityList.get(i).finish();
+                }
+            }
+
+        }
+        return true;
+    }
+
+
+
+
+
+
     @SuppressLint("HandlerLeak")
     public class GridAdapter extends BaseAdapter {
         private LayoutInflater inflater;
@@ -433,8 +503,6 @@ public class ReplyPhoto extends Activity {
             } else {
                 holder.image.setImageBitmap(Bimp.tempSelectBitmap.get(position)
                         .getBitmap());
-                System.out.println(Bimp.tempSelectBitmap.get(position)
-                        .getImagePath());
             }
 
             return convertView;
@@ -474,69 +542,5 @@ public class ReplyPhoto extends Activity {
                 }
             }).start();
         }
-    }
-
-    public String getString(String s) {
-        String path = null;
-        if (s == null)
-            return "";
-        for (int i = s.length() - 1; i > 0; i++) {
-            s.charAt(i);
-        }
-        return path;
-    }
-
-    protected void onRestart() {
-        adapter.update();
-        City = GlobalVariables.city;
-        city.setText(City);
-        super.onRestart();
-    }
-
-    private static final int TAKE_PICTURE = 0x000001;
-
-    public void photo() {
-        Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
-        startActivityForResult(openCameraIntent, TAKE_PICTURE);
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case TAKE_PICTURE:
-                if (Bimp.tempSelectBitmap.size() < 9 && resultCode == RESULT_OK) {
-//                    dataList = new ArrayList<ImageItem>();
-                    String fileName = String.valueOf(System.currentTimeMillis());
-//                    String a=tempFile.toString();
-//                    System.out.println(a);
-//                    Bitmap bm = (Bitmap) data.getExtras().get("data");
-                    BitmapFactory.Options opts = new BitmapFactory.Options();
-                    opts.inJustDecodeBounds = true;
-                    Bitmap bm = BitmapFactory.decodeFile(tempFile.toString(), opts);
-                    try {
-                        File file = FileUtils.saveBitmap(bm, fileName, tempFile.toString());
-                        ImageItem takePhoto = new ImageItem();
-                        takePhoto.setImagePath(file.toString());
-                        takePhoto.setBitmap(bm);
-                        Bimp.tempSelectBitmap.add(takePhoto);
-                    } catch (Exception e) {
-                        Toast.makeText(ReplyPhoto.this, "手机可运行内存不足，照片保存失败，请清理后操作", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-                break;
-        }
-    }
-
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            for (int i = 0; i < PublicWay.activityList.size(); i++) {
-                if (null != PublicWay.activityList.get(i)) {
-                    PublicWay.activityList.get(i).finish();
-                }
-            }
-//            finish();
-        }
-        return true;
     }
 }

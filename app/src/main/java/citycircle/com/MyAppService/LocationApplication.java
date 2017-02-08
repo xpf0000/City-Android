@@ -181,6 +181,13 @@ public class LocationApplication extends Application {
         });
 
         context = getApplicationContext();
+
+        XNetUtil.APPPrintln(context.getExternalCacheDir());
+        XNetUtil.APPPrintln(context.getCacheDir());
+
+        XNetUtil.APPPrintln(context.getExternalFilesDir(""));
+        XNetUtil.APPPrintln(context.getFilesDir());
+
         MemoryCache memoryCache= MemoryCacheUtils.createLruMemoryCache(1024*1024*256);
         CacheLoaderConfiguration config = new CacheLoaderConfiguration(this, new HashCodeFileNameGenerator(), 1024 * 1024 * 1024*64, 200000, memoryCache,60*24*30*365*20);
         CacheLoaderManager.getInstance().init(config);
