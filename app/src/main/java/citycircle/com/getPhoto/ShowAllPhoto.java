@@ -113,7 +113,7 @@ public class ShowAllPhoto extends Activity {
 	private class CancelListener implements OnClickListener {// 取消按钮的监听
 		public void onClick(View v) {
 			//清空选择的图片
-			Bimp.tempSelectBitmap.clear();
+			Bimp.clear();
 			intent.setClass(mContext, ReplyPhoto.class);
 			startActivity(intent);
 		}

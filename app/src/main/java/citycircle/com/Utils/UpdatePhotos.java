@@ -12,6 +12,7 @@ import java.net.URL;
 
 import util.Bimp;
 import util.FileUtils;
+import util.XAPPUtil;
 
 /**
  * Created by admins on 2015/10/30.
@@ -84,8 +85,9 @@ public class UpdatePhotos {
             for (int i=0;i< Bimp.tempSelectBitmap.size();i++){
                 String filePath=Bimp.tempSelectBitmap.get(i).getImagePath();
                 String fileName = String.valueOf(System.currentTimeMillis());
-                Bitmap bm = BitmapFactory.decodeFile(filePath.toString());
-                File file = FileUtils.saveBitmap(bm, fileName, filePath.toString());
+
+                File file = FileUtils.saveBitmap(fileName, filePath.toString());
+
                 filePath=file.toString();
                 String name="imgFile"+i;
                 StringBuilder sb1 = new StringBuilder();

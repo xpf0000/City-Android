@@ -86,6 +86,9 @@ public class ImageDetailFragment extends Fragment {
 				case UNKNOWN:
 					message = "未知的错误";
 					break;
+				default:
+					message = "图片加载失败";
+					break;
 				}
 				Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
 				progressBar.setVisibility(View.GONE);

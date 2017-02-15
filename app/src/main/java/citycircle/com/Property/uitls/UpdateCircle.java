@@ -92,8 +92,8 @@ public class UpdateCircle {
             for (int i=0;i< Bimp.tempSelectBitmap.size();i++){
                 String filePath=Bimp.tempSelectBitmap.get(i).getImagePath();
                 String fileName = String.valueOf(System.currentTimeMillis());
-                Bitmap bm = BitmapFactory.decodeFile(filePath.toString());
-                File file = FileUtils.saveBitmap(bm, fileName, filePath.toString());
+
+                File file = FileUtils.saveBitmap(fileName, filePath.toString());
                 filePath=file.toString();
                 String name="imgFile"+i;
                 StringBuilder sb1 = new StringBuilder();
@@ -129,6 +129,9 @@ public class UpdateCircle {
                 while ((ch = in.read()) != -1) {
                     sb2.append((char) ch);
                 }
+
+
+
             }
         }catch (Exception e){
             e.printStackTrace();

@@ -130,8 +130,7 @@ public class GalleryActivity extends Activity {
 
 		public void onClick(View v) {
 			if (listViews.size() == 1) {
-				Bimp.tempSelectBitmap.clear();
-				Bimp.max = 0;
+				Bimp.clear();
 				send_bt.setText(Res.getString("finish")+"(" + Bimp.tempSelectBitmap.size() + "/"+PublicWay.num+")");
 				Intent intent = new Intent("data.broadcast.action");  
                 sendBroadcast(intent);  

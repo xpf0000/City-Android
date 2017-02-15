@@ -69,6 +69,12 @@ public class Messagelist extends Activity {
         myPopwindows.setMyPopwindowswListener(new MyPopwindows.MyPopwindowsListener() {
             @Override
             public void onRefresh() {
+
+                if(positions >= array.size())
+                {
+                    return;
+                }
+
                 String id = array.get(positions).get("did");
                 deurl = GlobalVariables.urlstr + "Quan.commentDel&id="+id + "&username=" + username;
                 getList(1);
@@ -85,6 +91,12 @@ public class Messagelist extends Activity {
         messagelist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                if(position >= array.size())
+                {
+                    return;
+                }
+
                 Intent intent = new Intent();
                 intent.putExtra("id", array.get(position).get("did"));
                 intent.setClass(Messagelist.this, Cityinfo.class);

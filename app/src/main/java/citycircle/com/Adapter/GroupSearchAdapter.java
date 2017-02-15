@@ -99,7 +99,7 @@ public class GroupSearchAdapter extends BaseAdapter {
         listItemView.txt.setText(txt);
         ImageLoader.getInstance().displayImage(img,listItemView.img);
 
-        listItemView.txt.setVisibility(View.VISIBLE);
+        listItemView.icon.setVisibility(View.VISIBLE);
 
         String level = dataArr.get(position).getViplevel();
 
@@ -117,7 +117,7 @@ public class GroupSearchAdapter extends BaseAdapter {
         }
         else
         {
-            listItemView.txt.setVisibility(View.GONE);
+            listItemView.icon.setVisibility(View.GONE);
         }
 
         // 返回convertView对象

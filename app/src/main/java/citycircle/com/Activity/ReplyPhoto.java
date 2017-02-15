@@ -313,9 +313,9 @@ public class ReplyPhoto extends TakePhotoActivity {
                         JSONObject jsonObject1 = jsonObject.getJSONObject("data");
                         int b = jsonObject1.getIntValue("code");
                         if (b == 0) {
-//                            Bimp.tempSelectBitmap.clear();
-                            Bimp.tempSelectBitmap.clear();
-                            Bimp.max = 0;
+
+                            Bimp.clear();
+
                             Intent intent = new Intent("data.broadcast.action");
                             sendBroadcast(intent);
                             for (int i = 0; i < PublicWay.activityList.size(); i++) {
@@ -372,7 +372,7 @@ public class ReplyPhoto extends TakePhotoActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Bimp.tempSelectBitmap.clear();
+        Bimp.clear();
     }
 
     @Override

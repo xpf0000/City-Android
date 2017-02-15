@@ -15,6 +15,25 @@ public class Bimp {
 	
 	public static ArrayList<ImageItem> tempSelectBitmap = new ArrayList<ImageItem>();   //选择的图片的临时列表
 
+	public static void clear()
+	{
+		for(ImageItem item : tempSelectBitmap)
+		{
+			Bitmap bmp = item.getBitmap();
+			if(!bmp.isRecycled()){
+				bmp.recycle();   //回收图片所占的内存
+				System.gc();  //提醒系统及时回收
+			}
+			bmp = null;
+			item.setBitmap(null);
+
+		}
+
+		tempSelectBitmap.clear();
+
+		max = 0;
+	}
+
 	public static Bitmap revitionImageSize(String path) throws IOException {
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(
 				new File(path)));

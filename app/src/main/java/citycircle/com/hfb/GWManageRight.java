@@ -1,8 +1,12 @@
 package citycircle.com.hfb;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +30,7 @@ import citycircle.com.MyAppService.LocationApplication;
 import citycircle.com.R;
 import model.HFBModel;
 import util.HttpResult;
+import util.XAPPUtil;
 import util.XHorizontalBaseFragment;
 import util.XNetUtil;
 
@@ -105,12 +110,10 @@ public class GWManageRight extends XHorizontalBaseFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         System.out.println("RightFragment--->onCreateView");
-        View v = inflater.inflate(R.layout.qiandaopaihang, container, false);
+        View v = inflater.inflate(R.layout.caifupaihang, container, false);
         list = (PullToRefreshListView) v.findViewById(R.id.qiandaopaihang_list);
 
         bg = (LinearLayout) v.findViewById(R.id.qiandaopaihang_bg);
-
-        bg.setBackgroundResource(R.mipmap.caifupaihang_1242);
 
         img = (RoundedImageView) v
                 .findViewById(R.id.qiandaopaihang_header);

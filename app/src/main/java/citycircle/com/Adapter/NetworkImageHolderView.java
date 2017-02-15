@@ -1,6 +1,9 @@
 package citycircle.com.Adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -12,6 +15,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import citycircle.com.R;
 import citycircle.com.Utils.ImageUtils;
+import util.XAPPUtil;
 
 /**
  * Created by Sai on 15/8/4.
@@ -37,7 +41,11 @@ public class NetworkImageHolderView implements Holder<String> {
 
     @Override
     public void UpdateUI(Context context,int position, String data) {
-        imageView.setImageResource(R.mipmap.loading);
+
+        Bitmap bmp = XAPPUtil.readBitMap(context,R.mipmap.loading);
+        Drawable d = new BitmapDrawable(context.getResources(),bmp);
+        imageView.setImageDrawable(d);
+
         options=imageUtils.setcenterOptions();
         imageLoader.displayImage(data,imageView,options);
 //        ImageLoader.getInstance().displayImage(data,imageView);

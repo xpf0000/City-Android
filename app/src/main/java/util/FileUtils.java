@@ -14,7 +14,7 @@ public class FileUtils {
 	public static String SDPATH = Environment.getExternalStorageDirectory()
 			+ "/Photo_LJ/";
 
-	public static File saveBitmap(Bitmap bm, String picName,String filepath) {
+	public static File saveBitmap(String picName,String filepath) {
 		File file = null;
 		try {
 			if (!isFileExist("")) {
@@ -26,18 +26,22 @@ public class FileUtils {
 				f.delete();
 			}
 			FileOutputStream out = new FileOutputStream(f);
-//			bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+
 			final BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inJustDecodeBounds = true;
 			BitmapFactory.decodeFile(filepath, options);
-//
-//			// Calculate inSampleSize
-			options.inSampleSize = calculateInSampleSize(options, 480, 800);
-//
-//			// Decode bitmap with inSampleSize set
+
+			options.inSampleSize = XAPPUtil.calculateInSampleSize(options, 480, 800);
 			options.inJustDecodeBounds = false;
-			bm=BitmapFactory.decodeFile(filepath, options);
+
+			Bitmap bm=BitmapFactory.decodeFile(filepath, options);
 			bm.compress(Bitmap.CompressFormat.JPEG, 50, out);
+
+			if(!bm.isRecycled()){
+				bm.recycle();   //回收图片所占的内存
+				System.gc();  //提醒系统及时回收
+			}
+
 			out.flush();
 			out.close();
 
@@ -100,16 +104,5 @@ public class FileUtils {
 		}
 		return true;
 	}
-	public static int calculateInSampleSize(BitmapFactory.Options options,int reqWidth, int reqHeight) {
-		final int height = options.outHeight;
-		final int width = options.outWidth;
-		int inSampleSize = 1;
 
-		if (height > reqHeight || width > reqWidth) {
-			final int heightRatio = Math.round((float) height/ (float) reqHeight);
-			final int widthRatio = Math.round((float) width / (float) reqWidth);
-			inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-		}
-		return inSampleSize;
-	}
 }

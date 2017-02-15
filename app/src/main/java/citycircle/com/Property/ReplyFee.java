@@ -241,8 +241,7 @@ public class ReplyFee extends Activity implements View.OnClickListener {
                     JSONObject jsonObject1 = jsonObject.getJSONObject("data");
                     if (jsonObject1.getIntValue("code") == 0) {
                         Toast.makeText(ReplyFee.this, "发布成功", Toast.LENGTH_SHORT).show();
-                        Bimp.tempSelectBitmap.clear();
-                        Bimp.max = 0;
+                        Bimp.clear();
                         Intent intent = new Intent("data.broadcast.action");
                         sendBroadcast(intent);
                         for (int i = 0; i < PublicWay.activityList.size(); i++) {
@@ -305,7 +304,7 @@ public class ReplyFee extends Activity implements View.OnClickListener {
 //                    System.out.println(a);
 //                    Bitmap bm = (Bitmap) data.getExtras().get("data");
                     Bitmap bm = BitmapFactory.decodeFile(tempFile.toString());
-                    File file = FileUtils.saveBitmap(bm, fileName, tempFile.toString());
+                    File file = FileUtils.saveBitmap(fileName, tempFile.toString());
 
                     ImageItem takePhoto = new ImageItem();
                     takePhoto.setImagePath(file.toString());

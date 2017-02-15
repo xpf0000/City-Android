@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
@@ -20,6 +21,8 @@ import com.robin.lazy.cache.CacheLoaderManager;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -394,6 +397,71 @@ public class XAPPUtil {
             e.printStackTrace();
         }
         return versionName;
+    }
+
+
+    /**
+     * 以最省内存的方式读取本地资源的图片
+     * @param context
+     * @param resId
+     * @return
+     */
+    public static Bitmap readBitMap(Context context, int resId){
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inPreferredConfig = Bitmap.Config.RGB_565;
+        opt.inPurgeable = true;
+        opt.inInputShareable = true;
+        opt.inJustDecodeBounds = true;
+        //获取资源图片
+        InputStream is = context.getResources().openRawResource(resId);
+        Bitmap bitmap = BitmapFactory.decodeStream(is,null, opt);
+        try {
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return bitmap;
+    }
+
+
+    public static Bitmap readBitMap(String filePath){
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inPreferredConfig = Bitmap.Config.RGB_565;
+        opt.inDither=false;
+        opt.inPurgeable = true;
+        opt.inInputShareable = true;
+        opt.inTempStorage = new byte[12 * 1024];
+        opt.inJustDecodeBounds = true;
+        //获取资源图片
+
+        File file = new File(filePath);
+
+        FileInputStream fs=null;
+        Bitmap bmp = null;
+        try {
+            fs = new FileInputStream(file);
+            if(fs != null)
+                bmp = BitmapFactory.decodeFileDescriptor(fs.getFD(), null, opt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return bmp;
+    }
+
+
+    public static int calculateInSampleSize(BitmapFactory.Options options,int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int heightRatio = Math.round((float) height/ (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+        return inSampleSize;
     }
 
 }

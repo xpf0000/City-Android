@@ -460,21 +460,30 @@ public class Newphoto extends Fragment {
 
         XNetUtil.APPPrintln("str: "+str);
 
-        JSONObject jsonObject = JSON.parseObject(str);
-        JSONObject jsonObject1 = jsonObject.getJSONObject("data");
-        if (jsonObject1.getIntValue("code") == 0) {
-            JSONArray jsonArray = jsonObject1.getJSONArray("info");
-            indicator_imgs = new ImageView[jsonArray.size()];
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JSONObject jsonObject2 = jsonArray.getJSONObject(i);
-                hashMap = new HashMap<>();
-                hashMap.put("picurl", jsonObject2.getString("picurl") == null ? "" : jsonObject2.getString("picurl"));
-                hashMap.put("url", jsonObject2.getString("url") == null ? "" : jsonObject2.getString("url"));
-                addarray.add(hashMap);
+        try
+        {
+            JSONObject jsonObject = JSON.parseObject(str);
+            JSONObject jsonObject1 = jsonObject.getJSONObject("data");
+            if (jsonObject1.getIntValue("code") == 0) {
+                JSONArray jsonArray = jsonObject1.getJSONArray("info");
+                indicator_imgs = new ImageView[jsonArray.size()];
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    JSONObject jsonObject2 = jsonArray.getJSONObject(i);
+                    hashMap = new HashMap<>();
+                    hashMap.put("picurl", jsonObject2.getString("picurl") == null ? "" : jsonObject2.getString("picurl"));
+                    hashMap.put("url", jsonObject2.getString("url") == null ? "" : jsonObject2.getString("url"));
+                    addarray.add(hashMap);
+                }
+            } else {
+
             }
-        } else {
+        }
+        catch (Exception e)
+        {
 
         }
+
+
     }
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {

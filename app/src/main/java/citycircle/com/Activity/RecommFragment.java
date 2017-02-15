@@ -166,7 +166,15 @@ public class RecommFragment extends Fragment {
                 if (type==1){
                     arrayList.clear();
                 }
-                setArray(response);
+                try
+                {
+                    setArray(response);
+                }
+                catch (Exception e)
+                {
+
+                }
+
                 adapter.notifyDataSetChanged();
             }
         });
@@ -207,27 +215,36 @@ public class RecommFragment extends Fragment {
 
             @Override
             public void onResponse(String response) {
-                JSONObject jsonObject = JSON.parseObject(response);
-                JSONObject jsonObject1 = jsonObject.getJSONObject("data");
-                if (jsonObject1.getIntValue("code") == 0) {
-                    networkImages = new ArrayList<String>();
-                    networkurl= new ArrayList<String>();
-                    JSONArray jsonArray = jsonObject1.getJSONArray("info");
-                    for (int i=0;i<jsonArray.size();i++){
-                        JSONObject jsonObject2=jsonArray.getJSONObject(i);
-                        networkImages.add(jsonObject2.getString("picurl"));
-                        networkurl.add(jsonObject2.getString("url"));
-                    }
-                    fristbannerbanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
-                        @Override
-                        public NetworkImageHolderView createHolder() {
-                            return new NetworkImageHolderView();
+
+                try
+                {
+                    JSONObject jsonObject = JSON.parseObject(response);
+                    JSONObject jsonObject1 = jsonObject.getJSONObject("data");
+                    if (jsonObject1.getIntValue("code") == 0) {
+                        networkImages = new ArrayList<String>();
+                        networkurl= new ArrayList<String>();
+                        JSONArray jsonArray = jsonObject1.getJSONArray("info");
+                        for (int i=0;i<jsonArray.size();i++){
+                            JSONObject jsonObject2=jsonArray.getJSONObject(i);
+                            networkImages.add(jsonObject2.getString("picurl"));
+                            networkurl.add(jsonObject2.getString("url"));
                         }
-                    }, networkImages);
-                    headview.setVisibility(View.VISIBLE);
-                } else {
-                    headview.setVisibility(View.GONE);
+                        fristbannerbanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
+                            @Override
+                            public NetworkImageHolderView createHolder() {
+                                return new NetworkImageHolderView();
+                            }
+                        }, networkImages);
+                        headview.setVisibility(View.VISIBLE);
+                    } else {
+                        headview.setVisibility(View.GONE);
+                    }
                 }
+                catch (Exception e)
+                {
+
+                }
+
             }
         });
     }

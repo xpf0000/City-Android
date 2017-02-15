@@ -147,7 +147,7 @@ public class GroupVCAdapter extends BaseAdapter {
             cell.txt.setText(txt);
             ImageLoader.getInstance().displayImage(img,cell.img);
 
-            cell.txt.setVisibility(View.VISIBLE);
+            cell.icon.setVisibility(View.VISIBLE);
 
             String level = model.getViplevel();
 
@@ -165,7 +165,7 @@ public class GroupVCAdapter extends BaseAdapter {
             }
             else
             {
-                cell.txt.setVisibility(View.GONE);
+                cell.icon.setVisibility(View.GONE);
             }
 
         }
