@@ -45,6 +45,7 @@ public class MyMineAdapter extends RecyclerView.Adapter implements StickyRecycle
     DisplayImageOptions options = new DisplayImageOptions.Builder()
             .showImageForEmptyUri(R.mipmap.home_head)
             .showImageOnFail(R.mipmap.home_head)
+            .considerExifParams(true)
             .build();
 
     citycircle.com.Utils.ImageUtils ImageUtils = new ImageUtils();

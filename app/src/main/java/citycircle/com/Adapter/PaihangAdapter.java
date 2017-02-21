@@ -33,6 +33,7 @@ public class PaihangAdapter extends BaseAdapter {
     DisplayImageOptions options = new DisplayImageOptions.Builder()
             .showImageForEmptyUri(R.mipmap.home_head)
             .showImageOnFail(R.mipmap.home_head)
+            .considerExifParams(true)
             .build();
 
     public List<Object> dataArr = new ArrayList<>();

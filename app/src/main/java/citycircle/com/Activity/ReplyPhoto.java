@@ -43,6 +43,7 @@ import com.bigkoo.alertview.OnItemClickListener;
 import com.jph.takephoto.app.TakePhotoActivity;
 import com.jph.takephoto.model.TImage;
 import com.jph.takephoto.model.TResult;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -155,10 +156,12 @@ public class ReplyPhoto extends TakePhotoActivity {
             public void onDismiss(Object o) {
                 if(position == 0)
                 {
+                    ImageLoader.getInstance().clearMemoryCache();
                     getTakePhoto().onPickFromCapture(uri);
                 }
                 else if(position == 1)
                 {
+                    ImageLoader.getInstance().clearMemoryCache();
                     getTakePhoto().onPickMultiple(9-Bimp.tempSelectBitmap.size());
                 }
             }

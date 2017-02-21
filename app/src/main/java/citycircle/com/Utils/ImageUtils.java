@@ -31,6 +31,7 @@ public class ImageUtils {
                 .showImageForEmptyUri(R.mipmap.nopic) // 设置图片Uri为空或是错误的时候显示的图片
                 .showImageOnFail(R.mipmap.nopic) // 设置图片加载或解码过程中发生错误显示的图片
                 .cacheInMemory(true) // 设置下载的图片是否缓存在内存中
+                .considerExifParams(true)
                 .cacheOnDisc(true) // 设置下载的图片是否缓存在SD卡中
                 .displayer(new RoundedBitmapDisplayer(20)) // 设置成圆角图片
                 .build(); // 创建配置过得DisplayImageOption对象
@@ -45,6 +46,7 @@ public class ImageUtils {
                 .showStubImage(R.mipmap.nopic) // 设置图片下载期间显示的图片.cacheInMemory(true)//
                 .cacheOnDisk(true)//
                 .bitmapConfig(Bitmap.Config.RGB_565)//
+                .considerExifParams(true)
                 .build();
         return DisplayImageOptions;
 
@@ -54,6 +56,7 @@ public class ImageUtils {
         DisplayImageOptions = new DisplayImageOptions.Builder()
                 .showStubImage(R.mipmap.nopic) // 设置图片下载期间显示的图片
                 .showImageForEmptyUri(R.mipmap.nopic) // 设置图片Uri为空或是错误的时候显示的图片
+                .considerExifParams(true)
                 .showImageOnFail(R.mipmap.nopic) // 设置图片加载或解码过程中发生错误显示的图片
                 .cacheInMemory(true).imageScaleType(ImageScaleType.EXACTLY_STRETCHED) // 设置下载的图片是否缓存在内存中
                 .cacheOnDisc(true) .displayer(new RoundedBitmapDisplayer(0))// 设置下载的图片是否缓存在SD卡中
@@ -72,6 +75,7 @@ public class ImageUtils {
                 .cacheInMemory(true) // 设置下载的图片是否缓存在内存中
                 .cacheOnDisc(true) .bitmapConfig(Bitmap.Config.RGB_565)// // 设置下载的图片是否缓存在SD卡中
                 .displayer(new CircleBitmapDisplayer()) // 设置成圆角图片
+                .considerExifParams(true)
                 .build(); // 创建配置过得DisplayImageOption对象
         return DisplayImageOptions;
     }
@@ -82,6 +86,7 @@ public class ImageUtils {
 //                .showImageForEmptyUri(R.mipmap.app) // 设置图片Uri为空或是错误的时候显示的图片
 //                .showImageOnFail(R.mipmap.app) // 设置图片加载或解码过程中发生错误显示的图片
                 .cacheInMemory(true) // 设置下载的图片是否缓存在内存中
+                .considerExifParams(true)
                 .cacheOnDisc(true) // 设置下载的图片是否缓存在SD卡中
                 .displayer(new RoundedBitmapDisplayer(0)) // 设置成圆角图片
                 .build(); // 创建配置过得DisplayImageOption对象

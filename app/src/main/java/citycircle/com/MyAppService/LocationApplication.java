@@ -324,6 +324,7 @@ public class LocationApplication extends Application {
         //网络图片例子,结合常用的图片缓存库UIL,你可以根据自己需求自己换其他网络图片库
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder().
                 showImageForEmptyUri(R.drawable.app_default)
+                .considerExifParams(true)
                 .cacheInMemory(true).cacheOnDisk(true).build();
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(

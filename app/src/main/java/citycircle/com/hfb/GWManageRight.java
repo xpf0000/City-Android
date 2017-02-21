@@ -62,6 +62,7 @@ public class GWManageRight extends XHorizontalBaseFragment
     DisplayImageOptions options = new DisplayImageOptions.Builder()
             .showImageForEmptyUri(R.mipmap.home_head)
             .showImageOnFail(R.mipmap.home_head)
+            .considerExifParams(true)
             .build();
 
     public void refresh()
